@@ -20,7 +20,7 @@ public class Robot extends IterativeRobot {
     SendableChooser chooser;
     int[] CANTalonPorts = new int[4];
     DriverStation d = new DriverStation(); //TODO ask Hiren
-    DriveTrain drive = new DriveTrain(CANTalonPorts, d);
+    DriveTrain drive = new DriveTrain(CANTalonPorts, d);  // Find 2014 Drive Code for Shifting Gearbox
     T20GamePad driverJoy = new T20GamePad(0);
 	
     /**
