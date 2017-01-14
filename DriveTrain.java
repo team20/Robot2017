@@ -5,18 +5,17 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriveTrain {
-	DriverStation d;
-	CANTalon[] talons = new CANTalon[4]; // contains the CANTalons
-	DoubleSolenoid shifter = new DoubleSolenoid(moduleNumber, forwardChannel, reverseChannel);// Figure out what the Channels are
-	public DriveTrain(int[] CANTalonPorts, DriverStation d){
+	DriverStation d = DriverStation.getInstance();
+	CANTalon[] talons = new CANTalon[4]; //TODO contains the CANTalons
+	DoubleSolenoid shifter = new DoubleSolenoid(1, 2);
+	Constants constants;
+	public DriveTrain(int[] CANTalonPorts, Constants c){
+		constants = c;
 		for(int i = 0; i < CANTalonPorts.length; i++){
 			talons[i] = new CANTalon(CANTalonPorts[i]); // Assigns Port Numbers to the CANTalons
 		}
-		this.d = d;
-	}
-	
-	
-	public void drive(double speed){
+	}	
+	public void drive(double speed){	//drives forward
 		for (int i = 0; i < talons.length; i++){
 			if(i%2 == 1){
 				talons[i].set(-speed);
@@ -25,31 +24,31 @@ public class DriveTrain {
 			}
 		}
 	}
-	public void driveTimeStraight(double speed, double time){
+	public void driveTimeStraight(double speed, double time){	//drives forward for a specific time
 		double startTime = d.getMatchTime();
 		double endTime = startTime+time;
 		while(d.getMatchTime()<endTime){
 			drive(speed);
 		}
 	}
-	public void turnRight(double speed){
+	public void turnRight(double speed){	//turns right
 		for (int i = 0; i < talons.length; i++){
 			talons[i].set(-speed);
 		}
 	}
-	public void driveTimeRight(double speed, double time){
+	public void driveTimeRight(double speed, double time){	//turns right for a specific time
 		double startTime = d.getMatchTime();
 		double endTime = startTime+time;
 		while(d.getMatchTime()<endTime){
 			turnRight(speed);
 		}
 	}
-	public void turnLeft(double speed){
+	public void turnLeft(double speed){		//turns left
 		for (int i = 0; i < talons.length; i++){
 			talons[i].set(speed);
 		}
 	}
-	public void driveTimeLeft(double speed, double time){
+	public void driveTimeLeft(double speed, double time){	//turns left for a specific time
 		double startTime = d.getMatchTime();
 		double endTime = startTime+time;
 		while(d.getMatchTime()<endTime){
@@ -57,11 +56,11 @@ public class DriveTrain {
 		}
 	}
 	
-	public void shiftHigh(){
+	public void shiftHigh(){	//shifts into high gear ratio
 		shifter.set(DoubleSolenoid.Value.kReverse);
 	}
 	
-	public void shiftLow(){
+	public void shiftLow(){		//shifts into low gear ratio
 		shifter.set(DoubleSolenoid.Value.kForward);
 	}
 }
