@@ -21,4 +21,8 @@ public class Constants {
 	public static final int COLLECTOR_RETRACT_PORT = 4;
 	public static final int GEAR_AND_CLIMBER_EXTEND_PORT = 5;
 	public static final int GEAR_AND_CLIMBER_RETRACT_PORT = 6;
+
+	//Sockets
+	public static final int VISION_SOCKET_PORT_NUMBER = 0;
+	public static final int DIAGNOSTICS_SOCKET_PORT_NUMBER = 1;
 }

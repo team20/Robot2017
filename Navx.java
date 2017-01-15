@@ -21,7 +21,6 @@ public class Navx {
 			//TODO turn right
 		}
 		if(turnAngle < 0){
-
 			//TODO turn left
 		}
 		else{

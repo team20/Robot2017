@@ -9,6 +9,7 @@ public class AutoModes {
 	}
 	
 	public void doNothing(){	//robot does not move	
+
 	}	
 	public void crossBaseline(){	//robot drives forward to cross the baseline
 		drive.driveTimeStraight(1, 5); //TODO tune time spent driving
@@ -16,19 +17,35 @@ public class AutoModes {
 	public void middlePeg(){
 		
 	}
-	public void leftPeg(){
+	public void leftPegRed(){
 		
 	}
-	public void rightPeg(){
+	public void leftPegBlue(){
 		
 	}
-	public void middleToHopper(){
+	public void rightPegRed(){
 		
 	}
-	public void leftToHopper(){
+	public void rightPegBlue(){
 		
 	}
-	public void rightToHopper(){
+	public void middleToHopperRed(){
+		
+	}
+	public void middleToHopperBlue(){
+		
+	}
+	public void leftToHopperRed(){
+		
+	}
+	public void leftToHopperBlue(){
+		
+	}
+	public void rightToHopperRed(){
+		
+	}
+	public void rightToHopperBlue
+	(){
 	
 	}
 	public void middleToBoiler(){

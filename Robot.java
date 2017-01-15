@@ -18,10 +18,9 @@ public class Robot extends IterativeRobot {
 //    final String customAuto = "My Auto";
 //    String autoSelected;
 //    SendableChooser chooser;
-    int[] CANTalonPorts = new int[4];
     Constants constants = new Constants();
     DriverStation d = DriverStation.getInstance();
-    DriveTrain drive = new DriveTrain(CANTalonPorts, constants);
+    DriveTrain drive = new DriveTrain(constants);
     //T20GamePad driverJoy = new T20GamePad(0); //TODO import T20 classes
 	FlyWheel flywheel = new FlyWheel(constants);
 

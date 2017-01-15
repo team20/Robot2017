@@ -1,28 +1,31 @@
 package org.usfirst.frc.team20.robot;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriveTrain {
 	DriverStation d = DriverStation.getInstance();
-	CANTalon[] talons = new CANTalon[4]; //TODO contains the CANTalons
 	DoubleSolenoid shifter = new DoubleSolenoid(1, 2);
 	Constants constants;
-	public DriveTrain(int[] CANTalonPorts, Constants c){
+	CANTalon Front_Right;
+	CANTalon Front_Left;
+	CANTalon Back_Right;
+	CANTalon Back_Left;
+	
+	public DriveTrain(Constants c){
 		constants = c;
-		for(int i = 0; i < CANTalonPorts.length; i++){
-			talons[i] = new CANTalon(CANTalonPorts[i]); // Assigns Port Numbers to the CANTalons
-		}
+		Front_Right = new CANTalon(constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
+		Front_Left = new CANTalon(constants.DRIVETRAIN_MASTER_LEFT_MOTOR_PORT);
+		Back_Right = new CANTalon(constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT);
+		Back_Left = new CANTalon(constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT);
+		
 	}	
 	public void drive(double speed){	//drives forward
-		for (int i = 0; i < talons.length; i++){
-			if(i%2 == 1){
-				talons[i].set(-speed);
-			}else{
-				talons[i].set(speed);
-			}
-		}
+		Front_Right.set(speed);
+		Front_Left.set(-speed);
+		Back_Right.set(speed);
+		Back_Left.set(-speed);
 	}
 	public void driveTimeStraight(double speed, double time){	//drives forward for a specific time
 		double startTime = d.getMatchTime();
@@ -32,9 +35,10 @@ public class DriveTrain {
 		}
 	}
 	public void turnRight(double speed){	//turns right
-		for (int i = 0; i < talons.length; i++){
-			talons[i].set(-speed);
-		}
+		Front_Right.set(-speed);
+		Front_Left.set(-speed);
+		Back_Right.set(-speed);
+		Back_Left.set(-speed);
 	}
 	public void driveTimeRight(double speed, double time){	//turns right for a specific time
 		double startTime = d.getMatchTime();
@@ -44,9 +48,10 @@ public class DriveTrain {
 		}
 	}
 	public void turnLeft(double speed){		//turns left
-		for (int i = 0; i < talons.length; i++){
-			talons[i].set(speed);
-		}
+		Front_Right.set(speed);
+		Front_Left.set(speed);
+		Back_Right.set(speed);
+		Back_Left.set(speed);
 	}
 	public void driveTimeLeft(double speed, double time){	//turns left for a specific time
 		double startTime = d.getMatchTime();
