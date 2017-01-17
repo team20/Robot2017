@@ -1,9 +1,10 @@
 package org.usfirst.frc.team20.robot;
 
+import com.ctre.CANTalon;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -23,7 +24,8 @@ public class Robot extends IterativeRobot {
     DriveTrain drive = new DriveTrain(constants);
     //T20GamePad driverJoy = new T20GamePad(0); //TODO import T20 classes
 	FlyWheel flywheel = new FlyWheel(constants);
-
+	DriverVision highGoalVision = new DriverVision("High Goal Camera", 0);
+	DriverVision gearVision = new DriverVision("Gear Camera", 1);
 	
 	/**
      * This function is run when the robot is first started up and should be
@@ -34,6 +36,8 @@ public class Robot extends IterativeRobot {
 //        chooser.addDefault("Default Auto", defaultAuto);
 //        chooser.addObject("My Auto", customAuto);
 //        SmartDashboard.putData("Auto choices", chooser);
+    	  highGoalVision.startUSBCamera();
+    	  gearVision.startUSBCamera();
     }
     
 	/**
