@@ -3,12 +3,14 @@ package org.usfirst.frc.team20.robot;
 import edu.wpi.first.wpilibj.CameraServer;
 
 public class DriverVision {
-
-	public DriverVision(){
-		
+	int usbPort;
+	String name;
+	public DriverVision(String name, int usbPort){
+		this.name = name;
+		this.usbPort = usbPort;
 	}
 	public void startUSBCamera(){
 		CameraServer server = CameraServer.getInstance();
-		server.startAutomaticCapture("Normal Driver", 0);
+		server.startAutomaticCapture(name, usbPort);
 	}
 }
