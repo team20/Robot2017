@@ -1,10 +1,8 @@
 package org.usfirst.frc.team20.robot;
 
-import com.ctre.CANTalon;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -15,29 +13,50 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-//    final String defaultAuto = "Default";
-//    final String customAuto = "My Auto";
-//    String autoSelected;
-//    SendableChooser chooser;
+	String autoSelected;
+    SendableChooser chooser;
+    AutoFunctions functions;
+    AutoModes auto;
+    
     Constants constants = new Constants();
     DriverStation d = DriverStation.getInstance();
     DriveTrain drive = new DriveTrain(constants);
-    //T20GamePad driverJoy = new T20GamePad(0); //TODO import T20 classes
-	FlyWheel flywheel = new FlyWheel(constants);
-	DriverVision highGoalVision = new DriverVision("High Goal Camera", 0);
-	DriverVision gearVision = new DriverVision("Gear Camera", 1);
+    FlyWheel flywheel = new FlyWheel(constants);
+    Navx gyro = new Navx(drive);
+//    T20GamePad driverJoy = new T20GamePad(0); //TODO import T20 classes
+	
 	
 	/**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    public void robotInit() {
-//        chooser = new SendableChooser();
-//        chooser.addDefault("Default Auto", defaultAuto);
-//        chooser.addObject("My Auto", customAuto);
-//        SmartDashboard.putData("Auto choices", chooser);
-    	  highGoalVision.startUSBCamera();
-    	  gearVision.startUSBCamera();
+    @SuppressWarnings("unchecked")
+	public void robotInit() {
+        chooser = new SendableChooser();
+        chooser.addDefault("Do Nothing", "DoNothing");
+        chooser.addObject("Cross Baseline", "CrossBaseline");
+        chooser.addObject("Middle Gear", "MiddleGear");
+        chooser.addObject("Red: Right Gear", "RedRight");
+        chooser.addObject("Blue: Right Gear", "BlueRight");
+        chooser.addObject("Red: Left Gear", "RedLeft");
+        chooser.addObject("Blue: Left Gear", "BlueLeft");
+        chooser.addObject("Red: Middle Gear to Hopper", "RedMiddleHopper");
+        chooser.addObject("Blue: Middle Gear to Hopper", "BlueMiddleHopper");
+        chooser.addObject("Red: Right Gear to Hopper", "RedRightHopper");
+        chooser.addObject("Blue: Right Gear to Hopper", "BlueRightHopper");
+        chooser.addObject("Red: Left Gear to Hopper", "RedLeftHopper");
+        chooser.addObject("Blue: Left Gear to Hopper", "BlueLeftHopper");
+        chooser.addObject("Red: Middle Gear to Boiler", "RedMiddleBoiler");
+        chooser.addObject("Blue: Middle Gear to Boiler", "BlueMiddleBoiler");
+        chooser.addObject("Red: Right Gear to Boiler", "RedRightBoiler");
+        chooser.addObject("Blue: Right Gear to Boiler", "BlueRightBoiler");
+        chooser.addObject("Red: Left Gear to Boiler", "RedLeftBoiler");
+        chooser.addObject("Blue: Left Gear to Boiler", "BlueLeftBoiler");
+        chooser.addObject("Red: Hopper to Boiler", "RedHopperBoiler");
+        chooser.addObject("Blue: Hopper to Boiler", "BlueHopperBoiler");
+        chooser.addObject("Red: Start at Boiler", "RedStartBoiler");
+        chooser.addObject("Blue: Start at Boiler", "BlueStartBoiler");
+        SmartDashboard.putData("Auto choices", chooser);
     }
     
 	/**
@@ -50,25 +69,90 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
-//    	autoSelected = (String) chooser.getSelected();
-//		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
-//		System.out.println("Auto selected: " + autoSelected);
-    	AutoModes auto = new AutoModes(drive, flywheel);
+    	autoSelected = (String) chooser.getSelected();
+		autoSelected = SmartDashboard.getString("Auto Selector", "Do Nothing");
+		functions = new AutoFunctions(drive, flywheel, gyro);
+		auto = new AutoModes(functions);
+		System.out.println("Auto selected: " + autoSelected);
+
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-//    	switch(autoSelected) {
-//    	case customAuto:
-//        //Put custom auto code here   
-//            break;
-//    	case defaultAuto:
-//    	default:
-//    	//Put default auto code here
-//            break;
-//    	}
+    	switch(autoSelected) {
+    	case "DoNothing":
+    		auto.doNothing();
+    		break;
+    	case "CrossBaseline":
+    		auto.crossBaseline();
+    		break;
+    	case "MiddleGear":
+    		auto.middlePeg();
+    		break;
+    	case "RedRight":
+    		auto.rightPegRed();
+    		break;
+    	case "BlueRight":
+    		auto.rightPegBlue();
+    		break;
+    	case "RedLeft":
+    		auto.leftPegRed();
+    		break;
+    	case "BlueLeft":
+    		auto.leftPegBlue();
+    		break;
+    	case "RedMiddleHopper":
+    		auto.middleHopperRed();
+    		break;
+    	case "BlueMiddleHopper":
+    		auto.middleHopperBlue();
+    		break;
+    	case "RedRightHopper":
+    		auto.rightHopperRed();
+    		break;
+    	case "BlueRightHopper":
+    		auto.rightHopperBlue();
+    		break;
+    	case "RedLeftHopper":
+    		auto.leftHopperRed();
+    		break;
+    	case "BlueLeftHopper":
+    		auto.leftHopperBlue();
+    		break;
+    	case "RedMiddleBoiler":
+    		auto.middleBoilerRed();
+    		break;
+    	case "BlueMiddleBoiler":
+    		auto.middleBoilerBlue();
+    		break;
+    	case "RedRightBoiler":
+    		auto.rightBoilerRed();
+    		break;
+    	case "BlueRightBoiler":
+    		auto.rightBoilerBlue();
+    		break;
+    	case "RedLeftBoiler":
+    		auto.leftBoilerRed();
+    		break;
+    	case "BlueLeftBoiler":
+    		auto.leftBoilerBlue();
+    		break;
+    	case "RedHopperBoiler":
+    		auto.hopperBoilerRed();
+    		break;
+    	case "BlueHopperBoiler":
+    		auto.hopperBoilerBlue();
+    		break;
+    	case "RedStartBoiler":
+    		auto.startBoilerRed();
+    		break;
+    	case "BlueStartBoiler":
+    		auto.startBoilerBlue();
+    		break;
+
+    	}
     	
     	
     }
