@@ -70,15 +70,19 @@ public class DriveTrain {
 	public void shiftLow(){		//shifts into low gear ratio
 		shifter.set(DoubleSolenoid.Value.kForward);
 	}
-	public void driveToAngle(int angle){
+	
+	public void turnRightAngle(double angle){
 		double currentAngle = gyro.getYaw();
-		double difference = Math.abs(angle - currentAngle);
-		while(currentAngle!=angle){
-			if (difference<180){
-				turnRight(1); //fix speed
-			}else{
-				turnLeft(1);
-			}
+		double newAngle = currentAngle+angle;
+		while(currentAngle< newAngle){
+			turnRight(.5);
+		}
+	}
+	public void turnLeftAngle(double angle){
+		double currentAngle = gyro.getYaw();
+		double newAngle = currentAngle-angle;
+		while(currentAngle>newAngle){
+			turnLeft(.5);
 		}
 	}
 }
