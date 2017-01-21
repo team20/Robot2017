@@ -12,9 +12,11 @@ public class DriveTrain {
 	CANTalon Front_Left;
 	CANTalon Back_Right;
 	CANTalon Back_Left;
+	Navx gyro;
 	
-	public DriveTrain(Constants c){
+	public DriveTrain(Constants c, Navx g){
 		constants = c;
+		gyro = g;
 		Front_Right = new CANTalon(constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
 		Front_Left = new CANTalon(constants.DRIVETRAIN_MASTER_LEFT_MOTOR_PORT);
 		Back_Right = new CANTalon(constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT);
@@ -67,5 +69,16 @@ public class DriveTrain {
 	
 	public void shiftLow(){		//shifts into low gear ratio
 		shifter.set(DoubleSolenoid.Value.kForward);
+	}
+	public void driveToAngle(int angle){
+		double currentAngle = gyro.getYaw();
+		double difference = Math.abs(angle - currentAngle);
+		while(currentAngle!=angle){
+			if (difference<180){
+				turnRight(1); //fix speed
+			}else{
+				turnLeft(1);
+			}
+		}
 	}
 }

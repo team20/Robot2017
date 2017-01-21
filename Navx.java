@@ -14,20 +14,16 @@ public class Navx {
 		drive = d;
 	}
 	
-	public void turnToAngle(double angle){
-		angle = turnAngle;
-		currentAngle = gyro.getYaw();
-		if(turnAngle > 0){
-			//TODO turn right
-		}
-		if(turnAngle < 0){
-			//TODO turn left
-		}
-		else{
-			//do nothing
-		}
+	public double getYaw(){
+		double yaw = gyro.getYaw();
+		return yaw;
 	}
-	
+	public double getPitch(){
+		return gyro.getPitch();
+	}
+	public double getRoll(){
+		return gyro.getRoll();
+	}
 	public void reset(){
 		gyro.reset();
 	}
