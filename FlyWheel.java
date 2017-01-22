@@ -2,7 +2,6 @@ package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 
 public class FlyWheel {
 	CANTalon flywheelTalon = new CANTalon(Constants.FLYWHEEL_MOTOR_PORT);
@@ -15,7 +14,6 @@ public class FlyWheel {
 		flywheelTalon.changeControlMode(TalonControlMode.Speed);
 		flywheelTalon.configEncoderCodesPerRev(25);
 		double ticks = rpms/60*25; //ticks per second
-
 		
 		flywheelTalon.set(ticks);
 	}

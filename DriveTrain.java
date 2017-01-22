@@ -1,8 +1,11 @@
 package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 
 public class DriveTrain {
 	DriverStation d = DriverStation.getInstance();
@@ -12,11 +15,10 @@ public class DriveTrain {
 	CANTalon Front_Left;
 	CANTalon Back_Right;
 	CANTalon Back_Left;
-	Navx gyro;
+	AHRS gyro = new AHRS(Port.kMXP);
 	
-	public DriveTrain(Constants c, Navx g){
+	public DriveTrain(Constants c){
 		constants = c;
-		gyro = g;
 		Front_Right = new CANTalon(constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
 		Front_Left = new CANTalon(constants.DRIVETRAIN_MASTER_LEFT_MOTOR_PORT);
 		Back_Right = new CANTalon(constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT);
@@ -70,19 +72,15 @@ public class DriveTrain {
 	public void shiftLow(){		//shifts into low gear ratio
 		shifter.set(DoubleSolenoid.Value.kForward);
 	}
-	
-	public void turnRightAngle(double angle){
+	public void turnToAngle(int angle){
+		gyro.reset();
 		double currentAngle = gyro.getYaw();
-		double newAngle = currentAngle+angle;
-		while(currentAngle< newAngle){
-			turnRight(.5);
-		}
-	}
-	public void turnLeftAngle(double angle){
-		double currentAngle = gyro.getYaw();
-		double newAngle = currentAngle-angle;
-		while(currentAngle>newAngle){
-			turnLeft(.5);
+		while(currentAngle!=angle){
+			if(angle > 2 ){
+				turnRight(1);
+			}else if(angle < -2){
+				turnLeft(1);
+			}
 		}
 	}
 }

@@ -2,6 +2,7 @@ package org.usfirst.frc.team20.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,7 +23,8 @@ public class Robot extends IterativeRobot {
     DriverStation d = DriverStation.getInstance();
     DriveTrain drive = new DriveTrain(constants);
     FlyWheel flywheel = new FlyWheel(constants);
-    Navx gyro = new Navx(drive);
+    GroundCollector collector = new GroundCollector(constants);
+    Joystick driverJoy = new Joystick(0);
 //    T20GamePad driverJoy = new T20GamePad(0); //TODO import T20 classes
 	
 	
@@ -71,7 +73,7 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
     	autoSelected = (String) chooser.getSelected();
 		autoSelected = SmartDashboard.getString("Auto Selector", "Do Nothing");
-		functions = new AutoFunctions(drive, flywheel, gyro);
+		functions = new AutoFunctions(drive, flywheel);
 		auto = new AutoModes(functions);
 		System.out.println("Auto selected: " + autoSelected);
 
@@ -161,7 +163,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        
+    	  drive.drive(driverJoy.getRawAxis(5));
+          drive.turnLeft(driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER));
+          drive.turnRight(driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER));
     }
     
     /**
@@ -169,13 +173,18 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
     	double dashData = SmartDashboard.getNumber("DB/Slider 0", 0.0);
-    	System.out.print(dashData);
-    	if(dashData == 0){
-    		flywheel.stopFlywheel();
-    	}else{
-        	flywheel.flywheelToSpeedWithVoltage(dashData);
-
+    	System.out.println(dashData);
+    	if(driverJoy.getRawButton(1)){
+    		collector.intake(1);
     	}
+    	if(driverJoy.getRawButton(2)){
+        	if(dashData == 0){
+        		flywheel.stopFlywheel();
+        	}else{
+            	flywheel.flyWheeltoSpeedEncoders(dashData);
+        	}
+    	}
+    	
     }
     
 }

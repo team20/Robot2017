@@ -5,7 +5,7 @@ public class AutoModes {
 	public AutoModes(AutoFunctions f){
 		functions = f;
 	}
-
+	
 	public void doNothing(){	//robot does not move	
 		
 	}

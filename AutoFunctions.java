@@ -3,21 +3,20 @@ package org.usfirst.frc.team20.robot;
 public class AutoFunctions {
 	DriveTrain drive;
 	FlyWheel flywheel;
-	Navx gyro;
-	public AutoFunctions(DriveTrain d, FlyWheel f, Navx n){
+
+	public AutoFunctions(DriveTrain d, FlyWheel f){
 		drive = d;
 		flywheel = f;
-		gyro = n;
 	}
 	
 	public void crossBaseline(){
-		drive.driveTimeLeft(1, 5);
+		drive.driveTimeStraight(1, 4);
 	}
 	public void toMiddlePeg(){
-		
+		drive.driveTimeStraight(1, 2);
 	}
 	public void toLeftPegRed(){
-		
+
 	}
 	public void toLeftPegBlue(){
 		
@@ -83,6 +82,6 @@ public class AutoFunctions {
 		
 	}
 	public void shoot(){
-		
+		flywheel.flyWheeltoSpeedEncoders(5000);
 	}
 }
