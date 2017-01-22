@@ -15,7 +15,8 @@ public class Constants {
 	public static final int OPERATOR_JOYSTICK_PORT = 1;	//actual port
 	public static final int JOYSTICK_RIGHT_TRIGGER = 3;	//actual port
 	public static final int JOYSTICK_RIGHT_AXIS_UPDOWN = 5;	//actual port
-	public static final int JOYSTICK_LEFT_TRIGGER = 2;	
+	public static final int JOYSTICK_LEFT_AXIS_UPDOWN = 1; //actual port
+	public static final int JOYSTICK_LEFT_TRIGGER = 2;	//actual port
 	
 	//Solenoids
 	public static final int DRIVETRAIN_EXTEND_PORT = 1;

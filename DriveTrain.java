@@ -15,6 +15,8 @@ public class DriveTrain {
 	CANTalon Front_Left;
 	CANTalon Back_Right;
 	CANTalon Back_Left;
+	boolean moving = false;
+	double startingAngle = 0, adjustment;
 	AHRS gyro = new AHRS(Port.kMXP);
 	
 	public DriveTrain(Constants c){
@@ -25,18 +27,21 @@ public class DriveTrain {
 		Back_Left = new CANTalon(constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT);
 		
 	}	
-	public void drive(double speed){	//drives forward
-		Front_Right.set(speed);
-		Front_Left.set(-speed);
-		Back_Right.set(speed);
-		Back_Left.set(-speed);
+	public void drive(double speed, double rightTurn, double leftTurn){	//drives forward
+		Front_Right.set(speed - rightTurn + leftTurn);
+		Front_Left.set(-speed + leftTurn - rightTurn);
+		Back_Right.set(speed - rightTurn + leftTurn);
+		Back_Left.set(-speed + leftTurn - rightTurn);
 	}
 	public void driveTimeStraight(double speed, double time){	//drives forward for a specific time
 		double startTime = d.getMatchTime();
 		double endTime = startTime+time;
 		while(d.getMatchTime()<endTime){
-			drive(speed);
+			drive(speed, 0, 0);
 		}
+	}
+	public void driveDistanceStraight(double speed, double distance){
+		
 	}
 	public void turnRight(double speed){	//turns right
 		Front_Right.set(-speed);
