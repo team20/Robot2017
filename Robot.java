@@ -1,8 +1,13 @@
 package org.usfirst.frc.team20.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends IterativeRobot implements PIDOutput{
 	String autoSelected;
     SendableChooser chooser;
     AutoFunctions functions;
@@ -25,6 +30,16 @@ public class Robot extends IterativeRobot {
     FlyWheel flywheel = new FlyWheel(constants);
     GroundCollector collector = new GroundCollector(constants);
     Joystick driverJoy = new Joystick(0);
+    PIDController turnController;
+    AHRS gyro = new AHRS(SPI.Port.kMXP);
+    double rotateToAngleRate;
+    static final double kP = 0.03;
+    static final double kI = 0.00;
+    static final double kD = 0.00;
+    static final double kF = 0.00;
+    static final double kToleranceDegrees = 2.0f;
+
+    //Encoder encoder = new Encoder();
 //    T20GamePad driverJoy = new T20GamePad(0); //TODO import T20 classes
 	
 	
@@ -59,6 +74,12 @@ public class Robot extends IterativeRobot {
         chooser.addObject("Red: Start at Boiler", "RedStartBoiler");
         chooser.addObject("Blue: Start at Boiler", "BlueStartBoiler");
         SmartDashboard.putData("Auto choices", chooser);
+        turnController = new PIDController(kP, kI, kD, kF, gyro, this);
+        turnController.setInputRange(-180.0f,  180.0f);
+        turnController.setOutputRange(-1.0, 1.0);
+        turnController.setAbsoluteTolerance(kToleranceDegrees);
+        turnController.setContinuous(true);
+
     }
     
 	/**
@@ -153,6 +174,9 @@ public class Robot extends IterativeRobot {
     	case "BlueStartBoiler":
     		auto.startBoilerBlue();
     		break;
+    	default:
+    		turnController.setSetpoint(-90.0f);
+    		break;
 
     	}
     	
@@ -163,7 +187,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	  drive.drive(driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_AXIS_UPDOWN), driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER), driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER));
+    	  drive.drive(driverJoy.getRawAxis(constants.JOYSTICK_LEFT_AXIS_UPDOWN), driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER), driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER));
     }
     
     /**
@@ -184,5 +208,10 @@ public class Robot extends IterativeRobot {
     	}
     	
     }
+
+	@Override
+	public void pidWrite(double output) {
+		rotateToAngleRate = output;
+	}
     
 }
