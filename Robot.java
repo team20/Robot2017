@@ -163,9 +163,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	  drive.drive(driverJoy.getRawAxis(5));
-          drive.turnLeft(driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER));
-          drive.turnRight(driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER));
+    	  drive.drive(driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_AXIS_UPDOWN), driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER), driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER));
     }
     
     /**
