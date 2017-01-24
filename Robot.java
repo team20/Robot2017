@@ -1,13 +1,8 @@
 package org.usfirst.frc.team20.robot;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,11 +13,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot implements PIDOutput{
+public class Robot extends IterativeRobot{
 	String autoSelected;
     SendableChooser chooser;
     AutoFunctions functions;
     AutoModes auto;
+    VisionTargeting vT;
     
     Constants constants = new Constants();
     DriverStation d = DriverStation.getInstance();
@@ -30,14 +26,6 @@ public class Robot extends IterativeRobot implements PIDOutput{
     FlyWheel flywheel = new FlyWheel(constants);
     GroundCollector collector = new GroundCollector(constants);
     Joystick driverJoy = new Joystick(0);
-    PIDController turnController;
-    AHRS gyro = new AHRS(SPI.Port.kMXP);
-    double rotateToAngleRate;
-    static final double kP = 0.03;
-    static final double kI = 0.00;
-    static final double kD = 0.00;
-    static final double kF = 0.00;
-    static final double kToleranceDegrees = 2.0f;
 
     //Encoder encoder = new Encoder();
 //    T20GamePad driverJoy = new T20GamePad(0); //TODO import T20 classes
@@ -47,7 +35,7 @@ public class Robot extends IterativeRobot implements PIDOutput{
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
 	public void robotInit() {
         chooser = new SendableChooser();
         chooser.addDefault("Do Nothing", "DoNothing");
@@ -74,11 +62,9 @@ public class Robot extends IterativeRobot implements PIDOutput{
         chooser.addObject("Red: Start at Boiler", "RedStartBoiler");
         chooser.addObject("Blue: Start at Boiler", "BlueStartBoiler");
         SmartDashboard.putData("Auto choices", chooser);
-        turnController = new PIDController(kP, kI, kD, kF, gyro, this);
-        turnController.setInputRange(-180.0f,  180.0f);
-        turnController.setOutputRange(-1.0, 1.0);
-        turnController.setAbsoluteTolerance(kToleranceDegrees);
-        turnController.setContinuous(true);
+        
+        //TODO Find Real IP
+        vT = new VisionTargeting("12.345.67.890");
 
     }
     
@@ -94,7 +80,7 @@ public class Robot extends IterativeRobot implements PIDOutput{
     public void autonomousInit() {
     	autoSelected = (String) chooser.getSelected();
 		autoSelected = SmartDashboard.getString("Auto Selector", "Do Nothing");
-		functions = new AutoFunctions(drive, flywheel, collector);
+		functions = new AutoFunctions(drive, flywheel, vT);
 		auto = new AutoModes(functions);
 		System.out.println("Auto selected: " + autoSelected);
 
@@ -174,10 +160,6 @@ public class Robot extends IterativeRobot implements PIDOutput{
     	case "BlueStartBoiler":
     		auto.startBoilerBlue();
     		break;
-    	default:
-    		turnController.setSetpoint(-90.0f);
-    		break;
-
     	}
     	
     	
@@ -187,32 +169,26 @@ public class Robot extends IterativeRobot implements PIDOutput{
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	  drive.drive(driverJoy.getRawAxis(constants.JOYSTICK_LEFT_AXIS_UPDOWN), driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER),
-                    driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER));
-//     	double speed = driverJoy.getRawAxis(constants.DRIVER_JOYSTICK_PORT);
-//     	double rightSpeed = driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER);
-//     	double leftSpeed = driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER);
-//     	if(speed > 0 || rightSpeed > 0 || leftSpeed > 0){
-//     		drive.drive(speed, rightSpeed, leftSpeed);
-//     	}
+    	  drive.drive(driverJoy.getRawAxis(Constants.JOYSTICK_LEFT_AXIS_UPDOWN), driverJoy.getRawAxis(Constants.JOYSTICK_RIGHT_TRIGGER), driverJoy.getRawAxis(Constants.JOYSTICK_LEFT_TRIGGER));
     }
     
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    	double dashDataCollector = SmartDashboard.getNumber("DB/Slider 1", 0.0);
+    	double dashData = SmartDashboard.getNumber("DB/Slider 0", 0.0);
+    	System.out.println(dashData);
     	if(driverJoy.getRawButton(1)){
-    		collector.intake(dashDataCollector/5);
+    		collector.intake(1);
     	}
     	if(driverJoy.getRawButton(2)){
-    		collector.stopCollector();
+        	if(dashData == 0){
+        		flywheel.stopFlywheel();
+        	}else{
+            	flywheel.flyWheeltoSpeedEncoders(dashData);
+        	}
     	}
+    	
     }
-
-	public void pidWrite(double output) {
-		rotateToAngleRate = output;
-	}
     
-}
 }
