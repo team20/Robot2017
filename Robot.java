@@ -1,5 +1,7 @@
 package org.usfirst.frc.team20.robot;
 
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -73,7 +75,7 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
     	autoSelected = (String) chooser.getSelected();
 		autoSelected = SmartDashboard.getString("Auto Selector", "Do Nothing");
-		functions = new AutoFunctions(drive, flywheel);
+		functions = new AutoFunctions(drive, flywheel, collector);
 		auto = new AutoModes(functions);
 		System.out.println("Auto selected: " + autoSelected);
 
@@ -163,26 +165,24 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	  drive.drive(driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_AXIS_UPDOWN), driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER), driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER));
+    	double speed = driverJoy.getRawAxis(constants.DRIVER_JOYSTICK_PORT);
+    	double rightSpeed = driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER);
+    	double leftSpeed = driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER);
+    	if(speed > 0 || rightSpeed > 0 || leftSpeed > 0){
+    		drive.drive(speed, rightSpeed, leftSpeed);
+    	}
     }
     
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    	double dashData = SmartDashboard.getNumber("DB/Slider 0", 0.0);
-    	System.out.println(dashData);
+    	double dashDataCollector = SmartDashboard.getNumber("DB/Slider 1", 0.0);
     	if(driverJoy.getRawButton(1)){
-    		collector.intake(1);
+    		collector.intake(dashDataCollector/5);
     	}
     	if(driverJoy.getRawButton(2)){
-        	if(dashData == 0){
-        		flywheel.stopFlywheel();
-        	}else{
-            	flywheel.flyWheeltoSpeedEncoders(dashData);
-        	}
+    		collector.stopCollector();
     	}
-    	
     }
-    
 }

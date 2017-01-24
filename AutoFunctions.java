@@ -1,12 +1,15 @@
 package org.usfirst.frc.team20.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class AutoFunctions {
 	DriveTrain drive;
 	FlyWheel flywheel;
-
-	public AutoFunctions(DriveTrain d, FlyWheel f){
+	GroundCollector collector;
+	public AutoFunctions(DriveTrain d, FlyWheel f, GroundCollector c){
 		drive = d;
 		flywheel = f;
+		collector = c;
 	}
 	
 	public void crossBaseline(){
@@ -16,7 +19,7 @@ public class AutoFunctions {
 		drive.driveTimeStraight(1, 2);
 	}
 	public void toLeftPegRed(){
-
+		
 	}
 	public void toLeftPegBlue(){
 		
@@ -82,6 +85,14 @@ public class AutoFunctions {
 		
 	}
 	public void shoot(){
-		flywheel.flyWheeltoSpeedEncoders(5000);
+		String rpm = SmartDashboard.getString("DB/String 0", "");
+    	String p = SmartDashboard.getString("DB/String 1", "");
+    	String i = SmartDashboard.getString("DB/String 2", "");
+    	String d = SmartDashboard.getString("DB/String 3", "");
+    	String f = SmartDashboard.getString("DB/String 4", "");    	
+    	double RPM = Integer.parseInt(rpm);
+       	flywheel.shootWithEncoder(RPM,p,i,d,f);
+       	collector.intake(1);
+       	System.out.println(flywheel.flywheel.getSpeed());
 	}
 }
