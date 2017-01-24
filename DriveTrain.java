@@ -1,6 +1,7 @@
 package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.TalonControlMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -15,7 +16,6 @@ public class DriveTrain {
 	CANTalon Front_Left;
 	CANTalon Back_Right;
 	CANTalon Back_Left;
-	boolean moving = false;
 	double startingAngle = 0, adjustment;
 	AHRS gyro = new AHRS(Port.kMXP);
 	
@@ -28,9 +28,23 @@ public class DriveTrain {
 		
 	}	
 	public void drive(double speed, double rightTurn, double leftTurn){	//drives forward
-		Front_Right.set(speed - rightTurn + leftTurn);
+		
+		if(speed < 0.1 && speed > -0.1){
+			gyro.reset();
+			startingAngle = gyro.getYaw();
+			adjustment = 0;
+		}
+		
+		if(gyro.getYaw() > 0.1)
+			adjustment = (speed*0.125); //0.125 can be changed so that it is > 0.1 and < 0.14
+		else if(gyro.getYaw() < -0.1)
+			adjustment = -(speed*0.125);//0.125 can be changed so that it is > 0.1 and < 0.14
+		else
+			adjustment = 0;
+		
+		Front_Right.set(speed - rightTurn + leftTurn - adjustment);
 		Front_Left.set(-speed + leftTurn - rightTurn);
-		Back_Right.set(speed - rightTurn + leftTurn);
+		Back_Right.set(speed - rightTurn + leftTurn - adjustment);
 		Back_Left.set(-speed + leftTurn - rightTurn);
 	}
 	public void driveTimeStraight(double speed, double time){	//drives forward for a specific time
