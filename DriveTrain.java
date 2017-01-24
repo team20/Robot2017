@@ -6,9 +6,12 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 
-public class DriveTrain {
+public class DriveTrain implements PIDOutput{
 	DriverStation d = DriverStation.getInstance();
 	DoubleSolenoid shifter = new DoubleSolenoid(1, 2);
 	Constants constants;
@@ -18,6 +21,13 @@ public class DriveTrain {
 	CANTalon Back_Left;
 	double startingAngle = 0, adjustment;
 	AHRS gyro = new AHRS(Port.kMXP);
+	PIDController turnController;
+    double rotateToAngleRate;
+    static final double kP = 0.03;
+    static final double kI = 0.00;
+    static final double kD = 0.00;
+    static final double kF = 0.00;
+    static final double kToleranceDegrees = 2.0f;
 	
 	public DriveTrain(Constants c){
 		constants = c;
@@ -25,6 +35,13 @@ public class DriveTrain {
 		Front_Left = new CANTalon(constants.DRIVETRAIN_MASTER_LEFT_MOTOR_PORT);
 		Back_Right = new CANTalon(constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT);
 		Back_Left = new CANTalon(constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT);
+		
+
+        turnController = new PIDController(kP, kI, kD, kF, gyro, this);
+        turnController.setInputRange(-180.0f,  180.0f);
+        turnController.setOutputRange(-1.0, 1.0);
+        turnController.setAbsoluteTolerance(kToleranceDegrees);
+        turnController.setContinuous(true);
 		
 	}	
 	public void drive(double speed, double rightTurn, double leftTurn){	//drives forward
@@ -91,15 +108,11 @@ public class DriveTrain {
 	public void shiftLow(){		//shifts into low gear ratio
 		shifter.set(DoubleSolenoid.Value.kForward);
 	}
-	public void turnToAngle(int angle){
-		gyro.reset();
-		double currentAngle = gyro.getYaw();
-		while(currentAngle!=angle){
-			if(angle > 2 ){
-				turnRight(1);
-			}else if(angle < -2){
-				turnLeft(1);
-			}
-		}
+	public void turnAngle(double angle){
+		turnController.setSetpoint(angle);
+	}
+	@Override
+	public void pidWrite(double output) {
+		rotateToAngleRate = output;
 	}
 }

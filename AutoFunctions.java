@@ -1,25 +1,29 @@
 package org.usfirst.frc.team20.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class AutoFunctions {
 	DriveTrain drive;
 	FlyWheel flywheel;
-	GroundCollector collector;
-	public AutoFunctions(DriveTrain d, FlyWheel f, GroundCollector c){
+	VisionTargeting vT;
+
+	public AutoFunctions(DriveTrain d, FlyWheel f, VisionTargeting vT){
 		drive = d;
 		flywheel = f;
-		collector = c;
+		this.vT = vT;
 	}
 	
 	public void crossBaseline(){
 		drive.driveTimeStraight(1, 4);
 	}
 	public void toMiddlePeg(){
-		drive.driveTimeStraight(1, 2);
+		//drive.driveTimeStraight(1, 2);
+		vT.updateImage();
+		drive.turnAngle(vT.getFirstAngle());
+		drive.driveDistanceStraight(0.5, vT.getFirstDistance());
+		drive.turnAngle(vT.getSecondAngle());
+		drive.driveDistanceStraight(0.5, vT.getSecondDistance());
 	}
 	public void toLeftPegRed(){
-		
+
 	}
 	public void toLeftPegBlue(){
 		
@@ -85,14 +89,6 @@ public class AutoFunctions {
 		
 	}
 	public void shoot(){
-		String rpm = SmartDashboard.getString("DB/String 0", "");
-    	String p = SmartDashboard.getString("DB/String 1", "");
-    	String i = SmartDashboard.getString("DB/String 2", "");
-    	String d = SmartDashboard.getString("DB/String 3", "");
-    	String f = SmartDashboard.getString("DB/String 4", "");    	
-    	double RPM = Integer.parseInt(rpm);
-       	flywheel.shootWithEncoder(RPM,p,i,d,f);
-       	collector.intake(1);
-       	System.out.println(flywheel.flywheel.getSpeed());
+		flywheel.flyWheeltoSpeedEncoders(5000);
 	}
 }
