@@ -17,22 +17,30 @@ public class AutoModes {
 	public void middlePeg(){
 		functions.toMiddlePeg();
 	}
-	
-	public void rightPegRed(){
-		functions.toRightPegRed();
+
+	public void sidePeg(){
+		functions.toSidePeg();
 	}
 	
-	public void rightPegBlue(){
-		functions.toRightPegBlue();
-	}
-	
-	public void leftPegRed(){
-		functions.toLeftPegRed();
-	}
-	
-	public void leftPegBlue(){
-		functions.toLeftPegBlue();
-	} 
+//	public void rightPegRed(){
+//		functions.toSidePeg();
+////		functions.toRightPegRed();
+//	}
+//	
+//	public void rightPegBlue(){
+//		functions.toSidePeg();
+////		functions.toRightPegBlue();
+//	}
+//	
+//	public void leftPegRed(){
+//		functions.toSidePeg();
+////		functions.toLeftPegRed();
+//	}
+//	
+//	public void leftPegBlue(){
+//		functions.toSidePeg();
+////		functions.toLeftPegBlue();
+//	} 
 	
 	public void middleHopperRed(){	//robot puts a gear on the middle peg and then triggers a hopper
 		functions.toMiddlePeg();
@@ -45,22 +53,26 @@ public class AutoModes {
 	}
 	
 	public void leftHopperRed(){	//robot puts a gear on the left peg and then triggers a hopper
-		functions.toLeftPegRed();
+		functions.toSidePeg();
+//		functions.toLeftPegRed();
 		functions.leftPegToHopperRed();
 	}
 
 	public void leftHopperBlue(){	//robot puts a gear on the left peg and then triggers a hopper
-		functions.toLeftPegBlue();
+		functions.toSidePeg();
+//		functions.toLeftPegBlue();
 		functions.leftPegToHopperBlue();
 	}
 
 	public void rightHopperRed(){	//robot puts a gear on the right peg and then triggers a hopper
-		functions.toRightPegRed();
+		functions.toSidePeg();
+//	functions.toRightPegRed();
 		functions.rightPegToHopperRed();
 	}
 
 	public void rightHopperBlue(){	//robot puts a gear on the right peg and then triggers a hopper
-		functions.toRightPegBlue();
+		functions.toSidePeg();
+//	functions.toRightPegBlue();
 		functions.rightPegToHopperBlue();
 	}
 	
@@ -77,25 +89,29 @@ public class AutoModes {
 	}
 
 	public void leftBoilerRed(){	//robot puts a gear on the left peg and then shoots at the boiler
-		functions.toLeftPegRed();
+		functions.toSidePeg();
+//	functions.toLeftPegRed();
 		functions.leftPegToBoilerRed();
 		functions.shoot();
 	}
 
 	public void leftBoilerBlue(){	//robot puts a gear on the left peg and then shoots at the boiler
-		functions.toLeftPegBlue();
+		functions.toSidePeg();
+//	functions.toLeftPegBlue();
 		functions.leftPegToBoilerBlue();
 		functions.shoot();
 	}
 
 	public void rightBoilerRed(){	//robot puts a gear on the right peg and then shoots at the boiler
-		functions.toRightPegRed();
+		functions.toSidePeg();
+//	functions.toRightPegRed();
 		functions.rightPegToBoilerRed();
 		functions.shoot();
 	}
 
 	public void rightBoilerBlue(){	//robot puts a gear on the right peg and then shoots at the boiler
-		functions.toRightPegBlue();
+		functions.toSidePeg();
+//	functions.toRightPegBlue();
 		functions.rightPegToBoilerBlue();
 		functions.shoot();
 	}

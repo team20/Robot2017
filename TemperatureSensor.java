@@ -1,4 +1,7 @@
+package org.usfirst.frc.team20.robot;
+
 import java.util.ArrayList;
+
 public class TemperatureSensor { 
 	ArrayList<Double> Temperature = new ArrayList<Double>();
 

@@ -3,6 +3,7 @@ package org.usfirst.frc.team20.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,36 +16,38 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot{
 	String autoSelected;
-    SendableChooser chooser;
+    SendableChooser<String> chooser;
     AutoFunctions functions;
     AutoModes auto;
-    VisionTargeting vT;
-    
+    VisionTargeting vision;
     Constants constants = new Constants();
     DriverStation d = DriverStation.getInstance();
-    DriveTrain drive = new DriveTrain(constants);
+    //DriveTrain drive = new DriveTrain(constants);
     FlyWheel flywheel = new FlyWheel(constants);
     GroundCollector collector = new GroundCollector(constants);
     Joystick driverJoy = new Joystick(0);
-
-    //Encoder encoder = new Encoder();
-//    T20GamePad driverJoy = new T20GamePad(0); //TODO import T20 classes
-	
+    PIDController turnController;
+    double rotateToAngleRate;
+    static final double kP = 0.03;
+    static final double kI = 0.00;
+    static final double kD = 0.00;
+    static final double kF = 0.00;
+    static final double kToleranceDegrees = 2.0f;	
 	
 	/**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	public void robotInit() {
-        chooser = new SendableChooser();
+    public void robotInit() {
+        chooser = new SendableChooser<String>();
         chooser.addDefault("Do Nothing", "DoNothing");
         chooser.addObject("Cross Baseline", "CrossBaseline");
         chooser.addObject("Middle Gear", "MiddleGear");
-        chooser.addObject("Red: Right Gear", "RedRight");
-        chooser.addObject("Blue: Right Gear", "BlueRight");
-        chooser.addObject("Red: Left Gear", "RedLeft");
-        chooser.addObject("Blue: Left Gear", "BlueLeft");
+        chooser.addObject("Side Gear, Red or Blue", "SideGear");
+        //        chooser.addObject("Red: Right Gear", "RedRight");
+//        chooser.addObject("Blue: Right Gear", "BlueRight");
+//        chooser.addObject("Red: Left Gear", "RedLeft");
+//        chooser.addObject("Blue: Left Gear", "BlueLeft");
         chooser.addObject("Red: Middle Gear to Hopper", "RedMiddleHopper");
         chooser.addObject("Blue: Middle Gear to Hopper", "BlueMiddleHopper");
         chooser.addObject("Red: Right Gear to Hopper", "RedRightHopper");
@@ -62,10 +65,8 @@ public class Robot extends IterativeRobot{
         chooser.addObject("Red: Start at Boiler", "RedStartBoiler");
         chooser.addObject("Blue: Start at Boiler", "BlueStartBoiler");
         SmartDashboard.putData("Auto choices", chooser);
-        
-        //TODO Find Real IP
-        vT = new VisionTargeting("12.345.67.890");
-
+        Double f = Double.parseDouble(SmartDashboard.getString("DB/String 4", ""));
+        flywheel.setF(f);
     }
     
 	/**
@@ -80,7 +81,8 @@ public class Robot extends IterativeRobot{
     public void autonomousInit() {
     	autoSelected = (String) chooser.getSelected();
 		autoSelected = SmartDashboard.getString("Auto Selector", "Do Nothing");
-		functions = new AutoFunctions(drive, flywheel, vT);
+		vision = new VisionTargeting("");	//TODO insert IP Address here
+		//functions = new AutoFunctions(drive, flywheel, collector, vision);
 		auto = new AutoModes(functions);
 		System.out.println("Auto selected: " + autoSelected);
 
@@ -100,18 +102,21 @@ public class Robot extends IterativeRobot{
     	case "MiddleGear":
     		auto.middlePeg();
     		break;
-    	case "RedRight":
-    		auto.rightPegRed();
+    	case "SideGear":
+    		auto.sidePeg();
     		break;
-    	case "BlueRight":
-    		auto.rightPegBlue();
-    		break;
-    	case "RedLeft":
-    		auto.leftPegRed();
-    		break;
-    	case "BlueLeft":
-    		auto.leftPegBlue();
-    		break;
+//    	case "RedRight":
+//    		auto.rightPegRed();
+//    		break;
+//    	case "BlueRight":
+//    		auto.rightPegBlue();
+//    		break;
+//    	case "RedLeft":
+//    		auto.leftPegRed();
+//    		break;
+//    	case "BlueLeft":
+//    		auto.leftPegBlue();
+//    		break;
     	case "RedMiddleHopper":
     		auto.middleHopperRed();
     		break;
@@ -160,6 +165,10 @@ public class Robot extends IterativeRobot{
     	case "BlueStartBoiler":
     		auto.startBoilerBlue();
     		break;
+    	default:
+    		turnController.setSetpoint(-90.0f);
+    		break;
+
     	}
     	
     	
@@ -169,26 +178,42 @@ public class Robot extends IterativeRobot{
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	  drive.drive(driverJoy.getRawAxis(Constants.JOYSTICK_LEFT_AXIS_UPDOWN), driverJoy.getRawAxis(Constants.JOYSTICK_RIGHT_TRIGGER), driverJoy.getRawAxis(Constants.JOYSTICK_LEFT_TRIGGER));
+    	  //drive.drive(driverJoy.getRawAxis(Constants.JOYSTICK_LEFT_AXIS_UPDOWN),
+    			  //driverJoy.getRawAxis(Constants.JOYSTICK_RIGHT_TRIGGER), 
+    			  //driverJoy.getRawAxis(Constants.JOYSTICK_LEFT_TRIGGER));
+//     	double speed = driverJoy.getRawAxis(constants.DRIVER_JOYSTICK_PORT);
+//     	double rightSpeed = driverJoy.getRawAxis(constants.JOYSTICK_RIGHT_TRIGGER);
+//     	double leftSpeed = driverJoy.getRawAxis(constants.JOYSTICK_LEFT_TRIGGER);
+//     	if(speed > 0 || rightSpeed > 0 || leftSpeed > 0){
+//     		drive.drive(speed, rightSpeed, leftSpeed);
+//     	}
     }
     
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    	double dashData = SmartDashboard.getNumber("DB/Slider 0", 0.0);
-    	System.out.println(dashData);
+    	double dashDataCollector = SmartDashboard.getNumber("DB/Slider 1", 0.0);
+    	double RPMS, p, i, d;
+    	RPMS = Double.parseDouble(SmartDashboard.getString("DB/String 0", ""));
+    	p = Double.parseDouble(SmartDashboard.getString("DB/String 1", ""));
+    	i = Double.parseDouble(SmartDashboard.getString("DB/String 2", ""));
+    	d = Double.parseDouble(SmartDashboard.getString("DB/String 3", ""));
+    	
+
     	if(driverJoy.getRawButton(1)){
-    		collector.intake(1);
+    		collector.intake(dashDataCollector/5);
     	}
     	if(driverJoy.getRawButton(2)){
-        	if(dashData == 0){
-        		flywheel.stopFlywheel();
-        	}else{
-            	flywheel.flyWheeltoSpeedEncoders(dashData);
-        	}
+    		collector.stopCollector();
     	}
-    	
+    	if(driverJoy.getRawButton(3)){
+    		flywheel.shootWithEncoders(RPMS, p, i, d);
+    	}
+    	if(driverJoy.getRawButton(4)){
+    		flywheel.stopFlywheel();
+    	}
     }
     
 }
+

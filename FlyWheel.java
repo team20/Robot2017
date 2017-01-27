@@ -1,7 +1,6 @@
 package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 public class FlyWheel {
@@ -14,12 +13,14 @@ public class FlyWheel {
 		flywheel.changeControlMode(TalonControlMode.Voltage);
 		flywheel.set(-speed);
 	}
-	public void shootWithEncoder(double RPMS,String p, String i, String d, String f){
+	public void setF(double f){
+		flywheel.setF(f);
+	}
+	public void shootWithEncoders(double RPMS, double p, double i, double d){
 		flywheel.changeControlMode(TalonControlMode.Speed);
-		flywheel.setF(Double.parseDouble(f));
-		flywheel.setP(Double.parseDouble(p));
-		flywheel.setI(Double.parseDouble(i));
-		flywheel.setD(Double.parseDouble(d));
+		flywheel.setP(p);
+		flywheel.setI(i);
+		flywheel.setD(d);
 		//flywheel.setP(5.0);
 		//flywheel.setI(.00001);
 		//flywheel.setD(.00001);
