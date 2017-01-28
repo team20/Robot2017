@@ -27,8 +27,8 @@ public class DriveTrain implements PIDOutput{
 			Constants.DRIVETRAIN_LEFT_ENCODER_CHANNEL_B, false, EncodingType.k4X);
 	double startingAngle = 0, adjustment;
 	double rotateToAngleRate;
-    static final double kP = 0.03;
-    static final double kI = 0.00;
+    static final double kP = 0.02;
+    static final double kI = 0.0025;
     static final double kD = 0.00;
     static final double kF = 0.00;
     static final double kToleranceDegrees = 2.0f;
@@ -69,6 +69,49 @@ public class DriveTrain implements PIDOutput{
 		Back_Left.set(-speed + leftTurn - rightTurn);
 	}
 	
+	
+	//Copied from wpilib arcadeDrive
+	public void drive(double moveValue, double rotateValue){
+		
+		double leftMotorSpeed;
+	    	double rightMotorSpeed;
+
+	    //moveValue = limit(moveValue);
+	    //rotateValue = limit(rotateValue);
+		
+		if (moveValue >= 0.0) {
+		    moveValue = moveValue * moveValue;
+		} else {
+			  moveValue = -(moveValue * moveValue);
+		}
+	    if (rotateValue >= 0.0) {
+		      rotateValue = rotateValue * rotateValue;
+	    } else {
+		      rotateValue = -(rotateValue * rotateValue);
+	    }
+		    
+		if (moveValue > 0.0) {
+		    if (rotateValue > 0.0) {
+		    	leftMotorSpeed = moveValue - rotateValue;
+		    	rightMotorSpeed = Math.max(moveValue, rotateValue);
+		    } else {
+		    	leftMotorSpeed = Math.max(moveValue, -rotateValue);
+		    	rightMotorSpeed = moveValue + rotateValue;
+		    }
+		} else {
+		    if (rotateValue > 0.0) {
+		    	leftMotorSpeed = -Math.max(-moveValue, rotateValue);
+		    	rightMotorSpeed = moveValue + rotateValue;
+		    } else {
+		    	leftMotorSpeed = moveValue - rotateValue;
+		    	rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
+		    }
+		}
+		
+		leftMaster.set(leftMotorSpeed);
+		rightMaster.set(rightMotorSpeed);	
+	}
+	
 	public void driveDistanceStraight(double speed, double inches){
 		rightEnc.reset();
 		leftEnc.reset();
@@ -106,6 +149,16 @@ public class DriveTrain implements PIDOutput{
 	
 	public void turnAngle(double angle){
 		turnController.setSetpoint(angle);
+		double currentRotationRate;
+		turnController.enable();
+		currentRotationRate = rotateToAngleRate;
+		try {
+			myRobot.arcadeDrive(0, currentRotationRate);
+			//System.out.println(hrs.getAngle());
+		} catch ( RuntimeException ex ) {
+			DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
+		}
+		Timer.delay(0.005);
 	}
 	
 	public void pidWrite(double output) {
