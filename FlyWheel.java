@@ -4,32 +4,37 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
 public class FlyWheel {
-	CANTalon flywheel = new CANTalon(Constants.FLYWHEEL_MOTOR_PORT);
-	Constants constants;
-	public FlyWheel(Constants c){
-		constants = c;
+	CANTalon flywheelMaster, flywheelFollower;
+	
+	public FlyWheel(){
+		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MASTER_PORT);
+		flywheelFollower = new CANTalon(Constants.FLYWHEEL_FOLLOWER_PORT);
+		flywheelFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
+		flywheelFollower.set(flywheelMaster.getDeviceID());
 	}	
+	
 	public void shoot(double speed){
-		flywheel.changeControlMode(TalonControlMode.Voltage);
-		flywheel.set(-speed);
+		flywheelMaster.changeControlMode(TalonControlMode.Voltage);
+		flywheelMaster.set(-speed);
 	}
 	public void setF(double f){
-		flywheel.setF(f);
+		flywheelMaster.setF(f);
+		flywheelFollower.setF(f);
 	}
 	public void shootWithEncoders(double RPMS, double p, double i, double d){
-		flywheel.changeControlMode(TalonControlMode.Speed);
-		flywheel.setP(p);
-		flywheel.setI(i);
-		flywheel.setD(d);
-		//flywheel.setP(5.0);
-		//flywheel.setI(.00001);
-		//flywheel.setD(.00001);
+		flywheelMaster.changeControlMode(TalonControlMode.Speed);
+		flywheelMaster.setP(p);
+		flywheelMaster.setI(i);
+		flywheelMaster.setD(d);
+		//flywheelMaster.setP(5.0);
+		//flywheelMaster.setI(.00001);
+		//flywheelMaster.setD(.00001);
 		System.out.println(RPMS + "RPMS");
 		double cps = RPMS/60*1024;	//cycles per second
 		System.out.println(cps + "CPS");
-		flywheel.set(cps);
+		flywheelMaster.set(cps);
 	}
 	public void stopFlywheel(){
-		flywheel.set(0);
+		flywheelMaster.set(0);
 	}
 }

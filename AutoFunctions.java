@@ -12,10 +12,11 @@ public class AutoFunctions {
 		vision = vT;
 		collector = c;	
 	}
-	
+
 	public void crossBaseline(){
 		drive.driveDistanceStraight(1, 20);	//TODO get about the number of inches
 	}
+
 	public void toMiddlePeg(){
 		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
 		vision.updateImage();
@@ -24,6 +25,7 @@ public class AutoFunctions {
 		drive.turnAngle(vision.getSecondAngle());
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
+	
 	public void toSidePeg(){
 		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
 		vision.updateImage();
@@ -32,6 +34,7 @@ public class AutoFunctions {
 		drive.turnAngle(vision.getSecondAngle());
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
+	
 //	public void toLeftPegRed(){
 //		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
 //		vision.updateImage();
@@ -175,7 +178,7 @@ public class AutoFunctions {
 		drive.turnAngle(20);	//TODO calculate angle
 	}
 	public void shoot(){
-		flywheel.shootWithEncoders(5000.0, Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, 
+		flywheel.shootWithEncoders(3000.0, Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, 
 				Constants.FLYWHEEL_D);
 		collector.intake(1);
 	}

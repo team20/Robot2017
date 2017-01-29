@@ -66,13 +66,13 @@ public class AutoModes {
 
 	public void rightHopperRed(){	//robot puts a gear on the right peg and then triggers a hopper
 		functions.toSidePeg();
-//	functions.toRightPegRed();
+//		functions.toRightPegRed();
 		functions.rightPegToHopperRed();
 	}
 
 	public void rightHopperBlue(){	//robot puts a gear on the right peg and then triggers a hopper
 		functions.toSidePeg();
-//	functions.toRightPegBlue();
+//		functions.toRightPegBlue();
 		functions.rightPegToHopperBlue();
 	}
 	
