@@ -29,6 +29,7 @@ public class Robot extends IterativeRobot {
 	Controller operatorJoy;
 	Hopper hopper;
 	double rotateToAngleRate;
+	boolean hopperToFlywheel;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -208,6 +209,11 @@ public class Robot extends IterativeRobot {
 		}
 		if (operatorJoy.getButtonX()) {
 			hopper.hopperMotorIntoFlywheel(1);
+			hopperToFlywheel = true;
+		}
+		while(hopperToFlywheel){
+			hopper.actuateAgitator();
+			hopper.retractAgitator();
 		}
 		if (operatorJoy.getButtonY()) {
 			hopper.hopperMotorIntoHopper(1);
@@ -225,6 +231,7 @@ public class Robot extends IterativeRobot {
 			flywheel.stopFlywheel();
 			hopper.stopHopper();
 			collector.stopCollector();
+			hopperToFlywheel = false;
 		}
 		
 	}
