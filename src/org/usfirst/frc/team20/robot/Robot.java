@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-	
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -68,10 +68,10 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Red: Start at Boiler", "RedStartBoiler");
 		chooser.addObject("Blue: Start at Boiler", "BlueStartBoiler");
 		SmartDashboard.putData("Auto choices", chooser);
-//		if(drive.rightEncoder()){
-//			System.out.println("Right Encoder Working");
-//		}
-		if(drive.leftEncoder()){
+		// if(drive.rightEncoder()){
+		// System.out.println("Right Encoder Working");
+		// }
+		if (drive.leftEncoder()) {
 			System.out.println("Left Encoder Working");
 		}
 
@@ -114,18 +114,18 @@ public class Robot extends IterativeRobot {
 		case "SideGear":
 			auto.sidePeg();
 			break;
-// 		case "RedRight":
-// 			auto.rightPegRed();
-// 			break;
-// 		case "BlueRight":
-// 			auto.rightPegBlue();
-// 			break;
-// 		case "RedLeft":
-// 			auto.leftPegRed();
-// 			break;
-// 		case "BlueLeft":
-// 			auto.leftPegBlue();
-// 			break;
+		// case "RedRight":
+		// auto.rightPegRed();
+		// break;
+		// case "BlueRight":
+		// auto.rightPegBlue();
+		// break;
+		// case "RedLeft":
+		// auto.leftPegRed();
+		// break;
+		// case "BlueLeft":
+		// auto.leftPegBlue();
+		// break;
 		case "RedMiddleHopper":
 			auto.middleHopperRed();
 			break;
@@ -181,15 +181,55 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		gearCamera.startUSBCamera();
-		highGoalCamera.startUSBCamera();
-		drive.masterLeft.set(.5);
+		// gearCamera.startUSBCamera();
+		// highGoalCamera.startUSBCamera();
+		// drive.masterLeft.set(.5);
+		double speedStraight = driverJoy.getLeftYAxis();
+		double speedLeft = driverJoy.getLeftTriggerAxis();
+		double speedRight = driverJoy.getRightTriggerAxis();
+		if (speedStraight != 0 || speedLeft > 0 || speedRight > 0) {
+			drive.drive(speedStraight, speedRight, speedLeft);
+		}
+		if (driverJoy.getButtonLeftBumper()) {
+			drive.shiftHigh();
+		}
+		if (driverJoy.getButtonRightBumper()) {
+			drive.shiftLow();
+		}
+		if (operatorJoy.getButtonA()) {
+			collector.intake();
+		}
+		if (operatorJoy.getButtonB()) {
+			collector.outtake();
+		}
+		if (operatorJoy.getButtonX()) {
+			hopper.intake();
+		}
+		if (operatorJoy.getButtonY()) {
+			hopper.outtake();
+		}
+		if (operatorJoy.getButtonRightBumper()) {
+			gear.in();
+		}
+		if (operatorJoy.getButtonLeftBumper()) {
+			gear.out();
+		}
+		if (operatorJoy.getButtonDUp()) {
+			flywheel.shootWithEncoders();
+		}
+		if (operatorJoy.getButtonBack()) {
+			flywheel.stop();
+			hopper.stop();
+			gear.stop();
+			collector.stop();
+		}
+		
 	}
 
 	/**
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
-		
+
 	}
 }
