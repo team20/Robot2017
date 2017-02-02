@@ -61,7 +61,6 @@ public class DriveTrain implements PIDOutput {
 			startingAngle = gyro.getYaw();
 			adjustment = 0;
 		}
-
 		if (gyro.getYaw() > 0.1)
 			adjustment = (speed * 0.125); // 0.125 can be changed so that it is
 											// > 0.1 and < 0.14
@@ -70,51 +69,11 @@ public class DriveTrain implements PIDOutput {
 											// > 0.1 and < 0.14
 		else
 			adjustment = 0;
-
+		
 		masterRight.set(speed - rightTurn + leftTurn - adjustment);
 		masterLeft.set(-speed + leftTurn - rightTurn);
 	}
 
-	// Copied from wpilib arcadeDrive
-	public void arcadeDrive(double moveValue, double rotateValue) {
-		double leftMotorSpeed;
-		double rightMotorSpeed;
-
-		// moveValue = limit(moveValue);
-		// rotateValue = limit(rotateValue);
-
-		if (moveValue >= 0.0) {
-			moveValue = moveValue * moveValue;
-		} else {
-			moveValue = -(moveValue * moveValue);
-		}
-		if (rotateValue >= 0.0) {
-			rotateValue = rotateValue * rotateValue;
-		} else {
-			rotateValue = -(rotateValue * rotateValue);
-		}
-		if (moveValue > 0.0) {
-			if (rotateValue > 0.0) {
-				leftMotorSpeed = moveValue - rotateValue;
-				rightMotorSpeed = Math.max(moveValue, rotateValue);
-			} else {
-				leftMotorSpeed = Math.max(moveValue, -rotateValue);
-				rightMotorSpeed = moveValue + rotateValue;
-			}
-		} else {
-			if (rotateValue > 0.0) {
-				leftMotorSpeed = -Math.max(-moveValue, rotateValue);
-				rightMotorSpeed = moveValue + rotateValue;
-			} else {
-				leftMotorSpeed = moveValue - rotateValue;
-				rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
-			}
-		}
-
-		masterLeft.set(leftMotorSpeed);
-		masterRight.set(rightMotorSpeed);
-	}
-	
 //	public boolean rightEncoder(){
 ////		FeedbackDeviceStatus sensorStatusRight = masterRight.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
 //		FeedbackDeviceStatus sensorStatusRight = masterRight.isSensorPresent(FeedbackDevice.QuadEncoder);
@@ -130,7 +89,11 @@ public class DriveTrain implements PIDOutput {
 	}
 	
 	public void driveDistanceStraight(double speed, double inches) {
-		
+		masterLeft.reset();
+		drive(speed, 0, 0);
+		if(masterLeft.getEncPosition()/4096*Math.PI*4 > inches){
+			stopDrive();			//   ^Ticks		 ^Wheel diameter
+		}
 	}
 	
 	public void turnRight(double speed) { // turns right
@@ -142,6 +105,11 @@ public class DriveTrain implements PIDOutput {
 		masterRight.set(speed);
 		masterLeft.set(speed);
 	}
+	
+	public void stopDrive(){
+		masterRight.set(0);
+		masterLeft.set(0);
+	}
 
 	public void shiftHigh() { // shifts into high gear ratio
 		shifter.set(DoubleSolenoid.Value.kReverse);
@@ -152,16 +120,7 @@ public class DriveTrain implements PIDOutput {
 	}
 
 	public void turnAngle(double angle) {
-		turnController.setSetpoint(angle);
-		turnController.enable();
-		double currentRotationRate;
-		currentRotationRate = rotateToAngleRate;
-		try {
-			arcadeDrive(0.0, currentRotationRate);
-			// System.out.println(hrs.getAngle());
-		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
-		}
+
 	}
 
 	public void pidWrite(double output) {

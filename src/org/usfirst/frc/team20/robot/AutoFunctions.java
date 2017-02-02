@@ -14,96 +14,51 @@ public class AutoFunctions {
 	}
 
 	public void crossBaseline(){
-		drive.driveDistanceStraight(1, 20);	//TODO get about the number of inches
+		drive.driveDistanceStraight(1, 100);	
 	}
-
 	public void toMiddlePeg(){
-		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
-		vision.updateImage();
-		drive.turnAngle(vision.getFirstAngle());
-		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
-		drive.turnAngle(vision.getSecondAngle());
-		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
-	}
-	
+		drive.driveDistanceStraight(1, 94);
+	}	
 	public void toSidePeg(){
-		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
+		drive.driveDistanceStraight(1, 90); //TODO get about the number of inches
 		vision.updateImage();
 		drive.turnAngle(vision.getFirstAngle());
 		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
 		drive.turnAngle(vision.getSecondAngle());
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
-	}
-	
-//	public void toLeftPegRed(){
-//		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
-//		vision.updateImage();
-//		drive.turnAngle(vision.getFirstAngle());
-//		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
-//		drive.turnAngle(vision.getSecondAngle());
-//		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
-//	}
-//	public void toLeftPegBlue(){
-//		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
-//		vision.updateImage();
-//		drive.turnAngle(vision.getFirstAngle());
-//		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
-//		drive.turnAngle(vision.getSecondAngle());
-//		drive.driveDistanceStraight(0.5, vision.getSecondDistance());		
-//	}
-//	public void toRightPegRed(){
-//		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
-//		vision.updateImage();
-//		drive.turnAngle(vision.getFirstAngle());
-//		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
-//		drive.turnAngle(vision.getSecondAngle());
-//		drive.driveDistanceStraight(0.5, vision.getSecondDistance());				
-//	}
-//	public void toRightPegBlue(){
-//		drive.driveDistanceStraight(1, 5); //TODO get about the number of inches
-//		vision.updateImage();
-//		drive.turnAngle(vision.getFirstAngle());
-//		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
-//		drive.turnAngle(vision.getSecondAngle());
-//		drive.driveDistanceStraight(0.5, vision.getSecondDistance());		
-//	}
+	}	
 	public void middlePegToHopperRed(){
-		drive.turnAngle(20);	//TODO calculate angle
-		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
 	}
 	public void middlePegToHopperBlue(){
-		drive.turnAngle(20);	//TODO calculate angle
-		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
 	}
 	public void leftPegToHopperRed(){
-		drive.turnAngle(20);	//TODO calculate angle
-		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
 	}
 	public void leftPegToHopperBlue(){
-		drive.turnAngle(20);	//TODO calculate angle
-		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
 	}
 	public void rightPegToHopperRed(){
-		drive.turnAngle(20);	//TODO calculate angle
-		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
 	}
 	public void rightPegToHopperBlue(){
-		drive.turnAngle(20);	//TODO calculate angle
-		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
 	}
 	public void middlePegToBoilerRed(){
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.turnAngle(vision.getFirstAngle());
 		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
@@ -111,6 +66,7 @@ public class AutoFunctions {
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
 	public void middlePegToBoilerBlue(){
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.turnAngle(vision.getFirstAngle());
 		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
@@ -118,6 +74,7 @@ public class AutoFunctions {
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
 	public void leftPegToBoilerRed(){
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.turnAngle(vision.getFirstAngle());
 		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
@@ -125,6 +82,7 @@ public class AutoFunctions {
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
 	public void leftPegToBoilerBlue(){
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.turnAngle(vision.getFirstAngle());
 		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
@@ -132,6 +90,7 @@ public class AutoFunctions {
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
 	public void rightPegToBoilerRed(){
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.turnAngle(vision.getFirstAngle());
 		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
@@ -139,6 +98,7 @@ public class AutoFunctions {
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
 	public void rightPegToBoilerBlue(){
+		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
 		drive.turnAngle(vision.getFirstAngle());
 		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
@@ -146,15 +106,13 @@ public class AutoFunctions {
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
 	public void toHopperRed(){
-		drive.turnAngle(20);	//TODO calculate angle
-		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
-		drive.turnAngle(20);	//TODO calculate angle
+		drive.driveDistanceStraight(1, 95);
+		drive.turnAngle(-90);
 		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
 	}
 	public void toHopperBlue(){
-		drive.turnAngle(20);	//TODO calculate angle
-		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
-		drive.turnAngle(20);	//TODO calculate angle
+		drive.driveDistanceStraight(1, 95); 
+		drive.turnAngle(90);
 		drive.driveDistanceStraight(1, 15); //TODO get about the number of inches
 	}
 	public void hopperToBoilerRed(){
@@ -172,10 +130,14 @@ public class AutoFunctions {
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
 	}
 	public void wallToBoilerRed(){
-		drive.turnAngle(20);	//TODO calculate angle
+		drive.driveDistanceStraight(1, 45);
+		drive.turnAngle(-135);
+		drive.driveDistanceStraight(0.5, 45);
 	}
 	public void wallToBoilerBlue(){
-		drive.turnAngle(20);	//TODO calculate angle
+		drive.driveDistanceStraight(1, 45);
+		drive.turnAngle(135);
+		drive.driveDistanceStraight(0.5, 45);
 	}
 	public void shoot(){
 		flywheel.shootWithEncoders(3000.0, Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, 
