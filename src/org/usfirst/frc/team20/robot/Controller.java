@@ -19,10 +19,10 @@ public class Controller {
 	public boolean getButtonY(){
 		return joy.getRawButton(4);
 	}
-	public boolean getButtonLTrig(){
+	public boolean getButtonLeftBumper(){
 		return joy.getRawButton(5);
 	}
-	public boolean getButtonRTrig(){
+	public boolean getButtonRightBumper(){
 		return joy.getRawButton(6);
 	}
 	public boolean getButtonBack(){
@@ -46,10 +46,10 @@ public class Controller {
 	public double getLeftYAxis(){
 		return joy.getRawAxis(1);
 	}
-	public double getLeftBumpAxis(){
+	public double getLeftTriggerAxis(){
 		return joy.getRawAxis(2);
 	}
-	public double getRightBumpAxis(){
+	public double getRightTriggerAxis(){
 		return joy.getRawAxis(3);
 	}
 	public double getRightXAxis(){

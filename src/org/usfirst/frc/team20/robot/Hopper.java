@@ -19,7 +19,7 @@ public class Hopper {
 	public void hopperMotorIntoHopper(double speed){
 		hopperOuttake.set(speed);
 	}
-	public void hopperMotorStop(){
+	public void stopHopper(){
 		hopperOuttake.set(0);
 	}
 	public void retractCollector() {

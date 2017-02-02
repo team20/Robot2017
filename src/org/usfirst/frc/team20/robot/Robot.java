@@ -24,8 +24,10 @@ public class Robot extends IterativeRobot {
 	GroundCollector collector;
 	DriverVision gearCamera;
 	DriverVision highGoalCamera;
+	GearMechanism gear;
 	Controller driverJoy;
 	Controller operatorJoy;
+	Hopper hopper;
 	double rotateToAngleRate;
 
 	/**
@@ -37,6 +39,8 @@ public class Robot extends IterativeRobot {
 		drive = new DriveTrain();
 		flywheel = new FlyWheel();
 		collector = new GroundCollector();
+		hopper = new Hopper();
+		gear = new GearMechanism();
 		gearCamera = new DriverVision("gearCamera", 0);
 		highGoalCamera = new DriverVision("highGoalCamera", 1);
 		driverJoy = new Controller(0);
@@ -197,31 +201,30 @@ public class Robot extends IterativeRobot {
 			drive.shiftLow();
 		}
 		if (operatorJoy.getButtonA()) {
-			collector.intake();
+			collector.intake(1);
 		}
 		if (operatorJoy.getButtonB()) {
-			collector.outtake();
+			collector.outtake(1);
 		}
 		if (operatorJoy.getButtonX()) {
-			hopper.intake();
+			hopper.hopperMotorIntoFlywheel(1);
 		}
 		if (operatorJoy.getButtonY()) {
-			hopper.outtake();
+			hopper.hopperMotorIntoHopper(1);
 		}
 		if (operatorJoy.getButtonRightBumper()) {
-			gear.in();
+			gear.gearFlapIn();
 		}
 		if (operatorJoy.getButtonLeftBumper()) {
-			gear.out();
+			gear.gearFlapOut();
 		}
 		if (operatorJoy.getButtonDUp()) {
-			flywheel.shootWithEncoders();
+			flywheel.shootWithEncoders(3000.0, 0.0003, 0.0, 0.0);
 		}
 		if (operatorJoy.getButtonBack()) {
-			flywheel.stop();
-			hopper.stop();
-			gear.stop();
-			collector.stop();
+			flywheel.stopFlywheel();
+			hopper.stopHopper();
+			collector.stopCollector();
 		}
 		
 	}
