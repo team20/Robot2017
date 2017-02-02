@@ -24,8 +24,8 @@ public class GearMechanism {
 		if(gearBumpSwitch1.get() || gearBumpSwitch2.get()){
 			haveGear = true;
 		}
-		if(!gearBumpSwitch1.get() && !gearBumpSwitch2.get()){
+		else{
 			haveGear = false;
-		}		
+		}
 	}
 }
