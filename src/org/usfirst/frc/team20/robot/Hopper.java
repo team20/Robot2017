@@ -22,13 +22,13 @@ public class Hopper {
 	public void stopHopper(){
 		hopperOuttake.set(0);
 	}
-	public void retractCollector() {
+	public void retractAgitator() {
 		agitatorPistons.set(DoubleSolenoid.Value.kReverse);
 	}
-	public void actuateCollectors() {
+	public void actuateAgitator() {
 		agitatorPistons.set(DoubleSolenoid.Value.kForward);
 	}
-	public void neturalCollectors() {
+	public void neturalAgitator() {
 		agitatorPistons.set(DoubleSolenoid.Value.kOff);
 	}	
 }
