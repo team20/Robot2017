@@ -18,7 +18,7 @@ public class Robot extends IterativeRobot {
 	AutoFunctions functions;
 	AutoModes auto;
 	VisionTargeting vision;
-	DriverStation d;
+	DriverStation station;
 	DriveTrain drive;
 	FlyWheel flywheel;
 	GroundCollector collector;
@@ -29,15 +29,16 @@ public class Robot extends IterativeRobot {
 	Controller operatorJoy;
 	Hopper hopper;
 	double rotateToAngleRate;
-	boolean hopperToFlywheel;
+	double initialMatchTime;
+	boolean hopperToFlywheel = false;
 
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
-		d = DriverStation.getInstance();
-		drive = new DriveTrain();
+		station = DriverStation.getInstance();
+		drive = new DriveTrain(vision);
 		flywheel = new FlyWheel();
 		collector = new GroundCollector();
 		hopper = new Hopper();
@@ -45,17 +46,16 @@ public class Robot extends IterativeRobot {
 		gearCamera = new DriverVision("gearCamera", 0);
 		highGoalCamera = new DriverVision("highGoalCamera", 1);
 		driverJoy = new Controller(0);
-		operatorJoy = new Controller(1);
+		operatorJoy = new Controller(0);
+		initialMatchTime = station.getMatchTime();
 
 		chooser = new SendableChooser<String>();
 		chooser.addDefault("Do Nothing", "DoNothing");
 		chooser.addObject("Cross Baseline", "CrossBaseline");
 		chooser.addObject("Middle Gear", "MiddleGear");
-		chooser.addObject("Side Gear, Red or Blue", "SideGear");
-		// chooser.addObject("Red: Right Gear", "RedRight");
-		// chooser.addObject("Blue: Right Gear", "BlueRight");
-		// chooser.addObject("Red: Left Gear", "RedLeft");
-		// chooser.addObject("Blue: Left Gear", "BlueLeft");
+//		chooser.addObject("Side Gear, Red or Blue", "SideGear");
+		chooser.addObject("Right Gear", "Right");
+		chooser.addObject("Left Gear", "Left");
 		chooser.addObject("Red: Middle Gear to Hopper", "RedMiddleHopper");
 		chooser.addObject("Blue: Middle Gear to Hopper", "BlueMiddleHopper");
 		chooser.addObject("Red: Right Gear to Hopper", "RedRightHopper");
@@ -73,13 +73,9 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Red: Start at Boiler", "RedStartBoiler");
 		chooser.addObject("Blue: Start at Boiler", "BlueStartBoiler");
 		SmartDashboard.putData("Auto choices", chooser);
-		// if(drive.rightEncoder()){
-		// System.out.println("Right Encoder Working");
-		// }
 		if (drive.leftEncoder()) {
 			System.out.println("Left Encoder Working");
 		}
-
 	}
 
 	/**
@@ -97,7 +93,7 @@ public class Robot extends IterativeRobot {
 		autoSelected = (String) chooser.getSelected();
 		autoSelected = SmartDashboard.getString("Auto Selector", "Do Nothing");
 		vision = new VisionTargeting("10.0.20.9");
-		functions = new AutoFunctions(drive, flywheel, collector, vision);
+		functions = new AutoFunctions(drive, flywheel, collector, vision, hopper, gear);
 		auto = new AutoModes(functions);
 		System.out.println("Auto selected: " + autoSelected);
 	}
@@ -116,21 +112,15 @@ public class Robot extends IterativeRobot {
 		case "MiddleGear":
 			auto.middlePeg();
 			break;
-		case "SideGear":
-			auto.sidePeg();
+//		case "SideGear":
+//			auto.sidePeg();
+//			break;
+		case "Right":
+			auto.rightPeg();
 			break;
-		// case "RedRight":
-		// auto.rightPegRed();
-		// break;
-		// case "BlueRight":
-		// auto.rightPegBlue();
-		// break;
-		// case "RedLeft":
-		// auto.leftPegRed();
-		// break;
-		// case "BlueLeft":
-		// auto.leftPegBlue();
-		// break;
+		case "Left":
+			auto.leftPeg();
+			break;
 		case "RedMiddleHopper":
 			auto.middleHopperRed();
 			break;
@@ -182,25 +172,47 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
-	/**
-	 * This function is called periodically during operator control
-	 */
+/**
+* This function is called periodically during operator control
+*/
 	public void teleopPeriodic() {
-		// gearCamera.startUSBCamera();
-		// highGoalCamera.startUSBCamera();
-		// drive.masterLeft.set(.5);
-		double speedStraight = driverJoy.getLeftYAxis();
-		double speedLeft = driverJoy.getLeftTriggerAxis();
-		double speedRight = driverJoy.getRightTriggerAxis();
-		if (speedStraight != 0 || speedLeft > 0 || speedRight > 0) {
-			drive.drive(speedStraight, speedRight, speedLeft);
+//		gearCamera.startUSBCamera();
+//		highGoalCamera.startUSBCamera();
+		//Driver Code with the NavX Not Working
+		try{
+			drive.initializeNavx();
+		}catch(Exception e){
+			System.out.println("NavX Not Working");
+			double speedStraight = driverJoy.getLeftYAxis();
+			double speedLeft = driverJoy.getLeftTriggerAxis();
+			double speedRight = driverJoy.getRightTriggerAxis();
+			if (speedStraight != 0 || speedLeft > 0 || speedRight > 0) {
+				drive.masterRight.set(speedStraight - speedRight + speedLeft);
+				drive.masterLeft.set(-speedStraight + speedLeft - speedRight);
+			}
+			if (driverJoy.getButtonLeftBumper()) {
+				drive.shiftHigh();
+			}
+			if (driverJoy.getButtonRightBumper()) {
+				drive.shiftLow();
+			}			
 		}
-		if (driverJoy.getButtonLeftBumper()) {
-			drive.shiftHigh();
-		}
-		if (driverJoy.getButtonRightBumper()) {
-			drive.shiftLow();
-		}
+		
+		//Driver Code with the NavX Working
+//		double speedStraight = driverJoy.getLeftYAxis();
+//		double speedLeft = driverJoy.getLeftTriggerAxis();
+//		double speedRight = driverJoy.getRightTriggerAxis();
+//		if (speedStraight != 0 || speedLeft > 0 || speedRight > 0) {
+//			drive.drive(speedStraight, speedRight, speedLeft);
+//		}
+//		if (driverJoy.getButtonLeftBumper()) {
+//			drive.shiftHigh();
+//		}
+//		if (driverJoy.getButtonRightBumper()) {
+//			drive.shiftLow();
+//		}
+		
+		//Operator Code
 		if (operatorJoy.getButtonA()) {
 			collector.intake(1);
 		}
@@ -211,9 +223,22 @@ public class Robot extends IterativeRobot {
 			hopper.hopperMotorIntoFlywheel(1);
 			hopperToFlywheel = true;
 		}
-		while(hopperToFlywheel){
-			hopper.actuateAgitator();
-			hopper.retractAgitator();
+		if (hopperToFlywheel) {
+			double currentMatchTime = station.getMatchTime();
+			if(initialMatchTime < 0){
+				initialMatchTime = currentMatchTime;
+			}
+			System.out.println(initialMatchTime + "              " + currentMatchTime);
+			if(initialMatchTime - 0.25 < currentMatchTime){
+				System.out.println("In the If");
+				hopper.retractAgitator();
+			}else{
+				if(initialMatchTime - 0.4 > currentMatchTime){
+					initialMatchTime = currentMatchTime;
+				}
+				System.out.println("In the else");
+				hopper.actuateAgitator();
+			}
 		}
 		if (operatorJoy.getButtonY()) {
 			hopper.hopperMotorIntoHopper(1);
@@ -233,7 +258,6 @@ public class Robot extends IterativeRobot {
 			collector.stopCollector();
 			hopperToFlywheel = false;
 		}
-		
 	}
 
 	/**
