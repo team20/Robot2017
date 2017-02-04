@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
+
 
 public class DriveTrain implements PIDOutput {
 	DriverStation d = DriverStation.getInstance();
@@ -23,15 +24,17 @@ public class DriveTrain implements PIDOutput {
 	CANTalon followerLeftTwo;
 	AHRS gyro;
 	PIDController turnController;
+	int state;
+	double turnAngle = 0.0;
 	double startingAngle = 0, adjustment;
 	double rotateToAngleRate;
-	static final double kP = 0.02;
-	static final double kI = 0.0025;
-	static final double kD = 0.00;
-	static final double kF = 0.00;
-	static final double kToleranceDegrees = 2.0f;
-
-	public DriveTrain() {
+	double currentRotationRate;
+	double multiplier;
+	boolean kArcadeStandard_Reported = false;
+	VisionTargeting vision;
+	RobotDrive myDrive;
+	
+	public DriveTrain(VisionTargeting v) {
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
 		followerRightOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_ONE);
 		followerRightTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_TWO);
@@ -46,21 +49,31 @@ public class DriveTrain implements PIDOutput {
 		followerLeftOne.set(masterLeft.getDeviceID());
 		followerLeftTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerLeftTwo.set(masterLeft.getDeviceID());
-		turnController = new PIDController(kP, kI, kD, kF, gyro, this);
-		turnController.setInputRange(-180.0f, 180.0f);
-		turnController.setOutputRange(-1.0, 1.0);
-		turnController.setAbsoluteTolerance(kToleranceDegrees);
-		turnController.setContinuous(true);
 //		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 //		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 //		masterRight.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		masterLeft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		myDrive = new RobotDrive(masterRight, masterLeft);
+		multiplier = 6.5;
+		vision = v;
+		
 	}
 	
 	public void initializeNavx(){
-			gyro = new AHRS(SPI.Port.kMXP);
+			gyro = new AHRS(SerialPort.Port.kMXP);
 	}
-
+	
+	public void setTurnController(){
+		   turnController = new PIDController(Constants.NavX_P, Constants.NavX_I,
+				   Constants.NavX_D, Constants.NavX_F, gyro, this);
+		   turnController.setInputRange(-180.0f,  180.0f);
+		   turnController.setOutputRange(-1.0, 1.0);
+		   turnController.setAbsoluteTolerance(Constants.NavX_Tolerance_Degrees);
+		   turnController.setContinuous(true);
+		   turnController.setSetpoint(turnAngle);
+		   turnController.enable();
+	}
+	
 	public void drive(double speed, double rightTurn, double leftTurn) { // drives
 		if (speed < 0.1 && speed > -0.1) { //forward
 			gyro.reset();
@@ -95,12 +108,15 @@ public class DriveTrain implements PIDOutput {
 	}
 	
 	public void driveDistanceStraight(double speed, double inches) {
-		masterLeft.reset();
-		drive(speed, 0, 0);
-		if(masterLeft.getEncPosition()/4096*Math.PI*4 > inches){
-			stopDrive();			//   ^Ticks		 ^Wheel diameter
+		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
+			System.out.println("Done");
+			masterLeft.set(0);
+			masterRight.set(0);
 		}
-	}
+		else{
+			drive(speed, 0, 0);
+			System.out.println(masterLeft.getEncPosition());
+		}	}
 	
 	public void turnRight(double speed) { // turns right
 		masterRight.set(-speed);
@@ -124,9 +140,72 @@ public class DriveTrain implements PIDOutput {
 	public void shiftLow() { // shifts into low gear ratio
 		shifter.set(DoubleSolenoid.Value.kForward);
 	}
+	
+	public void turnDrive(double moveValue, double rotateValue) {
+		double leftMotorSpeed;
+		double rightMotorSpeed;
+		if (moveValue >= 0.0) {
+			moveValue = moveValue * moveValue;
+		} else {
+			moveValue = -(moveValue * moveValue);
+		}
+		if (rotateValue >= 0.0) {
+			rotateValue = rotateValue * rotateValue;
+		} else {
+			rotateValue = -(rotateValue * rotateValue);
+		}
+		if (moveValue > 0.0) {
+			if (rotateValue > 0.0) {
+				leftMotorSpeed = moveValue - rotateValue;
+				rightMotorSpeed = Math.max(moveValue, rotateValue);
+			} else {
+				leftMotorSpeed = Math.max(moveValue, -rotateValue);
+				rightMotorSpeed = moveValue + rotateValue;
+			}
+		} else {
+			if (rotateValue > 0.0) {
+				leftMotorSpeed = -Math.max(-moveValue, rotateValue);
+				rightMotorSpeed = moveValue + rotateValue;
+			} else {
+				leftMotorSpeed = moveValue - rotateValue;
+				rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
+			}
+		}
+		masterRight.set(rightMotorSpeed);
+		masterLeft.set(leftMotorSpeed);
+	}
 
-	public void turnAngle(double angle) {
-		
+	private void TurnAngle(){
+		currentRotationRate = rotateToAngleRate;
+		try {
+			turnDrive(0.0, currentRotationRate);
+			System.out.println(gyro.getAngle());
+		} catch (RuntimeException ex) {
+			DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
+		}
+	}
+	
+	public void turnAngle(double turnAngle) {
+		if (state == States.GET_CAMERA_ANGLE){ 
+			System.out.println("++++ GetCameraAngle Turn Angle =  " + turnAngle);
+			state = States.SET_PID_LOOP;
+		}
+		if (state == States.SET_PID_LOOP){
+				setTurnController();
+				System.out.println("++++++++++++++++++++++++Set Pid Loop ************** ");
+				state = States.TURN_ANGLE;
+		}
+		if (state == States.TURN_ANGLE) {
+			System.out.println("++++++++++++++++++++++++Turn Angle " + turnAngle + " navx angle " + gyro.getAngle());
+			System.out.println("++++++++++++++++++++++++currentRotationRate " + currentRotationRate);
+			TurnAngle();
+			if (Math.abs(currentRotationRate) < .23 && Math.abs(turnAngle - gyro.getAngle()) < .3) {
+				currentRotationRate = 0;
+				TurnAngle();
+				turnController.disable();
+				state = States.DONE;
+			}
+		}
 	}
 
 	@Override

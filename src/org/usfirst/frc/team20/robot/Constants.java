@@ -36,6 +36,13 @@ public class Constants {
 	public static final double FLYWHEEL_I = 0.0;
 	public static final double FLYWHEEL_D = 0.0;
 	public static final double FLYWHEEL_F = 0.0165;
+
+	//NavX PID
+	public static final double NavX_P = 0.025;
+	public static final double NavX_I = 0.001;
+	public static final double NavX_D = 0.00;
+	public static final double NavX_F = 0.00;
+	public static final double NavX_Tolerance_Degrees = 2.0f;
 	
 	//Bump Switch
 	public static final int GEAR_BUMP_SWITCH_PORT_ONE = 0;

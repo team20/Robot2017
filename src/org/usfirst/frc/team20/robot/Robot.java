@@ -31,13 +31,14 @@ public class Robot extends IterativeRobot {
 	double rotateToAngleRate;
 	double initialMatchTime;
 	boolean hopperToFlywheel = false;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
 		station = DriverStation.getInstance();
-		drive = new DriveTrain();
+		drive = new DriveTrain(vision);
 		flywheel = new FlyWheel();
 		collector = new GroundCollector();
 		hopper = new Hopper();
