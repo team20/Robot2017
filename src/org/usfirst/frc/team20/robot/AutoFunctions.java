@@ -5,12 +5,15 @@ public class AutoFunctions {
 	FlyWheel flywheel;
 	VisionTargeting vision;
 	GroundCollector collector;
-	
-	public AutoFunctions(DriveTrain d, FlyWheel f, GroundCollector c, VisionTargeting vT){
+	Hopper hopper;
+	GearMechanism gear;
+	public AutoFunctions(DriveTrain d, FlyWheel f, GroundCollector c, VisionTargeting vT, Hopper h, GearMechanism g){
 		drive = d;
 		flywheel = f;
 		vision = vT;
 		collector = c;	
+		hopper = h;
+		gear = g;
 	}
 
 	public void crossBaseline(){
@@ -19,14 +22,32 @@ public class AutoFunctions {
 	public void toMiddlePeg(){
 		drive.driveDistanceStraight(1, 94);
 	}	
-	public void toSidePeg(){
+//	public void toSidePeg(){
+//		drive.driveDistanceStraight(1, 90); //TODO get about the number of inches
+//		vision.updateImage();
+//		drive.turnAngle(vision.getFirstAngle());
+//		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
+//		drive.turnAngle(vision.getSecondAngle());
+//		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
+//	}	
+	public void toLeftPeg(){
 		drive.driveDistanceStraight(1, 90); //TODO get about the number of inches
+		drive.turnAngle(45);	//TODO get approx. angle
 		vision.updateImage();
 		drive.turnAngle(vision.getFirstAngle());
 		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
 		drive.turnAngle(vision.getSecondAngle());
 		drive.driveDistanceStraight(0.5, vision.getSecondDistance());
-	}	
+	}
+	public void toRightPeg(){
+		drive.driveDistanceStraight(1, 90); //TODO get about the number of inches
+		drive.turnAngle(-45);	//TODO get approx. angle
+		vision.updateImage();
+		drive.turnAngle(vision.getFirstAngle());
+		drive.driveDistanceStraight(0.5, vision.getFirstDistance());
+		drive.turnAngle(vision.getSecondAngle());
+		drive.driveDistanceStraight(0.5, vision.getSecondDistance());				
+	}
 	public void middlePegToHopperRed(){
 		drive.driveDistanceStraight(-1, 5);
 		drive.turnAngle(20);	//TODO calculate angle
@@ -139,9 +160,18 @@ public class AutoFunctions {
 		drive.turnAngle(135);
 		drive.driveDistanceStraight(0.5, 45);
 	}
-	public void shoot(){
-		flywheel.shootWithEncoders(3000.0, Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, 
+	public void shoot(double RPMS){
+		boolean shooting = true;
+		flywheel.shootWithEncoders(RPMS, Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, 
 				Constants.FLYWHEEL_D);
 		collector.intake(1);
+		hopper.hopperMotorIntoFlywheel(1);
+		while(shooting){
+			hopper.actuateAgitator();
+			hopper.retractAgitator();
+		}
+	}
+	public void stopFlywheel(){
+		flywheel.stopFlywheel();
 	}
 }

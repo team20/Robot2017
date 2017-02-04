@@ -34,6 +34,9 @@ public class FlyWheel {
 		System.out.println(cps + "CPS");
 		flywheelMaster.set(cps);
 	}
+	public double flywheelSpeed(){
+		return flywheelMaster.getSpeed();
+	}
 	public void stopFlywheel(){
 		flywheelMaster.set(0);
 	}

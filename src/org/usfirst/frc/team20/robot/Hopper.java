@@ -9,8 +9,7 @@ public class Hopper {
 
 	public Hopper(){
 		hopperOuttake = new CANTalon(Constants.HOPPER_COLLECTOR_MOTOR_PORT);
-		agitatorPistons = new DoubleSolenoid(Constants.HOPPER_EXTEND_PORT,
-				Constants.HOPPER_RETRACT_PORT);
+		agitatorPistons = new DoubleSolenoid(1, 0);
 	}
 	
 	public void hopperMotorIntoFlywheel(double speed){
@@ -22,13 +21,13 @@ public class Hopper {
 	public void stopHopper(){
 		hopperOuttake.set(0);
 	}
-	public void retractCollector() {
+	public void retractAgitator() {
 		agitatorPistons.set(DoubleSolenoid.Value.kReverse);
 	}
-	public void actuateCollectors() {
+	public void actuateAgitator() {
 		agitatorPistons.set(DoubleSolenoid.Value.kForward);
 	}
-	public void neturalCollectors() {
+	public void neturalAgitator() {
 		agitatorPistons.set(DoubleSolenoid.Value.kOff);
 	}	
 }

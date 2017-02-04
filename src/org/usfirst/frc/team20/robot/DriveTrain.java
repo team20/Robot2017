@@ -8,18 +8,20 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class DriveTrain implements PIDOutput {
 	DriverStation d = DriverStation.getInstance();
-	DoubleSolenoid shifter = new DoubleSolenoid(Constants.DRIVETRAIN_EXTEND_PORT, Constants.DRIVERTRAIN_RETRACT_PORT);
+	DoubleSolenoid shifter = new DoubleSolenoid(Constants.DRIVETRAIN_EXTEND_PORT,
+			Constants.DRIVERTRAIN_RETRACT_PORT);
 	CANTalon masterRight;
 	CANTalon followerRightOne;
 	CANTalon followerRightTwo;
 	CANTalon masterLeft;
 	CANTalon followerLeftOne;
 	CANTalon followerLeftTwo;
-	AHRS gyro = new AHRS(SerialPort.Port.kMXP);
+	AHRS gyro;
 	PIDController turnController;
 	double startingAngle = 0, adjustment;
 	double rotateToAngleRate;
@@ -35,7 +37,7 @@ public class DriveTrain implements PIDOutput {
 		followerRightTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_TWO);
 		masterLeft = new CANTalon(Constants.DRIVETRAIN_MASTER_LEFT_MOTOR_PORT);
 		followerLeftOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_ONE);
-		followerLeftOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO);
+		followerLeftTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO);
 		followerRightOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerRightOne.set(masterRight.getDeviceID());
 		followerRightTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
@@ -51,8 +53,12 @@ public class DriveTrain implements PIDOutput {
 		turnController.setContinuous(true);
 //		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 //		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		masterRight.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+//		masterRight.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		masterLeft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+	}
+	
+	public void initializeNavx(){
+			gyro = new AHRS(SPI.Port.kMXP);
 	}
 
 	public void drive(double speed, double rightTurn, double leftTurn) { // drives
@@ -120,9 +126,10 @@ public class DriveTrain implements PIDOutput {
 	}
 
 	public void turnAngle(double angle) {
-
+		
 	}
 
+	@Override
 	public void pidWrite(double output) {
 		rotateToAngleRate = output;
 	}
