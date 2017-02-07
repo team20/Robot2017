@@ -15,10 +15,6 @@ public class Constants {
 	public static final int FLYWHEEL_FOLLOWER_PORT = 10;
 	public static final int HOPPER_COLLECTOR_MOTOR_PORT = 4;
 		
-	//JoySticks
-	public static final int DRIVER_JOYSTICK_PORT = 0;	//actual port
-	public static final int OPERATOR_JOYSTICK_PORT = 1;	//actual port
-
 	//Solenoids
 	public static final int DRIVETRAIN_EXTEND_PORT = 7;
 	public static final int DRIVERTRAIN_RETRACT_PORT = 2;

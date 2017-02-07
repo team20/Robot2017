@@ -8,9 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
-
 
 public class DriveTrain implements PIDOutput {
 	DriverStation d = DriverStation.getInstance();
@@ -32,7 +30,6 @@ public class DriveTrain implements PIDOutput {
 	double multiplier;
 	boolean kArcadeStandard_Reported = false;
 	VisionTargeting vision;
-	RobotDrive myDrive;
 	
 	public DriveTrain(VisionTargeting v) {
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
@@ -51,12 +48,10 @@ public class DriveTrain implements PIDOutput {
 		followerLeftTwo.set(masterLeft.getDeviceID());
 //		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 //		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-//		masterRight.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		masterRight.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		masterLeft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		myDrive = new RobotDrive(masterRight, masterLeft);
 		multiplier = 6.5;
-		vision = v;
-		
+		vision = v;		
 	}
 	
 	public void initializeNavx(){
@@ -64,14 +59,14 @@ public class DriveTrain implements PIDOutput {
 	}
 	
 	public void setTurnController(){
-		   turnController = new PIDController(Constants.NavX_P, Constants.NavX_I,
-				   Constants.NavX_D, Constants.NavX_F, gyro, this);
-		   turnController.setInputRange(-180.0f,  180.0f);
-		   turnController.setOutputRange(-1.0, 1.0);
-		   turnController.setAbsoluteTolerance(Constants.NavX_Tolerance_Degrees);
-		   turnController.setContinuous(true);
-		   turnController.setSetpoint(turnAngle);
-		   turnController.enable();
+		turnController = new PIDController(Constants.NavX_P, Constants.NavX_I, Constants.NavX_D, Constants.NavX_F, gyro,
+				this);
+		turnController.setInputRange(-180.0f, 180.0f);
+		turnController.setOutputRange(-1.0, 1.0);
+		turnController.setAbsoluteTolerance(Constants.NavX_Tolerance_Degrees);
+		turnController.setContinuous(true);
+		turnController.setSetpoint(turnAngle);
+		turnController.enable();
 	}
 	
 	public void drive(double speed, double rightTurn, double leftTurn) { // drives
@@ -81,10 +76,10 @@ public class DriveTrain implements PIDOutput {
 			adjustment = 0;
 		}
 		if (gyro.getYaw() > 0.1)
-			adjustment = (speed * 0.125); // 0.125 can be changed so that it is
+			adjustment = (speed * 0.1); // 0.125 can be changed so that it is
 											// > 0.1 and < 0.14
 		else if (gyro.getYaw() < -0.1)
-			adjustment = -(speed * 0.125);// 0.125 can be changed so that it is
+			adjustment = -(speed * 0.1);// 0.125 can be changed so that it is
 											// > 0.1 and < 0.14
 		else
 			adjustment = 0;
@@ -92,22 +87,33 @@ public class DriveTrain implements PIDOutput {
 		masterRight.set(speed - rightTurn + leftTurn - adjustment);
 		masterLeft.set(-speed + leftTurn - rightTurn);
 	}
-
-//	public boolean rightEncoder(){
-////		FeedbackDeviceStatus sensorStatusRight = masterRight.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
-//		FeedbackDeviceStatus sensorStatusRight = masterRight.isSensorPresent(FeedbackDevice.QuadEncoder);
-//		boolean rightEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusRight);
-//		return rightEncoder;
-//	}
 	
 	public boolean leftEncoder(){
+		boolean leftEncoder = false;
+		try{
 //		FeedbackDeviceStatus sensorStatusLeft = masterLeft.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
 		FeedbackDeviceStatus sensorStatusLeft = masterLeft.isSensorPresent(FeedbackDevice.QuadEncoder);
-		boolean leftEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusLeft);
+		leftEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusLeft);
+		}catch(Exception e){
+			System.out.println("Left Encoder Error: " + e.toString());
+			rightEncoder();
+		}
 		return leftEncoder;
 	}
+
+	public boolean rightEncoder(){
+		boolean rightEncoder = false;
+		try{
+//			FeedbackDeviceStatus sensorStatusRight = masterRight.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
+			FeedbackDeviceStatus sensorStatusRight = masterRight.isSensorPresent(FeedbackDevice.QuadEncoder);
+			rightEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusRight);
+		}catch(Exception e){
+			System.out.println("Right Encoder Error: " + e.toString());
+		}
+		return rightEncoder;
+	}
 	
-	public void driveDistanceStraight(double speed, double inches) {
+	public void driveDistanceStraightLeftEncoder(double speed, double inches) {
 		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
 			System.out.println("Done");
 			masterLeft.set(0);
@@ -116,7 +122,20 @@ public class DriveTrain implements PIDOutput {
 		else{
 			drive(speed, 0, 0);
 			System.out.println(masterLeft.getEncPosition());
-		}	}
+		}	
+	}
+	
+	public void driveDistanceStraightRightEncoder(double speed, double inches) {
+		if(masterRight.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
+			System.out.println("Done");
+			masterLeft.set(0);
+			masterRight.set(0);
+		}
+		else{
+			drive(speed, 0, 0);
+			System.out.println(masterLeft.getEncPosition());
+		}	
+	}
 	
 	public void turnRight(double speed) { // turns right
 		masterRight.set(-speed);

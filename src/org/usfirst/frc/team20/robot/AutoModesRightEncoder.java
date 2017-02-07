@@ -1,9 +1,9 @@
 package org.usfirst.frc.team20.robot;
 
-public class AutoModes {
-	AutoFunctions functions;
+public class AutoModesRightEncoder {
+	AutoFunctionsRightEncoder functions;
 	
-	public AutoModes(AutoFunctions f){
+	public AutoModesRightEncoder(AutoFunctionsRightEncoder f){
 		functions = f;
 	}
 	

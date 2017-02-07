@@ -10,7 +10,12 @@ public class DriverVision {
 		this.usbPort = usbPort;
 	}
 	public void startUSBCamera(){
-		CameraServer server = CameraServer.getInstance();
-		server.startAutomaticCapture(name, usbPort);
+		try{
+			CameraServer server = CameraServer.getInstance();
+			server.startAutomaticCapture(name, usbPort);
+		}catch(Exception e){
+			System.out.println(name + " Not Working: " + e.toString());
+
+		}
 	}
 }
