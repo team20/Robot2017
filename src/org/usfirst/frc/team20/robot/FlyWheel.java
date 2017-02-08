@@ -41,8 +41,15 @@ public class FlyWheel {
 		System.out.println(cps + "CPS");
 		flywheelMaster.set(cps);
 	}
+	public boolean flywheelReady(){
+		if(2900 < flywheelSpeed() && flywheelSpeed() < 3000){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	public double flywheelSpeed(){
-		return flywheelMaster.getSpeed();
+		return flywheelMaster.getSpeed()/4096*10*60;
 	}
 	public void stopFlywheel(){
 		flywheelMaster.set(0);

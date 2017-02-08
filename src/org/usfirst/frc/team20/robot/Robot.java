@@ -179,6 +179,9 @@ public class Robot extends IterativeRobot {
 		highGoalCamera.startUSBCamera();
 		driver.driverControls();
 		operator.operatorControls();
+		SmartDashboard.putNumber("Flywheel RPM", flywheel.flywheelSpeed());
+		SmartDashboard.putBoolean("Flywheel Ready", flywheel.flywheelReady());
+		SmartDashboard.putBoolean("Have Gear", gear.haveGear);
 	}
 
 	/**
