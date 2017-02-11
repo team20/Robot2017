@@ -29,7 +29,6 @@ public class DriveTrain implements PIDOutput {
 	double currentRotationRate;
 	double multiplier;
 	boolean kArcadeStandard_Reported = false;
-	VisionTargeting vision;
 	
 	public DriveTrain(VisionTargeting v) {
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
@@ -51,7 +50,6 @@ public class DriveTrain implements PIDOutput {
 		masterRight.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		masterLeft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		multiplier = 6.5;
-		vision = v;		
 	}
 	
 	public void initializeNavx(){
@@ -112,28 +110,48 @@ public class DriveTrain implements PIDOutput {
 		}
 		return rightEncoder;
 	}
-	
-	public void driveDistanceStraightLeftEncoder(double speed, double inches) {
+	public boolean driveDistanceStraightLeftEncoder(double speed, double inches){
+		boolean doneDriving = false;
+		System.out.println("Speed " + speed); // .5
+		System.out.println("multiplier " + multiplier); // 6.5
+		System.out.println("distance" + inches); // 80
+		double	currentRotationRate = rotateToAngleRate;
+		System.out.println("CurrentRR: " + currentRotationRate);
 		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
 			System.out.println("Done");
-			masterLeft.set(0);
-			masterRight.set(0);
+			 turnDrive(0, 0);
+			doneDriving = true;
+			//leftMaster.set(0);
+			//rightMaster.set(0);
+		}else{
+			  turnDrive(.65, currentRotationRate);
+			 System.out.println("Navx = " + gyro.getAngle());
 		}
-		else{
-			drive(speed, 0, 0);
-			System.out.println(masterLeft.getEncPosition());
-		}	
-	}
+		return doneDriving;
+	}	
+	
+//	public void driveDistanceStraightLeftEncoder(double speed, double inches) {
+//		multiplier = 6.5;
+//		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
+//			System.out.println("Done");
+//			masterLeft.set(0);
+//			masterRight.set(0);
+//		}
+//		else{
+//			drive(speed, 0, 0);
+//			System.out.println(masterLeft.getEncPosition());
+//		}	
+//	}
 	
 	public void driveDistanceStraightRightEncoder(double speed, double inches) {
-		if(masterRight.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
+		if(Math.abs(masterRight.getEncPosition()/1024*Math.PI*4) > (inches*multiplier)){
 			System.out.println("Done");
 			masterLeft.set(0);
 			masterRight.set(0);
 		}
 		else{
 			drive(speed, 0, 0);
-			System.out.println(masterLeft.getEncPosition());
+			System.out.println(masterRight.getEncPosition());
 		}	
 	}
 	
@@ -194,38 +212,63 @@ public class DriveTrain implements PIDOutput {
 		masterLeft.set(leftMotorSpeed);
 	}
 
-	private void TurnAngle(){
-		currentRotationRate = rotateToAngleRate;
-		try {
-			turnDrive(0.0, currentRotationRate);
-			System.out.println(gyro.getAngle());
-		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
-		}
-	}
-	
-	public void turnAngle(double turnAngle) {
-		if (state == States.GET_CAMERA_ANGLE){ 
-			System.out.println("++++ GetCameraAngle Turn Angle =  " + turnAngle);
-			state = States.SET_PID_LOOP;
-		}
-		if (state == States.SET_PID_LOOP){
-				setTurnController();
-				System.out.println("++++++++++++++++++++++++Set Pid Loop ************** ");
-				state = States.TURN_ANGLE;
-		}
-		if (state == States.TURN_ANGLE) {
-			System.out.println("++++++++++++++++++++++++Turn Angle " + turnAngle + " navx angle " + gyro.getAngle());
-			System.out.println("++++++++++++++++++++++++currentRotationRate " + currentRotationRate);
-			TurnAngle();
-			if (Math.abs(currentRotationRate) < .23 && Math.abs(turnAngle - gyro.getAngle()) < .3) {
+	public boolean turnAngle(double turnAngle){
+		double angle = turnAngle;
+		boolean doneTurning = false;
+		double	currentRotationRate = rotateToAngleRate;
+		 if (Math.abs(angle - gyro.getAngle()) < .6 && Math.abs(currentRotationRate) < .3){
 				currentRotationRate = 0;
-				TurnAngle();
-				turnController.disable();
-				state = States.DONE;
+				turnDrive(0.0, 0);
+				//turnController.disable();
+				doneTurning = true;	
 			}
-		}
+		 else
+		 {
+			 try {
+				 turnDrive(0.0, currentRotationRate);
+				 //Timer.delay(0.004);
+				 System.out.println("Navx " + gyro.getAngle());
+				 System.out.println(" currentRotationRate  = " + currentRotationRate);
+				 System.out.println(" Math.abs(angle - hrs.getAngle()) = " +  Math.abs(angle -gyro.getAngle()) );
+			 	} catch ( RuntimeException ex ) {
+			 		DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
+			 	}
+		 }
+		 return doneTurning;
 	}
+
+//	private void TurnAngle(){
+//		currentRotationRate = rotateToAngleRate;
+//		try {
+//			turnDrive(0.0, currentRotationRate);
+//			System.out.println(gyro.getAngle());
+//		} catch (RuntimeException ex) {
+//			DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
+//		}
+//	}
+//	
+//	public void turnAngle(double turnAngle) {
+//		if (state == States.GET_CAMERA_ANGLE){ 
+//			System.out.println("++++ GetCameraAngle Turn Angle =  " + turnAngle);
+//			state = States.SET_PID_LOOP;
+//		}
+//		if (state == States.SET_PID_LOOP){
+//				setTurnController();
+//				System.out.println("++++++++++++++++++++++++Set Pid Loop ************** ");
+//				state = States.TURN_ANGLE;
+//		}
+//		if (state == States.TURN_ANGLE) {
+//			System.out.println("++++++++++++++++++++++++Turn Angle " + turnAngle + " navx angle " + gyro.getAngle());
+//			System.out.println("++++++++++++++++++++++++currentRotationRate " + currentRotationRate);
+//			TurnAngle();
+//			if (Math.abs(currentRotationRate) < .23 && Math.abs(turnAngle - gyro.getAngle()) < .3) {
+//				currentRotationRate = 0;
+//				TurnAngle();
+//				turnController.disable();
+//				state = States.DONE;
+//			}
+//		}
+//	}
 
 	@Override
 	public void pidWrite(double output) {

@@ -121,14 +121,7 @@ public class AutoModesRightEncoder {
 		functions.stopFlywheel();
 	}
 
-	public void startBoilerRed(){	//robot shoots at boiler
-		functions.wallToBoilerRed();
-		functions.shoot(3000.0);
-		functions.stopFlywheel();
-	}
-	
-	public void startBoilerBlue(){	//robot shoots at boiler
-		functions.wallToBoilerBlue();
+	public void startBoiler(){	//robot shoots at boiler
 		functions.shoot(3000.0);
 		functions.stopFlywheel();
 	}

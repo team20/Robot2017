@@ -150,24 +150,13 @@ public class AutoFunctions {
 		drive.turnAngle(vision.getSecondAngle());
 		drive.driveDistanceStraightLeftEncoder(0.5, vision.getSecondDistance());
 	}
-	public void wallToBoilerRed(){
-		drive.driveDistanceStraightLeftEncoder(1, 45);
-		drive.turnAngle(-135);
-		drive.driveDistanceStraightLeftEncoder(0.5, 45);
-	}
-	public void wallToBoilerBlue(){
-		drive.driveDistanceStraightLeftEncoder(1, 45);
-		drive.turnAngle(135);
-		drive.driveDistanceStraightLeftEncoder(0.5, 45);
-	}
 	public void shoot(double RPMS){
 		boolean shooting = true;
 		flywheel.shootWithEncoders(RPMS);
 		collector.intake(1);
 		hopper.hopperMotorIntoFlywheel(1);
-		while(shooting){
-			hopper.actuateAgitator(); //TODO make like robot.java
-			hopper.retractAgitator();
+		if(shooting){
+			hopper.runAgitator();
 		}
 	}
 	public void stopFlywheel(){

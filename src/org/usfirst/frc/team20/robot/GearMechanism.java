@@ -15,17 +15,19 @@ public class GearMechanism {
 	}
 	
 	public void gearFlapOut(){
-		gearFlap.set(DoubleSolenoid.Value.kForward);
+		gearFlap.set(DoubleSolenoid.Value.kReverse);
 	}
 	public void gearFlapIn(){
-		gearFlap.set(DoubleSolenoid.Value.kReverse);
+		gearFlap.set(DoubleSolenoid.Value.kForward);
 	}
 	public void checkGear(){
 		if(gearBumpSwitch1.get() || gearBumpSwitch2.get()){
 			haveGear = true;
+			gearFlapIn();
 		}
 		else{
 			haveGear = false;
+			gearFlapOut();
 		}
 	}
 }

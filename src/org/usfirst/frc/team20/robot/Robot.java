@@ -47,30 +47,44 @@ public class Robot extends IterativeRobot {
 		operator = new OperatorControls(hopper, gear, flywheel, vision, collector);
 		gearCamera = new DriverVision("Gear Camera", 0);
 		highGoalCamera = new DriverVision("High Goal Camera", 1);
-		
+		gearCamera.startUSBCamera();
+		highGoalCamera.startUSBCamera();
+
 		chooser = new SendableChooser<String>();
+		//Basic AutoModes
 		chooser.addDefault("Do Nothing", "DoNothing");
 		chooser.addObject("Cross Baseline", "CrossBaseline");
+		//Starting at the Boiler AutoMode
+		chooser.addObject("Start at Boiler", "StartBoiler");
+		//Just the Middle Gear AutoModes
 		chooser.addObject("Middle Gear", "MiddleGear");
-//		chooser.addObject("Side Gear, Red or Blue", "SideGear");
-		chooser.addObject("Right Gear", "Right");
-		chooser.addObject("Left Gear", "Left");
-		chooser.addObject("Red: Middle Gear to Hopper", "RedMiddleHopper");
-		chooser.addObject("Blue: Middle Gear to Hopper", "BlueMiddleHopper");
-		chooser.addObject("Red: Right Gear to Hopper", "RedRightHopper");
-		chooser.addObject("Blue: Right Gear to Hopper", "BlueRightHopper");
-		chooser.addObject("Red: Left Gear to Hopper", "RedLeftHopper");
-		chooser.addObject("Blue: Left Gear to Hopper", "BlueLeftHopper");
+		chooser.addObject("Right Gear", "RightGear");
+		chooser.addObject("Left Gear", "LeftGear");
+		//Boiler to Gear AutoModes
+		chooser.addObject("Red: Boiler to Middle Gear", "RedBoilerMiddle");
+		chooser.addObject("Red: Boiler to Right Gear", "RedBoilerRight");
+		chooser.addObject("Red: Boiler to Left Gear", "RedBoilerLeft");
+		chooser.addObject("Blue: Boiler to Middle Gear", "BlueBoilerMiddle");
+		chooser.addObject("Blue: Boiler Right Gear", "BlueBoilerRight");
+		chooser.addObject("Blue: Boiler Left Gear", "BlueBoilerLeft");
+		//Gear to Boiler AutoModes
 		chooser.addObject("Red: Middle Gear to Boiler", "RedMiddleBoiler");
-		chooser.addObject("Blue: Middle Gear to Boiler", "BlueMiddleBoiler");
 		chooser.addObject("Red: Right Gear to Boiler", "RedRightBoiler");
-		chooser.addObject("Blue: Right Gear to Boiler", "BlueRightBoiler");
 		chooser.addObject("Red: Left Gear to Boiler", "RedLeftBoiler");
+		chooser.addObject("Blue: Middle Gear to Boiler", "BlueMiddleBoiler");
+		chooser.addObject("Blue: Right Gear to Boiler", "BlueRightBoiler");
 		chooser.addObject("Blue: Left Gear to Boiler", "BlueLeftBoiler");
+		//Hopper to Boiler AutoModes
 		chooser.addObject("Red: Hopper to Boiler", "RedHopperBoiler");
 		chooser.addObject("Blue: Hopper to Boiler", "BlueHopperBoiler");
-		chooser.addObject("Red: Start at Boiler", "RedStartBoiler");
-		chooser.addObject("Blue: Start at Boiler", "BlueStartBoiler");
+		//Gear to Hopper AutoModes
+		chooser.addObject("Red: Middle Gear to Hopper", "RedMiddleHopper");
+		chooser.addObject("Red: Right Gear to Hopper", "RedRightHopper");
+		chooser.addObject("Red: Left Gear to Hopper", "RedLeftHopper");
+		chooser.addObject("Blue: Middle Gear to Hopper", "BlueMiddleHopper");
+		chooser.addObject("Blue: Right Gear to Hopper", "BlueRightHopper");
+		chooser.addObject("Blue: Left Gear to Hopper", "BlueLeftHopper");
+
 		SmartDashboard.putData("Auto choices", chooser);
 	}
 
@@ -99,9 +113,11 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousPeriodic() {
 		switch (autoSelected) {
+
+		//Basic AutoModes
 		case "DoNothing":
 			auto.doNothing();
-			break;
+			break;	
 		case "CrossBaseline":
 			if(drive.leftEncoder()){
 				auto.crossBaseline();
@@ -111,62 +127,233 @@ public class Robot extends IterativeRobot {
 				auto.doNothing();
 			}
 			break;
+
+		//Start at the Boiler AutoMode
+		case "StartBoiler":
+			if(drive.leftEncoder()){	
+				auto.startBoiler();
+			}else if(drive.rightEncoder()){
+				autoR.startBoiler();
+			}else{
+				auto.doNothing();
+			}
+			break;
+			
+		//Just the Gear AutoModes
 		case "MiddleGear":
-			auto.middlePeg();
+			if(drive.leftEncoder()){
+				auto.middlePeg();
+			}else if(drive.rightEncoder()){
+				autoR.middlePeg();
+			}else{
+				auto.doNothing();
+			}
+			break;		
+ 		case "RightGear":
+			if(drive.leftEncoder()){
+ 				auto.rightPeg();
+			}else if(drive.rightEncoder()){
+				autoR.rightPeg();
+			}else{
+				auto.doNothing();
+			}
 			break;
- 		case "Right":
-			auto.rightPeg();
+		case "LeftGear":
+			if(drive.leftEncoder()){	
+				auto.leftPeg();
+			}else if(drive.rightEncoder()){
+				autoR.leftPeg();
+			}else{
+				auto.doNothing();
+			}
 			break;
-		case "Left":
-			auto.leftPeg();
+
+		//AutoModes That Go From the Boiler to a Gear
+		case "RedBoilerMiddle":
+			if(drive.leftEncoder()){	
+				//auto.boilerMiddleRed();
+			}else if(drive.rightEncoder()){
+				//autoR.boilerMiddleRed();
+			}else{
+				auto.doNothing();
+			}
+			break;			
+		case "RedBoilerRight":
+			if(drive.leftEncoder()){	
+				//auto.boilerRightRed();
+			}else if(drive.rightEncoder()){
+				//autoR.boilerRightRed();
+			}else{
+				auto.doNothing();
+			}
 			break;
-		case "RedMiddleHopper":
-			auto.middleHopperRed();
+		case "RedBoilerLeft":
+			if(drive.leftEncoder()){	
+				//auto.boilerLeftRed();
+			}else if(drive.rightEncoder()){
+				//autoR.boilerLeftRed();
+			}else{
+				auto.doNothing();
+			}
 			break;
-		case "BlueMiddleHopper":
-			auto.middleHopperBlue();
+		case "BlueBoilerMiddle":
+			if(drive.leftEncoder()){	
+				//auto.boilerMiddleBlue();
+			}else if(drive.rightEncoder()){
+				//autoR.boilerMiddleBlue();
+			}else{
+				auto.doNothing();
+			}
+			break;			
+		case "BlueBoilerRight":
+			if(drive.leftEncoder()){	
+				//auto.boilerRightBlue();
+			}else if(drive.rightEncoder()){
+				//autoR.boilerRightBlue();
+			}else{
+				auto.doNothing();
+			}
 			break;
-		case "RedRightHopper":
-			auto.rightHopperRed();
+		case "BlueBoilerLeft":
+			if(drive.leftEncoder()){	
+				//auto.boilerLeftBlue();
+			}else if(drive.rightEncoder()){
+				//autoR.boilerLeftBlue();
+			}else{
+				auto.doNothing();
+			}
 			break;
-		case "BlueRightHopper":
-			auto.rightHopperBlue();
-			break;
-		case "RedLeftHopper":
-			auto.leftHopperRed();
-			break;
-		case "BlueLeftHopper":
-			auto.leftHopperBlue();
-			break;
+
+		//AutoModes That Go From a Gear to the Boiler
 		case "RedMiddleBoiler":
-			auto.middleBoilerRed();
-			break;
-		case "BlueMiddleBoiler":
-			auto.middleBoilerBlue();
-			break;
+			if(drive.leftEncoder()){	
+				auto.middleBoilerRed();
+			}else if(drive.rightEncoder()){
+				autoR.middleBoilerRed();
+			}else{
+				auto.doNothing();
+			}
+			break;			
 		case "RedRightBoiler":
-			auto.rightBoilerRed();
-			break;
-		case "BlueRightBoiler":
-			auto.rightBoilerBlue();
+			if(drive.leftEncoder()){	
+				auto.rightBoilerRed();
+			}else if(drive.rightEncoder()){
+				autoR.rightBoilerRed();
+			}else{
+				auto.doNothing();
+			}
 			break;
 		case "RedLeftBoiler":
-			auto.leftBoilerRed();
+			if(drive.leftEncoder()){	
+				auto.leftBoilerRed();
+			}else if(drive.rightEncoder()){
+				autoR.leftBoilerRed();
+			}else{
+				auto.doNothing();
+			}
+			break;
+		case "BlueMiddleBoiler":
+			if(drive.leftEncoder()){	
+				auto.middleBoilerBlue();
+			}else if(drive.rightEncoder()){
+				autoR.middleBoilerBlue();
+			}else{
+				auto.doNothing();
+			}
+			break;			
+		case "BlueRightBoiler":
+			if(drive.leftEncoder()){	
+				auto.rightBoilerBlue();
+			}else if(drive.rightEncoder()){
+				autoR.rightBoilerBlue();
+			}else{
+				auto.doNothing();
+			}
 			break;
 		case "BlueLeftBoiler":
-			auto.leftBoilerBlue();
+			if(drive.leftEncoder()){	
+				auto.leftBoilerBlue();
+			}else if(drive.rightEncoder()){
+				autoR.leftBoilerBlue();
+			}else{
+				auto.doNothing();
+			}
 			break;
+			
+		//AutoModes That Go From the Hopper to the Boiler
 		case "RedHopperBoiler":
-			auto.hopperBoilerRed();
-			break;
+			if(drive.leftEncoder()){	
+				auto.hopperBoilerRed();
+			}else if(drive.rightEncoder()){
+				autoR.hopperBoilerRed();
+			}else{
+				auto.doNothing();
+			}
+			break;			
 		case "BlueHopperBoiler":
-			auto.hopperBoilerBlue();
+			if(drive.leftEncoder()){	
+				auto.hopperBoilerBlue();
+			}else if(drive.rightEncoder()){
+				autoR.hopperBoilerBlue();
+			}else{
+				auto.doNothing();
+			}
 			break;
-		case "RedStartBoiler":
-			auto.startBoilerRed();
+			
+		//AutoModes That Place a Gear Then Go to the Hopper
+		case "RedMiddleHopper":
+			if(drive.leftEncoder()){	
+				auto.middleHopperRed();
+			}else if(drive.rightEncoder()){
+				autoR.middleHopperRed();
+			}else{
+				auto.doNothing();
+			}
 			break;
-		case "BlueStartBoiler":
-			auto.startBoilerBlue();
+		case "RedRightHopper":
+			if(drive.leftEncoder()){	
+				auto.rightHopperRed();
+			}else if(drive.rightEncoder()){
+				autoR.rightHopperRed();
+			}else{
+				auto.doNothing();
+			}
+			break;
+		case "RedLeftHopper":
+			if(drive.leftEncoder()){	
+				auto.leftHopperRed();
+			}else if(drive.rightEncoder()){
+				autoR.leftHopperRed();
+			}else{
+				auto.doNothing();
+			}
+			break;
+		case "BlueMiddleHopper":
+			if(drive.leftEncoder()){	
+				auto.middleHopperBlue();
+			}else if(drive.rightEncoder()){
+				autoR.middleHopperBlue();
+			}else{
+				auto.doNothing();
+			}
+			break;
+		case "BlueRightHopper":
+			if(drive.leftEncoder()){	
+				auto.rightHopperBlue();
+			}else if(drive.rightEncoder()){
+				autoR.rightHopperBlue();
+			}else{
+				auto.doNothing();
+			}
+			break;
+		case "BlueLeftHopper":
+			if(drive.leftEncoder()){	
+				auto.leftHopperBlue();
+			}else if(drive.rightEncoder()){
+				autoR.leftHopperBlue();
+			}else{
+				auto.doNothing();
+			}
 			break;
 		}
 	}
@@ -175,8 +362,6 @@ public class Robot extends IterativeRobot {
 * This function is called periodically during operator control
 */
 	public void teleopPeriodic() {
-		gearCamera.startUSBCamera();
-		highGoalCamera.startUSBCamera();
 		driver.driverControls();
 		operator.operatorControls();
 		SmartDashboard.putNumber("Flywheel RPM", flywheel.flywheelSpeed());
