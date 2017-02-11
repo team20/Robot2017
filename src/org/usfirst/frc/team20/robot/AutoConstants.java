@@ -9,10 +9,12 @@ public class AutoConstants {	//TODO tune all distances and angles
 	public static final double leftPegHardAngle = 45;
 	public static final double rightPegHardAngle = -45;
 	public static final double backUpFromPegDistance = 5;
+	public static final double backUpFromBoilerDistance = 10;
 	public static final double middlePegToBoilerRedAngle = 20;
 	public static final double middlePegToBoilerBlueAngle = -20;
 	public static final double leftPegToBoilerRedAngle = 5;
 	public static final double leftPegToBoilerBlueAngle = 5;
 	public static final double rightPegToBoilerRedAngle = 5;
 	public static final double rightPegToBoilerBlueAngle = 5;
+	public static final double boilerToSidePegAngle = 180;
 }

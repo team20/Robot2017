@@ -26,6 +26,11 @@ public class AutoModes {
 	public void leftPeg(){
 		functions.toLeftPeg();
 	}
+	
+	public void boilerToSidePeg(){
+		functions.shoot(3000.0);
+		functions.backUpFromBoilerTurnAndTarget();
+	}
 		
 	public void middleHopperRed(){	//robot puts a gear on the middle peg and then triggers a hopper
 		functions.toMiddlePeg();

@@ -56,17 +56,12 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Cross Baseline", "CrossBaseline");
 		//Starting at the Boiler AutoMode
 		chooser.addObject("Start at Boiler", "StartBoiler");
-		//Just the Middle Gear AutoModes
+		//Just the Gear AutoModes
 		chooser.addObject("Middle Gear", "MiddleGear");
 		chooser.addObject("Right Gear", "RightGear");
 		chooser.addObject("Left Gear", "LeftGear");
-		//Boiler to Gear AutoModes
-		chooser.addObject("Red: Boiler to Middle Gear", "RedBoilerMiddle");
-		chooser.addObject("Red: Boiler to Right Gear", "RedBoilerRight");
-		chooser.addObject("Red: Boiler to Left Gear", "RedBoilerLeft");
-		chooser.addObject("Blue: Boiler to Middle Gear", "BlueBoilerMiddle");
-		chooser.addObject("Blue: Boiler Right Gear", "BlueBoilerRight");
-		chooser.addObject("Blue: Boiler Left Gear", "BlueBoilerLeft");
+		//Boiler to Gear AutoMode
+		chooser.addObject("Boiler to Closest Gear", "BoilerSideGear");
 		//Gear to Boiler AutoModes
 		chooser.addObject("Red: Middle Gear to Boiler", "RedMiddleBoiler");
 		chooser.addObject("Red: Right Gear to Boiler", "RedRightBoiler");
@@ -168,57 +163,12 @@ public class Robot extends IterativeRobot {
 			}
 			break;
 
-		//AutoModes That Go From the Boiler to a Gear
-		case "RedBoilerMiddle":
+		//AutoMode That Goes From the Boiler to a Gear
+		case "BoilerSideGear":
 			if(drive.leftEncoder()){	
-				//auto.boilerMiddleRed();
+				auto.boilerToSidePeg();
 			}else if(drive.rightEncoder()){
-				//autoR.boilerMiddleRed();
-			}else{
-				auto.doNothing();
-			}
-			break;			
-		case "RedBoilerRight":
-			if(drive.leftEncoder()){	
-				//auto.boilerRightRed();
-			}else if(drive.rightEncoder()){
-				//autoR.boilerRightRed();
-			}else{
-				auto.doNothing();
-			}
-			break;
-		case "RedBoilerLeft":
-			if(drive.leftEncoder()){	
-				//auto.boilerLeftRed();
-			}else if(drive.rightEncoder()){
-				//autoR.boilerLeftRed();
-			}else{
-				auto.doNothing();
-			}
-			break;
-		case "BlueBoilerMiddle":
-			if(drive.leftEncoder()){	
-				//auto.boilerMiddleBlue();
-			}else if(drive.rightEncoder()){
-				//autoR.boilerMiddleBlue();
-			}else{
-				auto.doNothing();
-			}
-			break;			
-		case "BlueBoilerRight":
-			if(drive.leftEncoder()){	
-				//auto.boilerRightBlue();
-			}else if(drive.rightEncoder()){
-				//autoR.boilerRightBlue();
-			}else{
-				auto.doNothing();
-			}
-			break;
-		case "BlueBoilerLeft":
-			if(drive.leftEncoder()){	
-				//auto.boilerLeftBlue();
-			}else if(drive.rightEncoder()){
-				//autoR.boilerLeftBlue();
+				autoR.boilerToSidePeg();
 			}else{
 				auto.doNothing();
 			}

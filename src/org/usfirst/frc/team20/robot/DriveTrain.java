@@ -119,40 +119,33 @@ public class DriveTrain implements PIDOutput {
 		System.out.println("CurrentRR: " + currentRotationRate);
 		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
 			System.out.println("Done");
-			 turnDrive(0, 0);
+			stopDrive();
 			doneDriving = true;
-			//leftMaster.set(0);
-			//rightMaster.set(0);
 		}else{
-			  turnDrive(.65, currentRotationRate);
-			 System.out.println("Navx = " + gyro.getAngle());
+			turnDrive(.65, currentRotationRate);
+			System.out.println("Navx = " + gyro.getAngle());
+			doneDriving = false;
 		}
 		return doneDriving;
 	}	
-	
-//	public void driveDistanceStraightLeftEncoder(double speed, double inches) {
-//		multiplier = 6.5;
-//		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
-//			System.out.println("Done");
-//			masterLeft.set(0);
-//			masterRight.set(0);
-//		}
-//		else{
-//			drive(speed, 0, 0);
-//			System.out.println(masterLeft.getEncPosition());
-//		}	
-//	}
-	
-	public void driveDistanceStraightRightEncoder(double speed, double inches) {
-		if(Math.abs(masterRight.getEncPosition()/1024*Math.PI*4) > (inches*multiplier)){
+		
+	public boolean driveDistanceStraightRightEncoder(double speed, double inches) {
+		boolean doneDriving = false;
+		System.out.println("Speed " + speed); // .5
+		System.out.println("multiplier " + multiplier); // 6.5
+		System.out.println("distance" + inches); // 80
+		double	currentRotationRate = rotateToAngleRate;
+		System.out.println("CurrentRR: " + currentRotationRate);
+		if(masterRight.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
 			System.out.println("Done");
-			masterLeft.set(0);
-			masterRight.set(0);
+			stopDrive();
+			doneDriving = true;
+		}else{
+			turnDrive(.65, currentRotationRate);
+			System.out.println("Navx = " + gyro.getAngle());
+			doneDriving = false;
 		}
-		else{
-			drive(speed, 0, 0);
-			System.out.println(masterRight.getEncPosition());
-		}	
+		return doneDriving;
 	}
 	
 	public void turnRight(double speed) { // turns right
