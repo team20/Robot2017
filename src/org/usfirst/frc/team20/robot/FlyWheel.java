@@ -12,6 +12,7 @@ public class FlyWheel {
 		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MASTER_PORT);
 		flywheelFollower = new CANTalon(Constants.FLYWHEEL_FOLLOWER_PORT);
 		flywheelFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
+		flywheelFollower.reverseOutput(true);
 		flywheelFollower.set(flywheelMaster.getDeviceID());
 	}	
 	
@@ -25,8 +26,9 @@ public class FlyWheel {
 		flywheelMaster.setD(d);
 		flywheelMaster.setF(f);
 	}
-	public void shootWithEncoders(double RPMS){
+	public boolean shootWithEncoders(double RPMS){
 		boolean flywheelEncoder = false;
+		boolean shooting = true;
 		try{
 			FeedbackDeviceStatus sensorStatusFlywheel = flywheelMaster.isSensorPresent(FeedbackDevice.QuadEncoder);
 			flywheelEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusFlywheel);
@@ -40,6 +42,7 @@ public class FlyWheel {
 		double cps = RPMS/60*1024;	//cycles per second
 		System.out.println(cps + "CPS");
 		flywheelMaster.set(cps);
+		return shooting;
 	}
 	public boolean flywheelReady(){
 		if(2900 < flywheelSpeed() && flywheelSpeed() < 3000){

@@ -11,6 +11,10 @@ public class AutoModes {
 		
 	}
 	
+	public void auto1(){
+		functions.autoMode1();
+	}
+	
 	public void crossBaseline(){	//robot drives forward to cross the baseline
 		functions.crossBaseline();
 	}

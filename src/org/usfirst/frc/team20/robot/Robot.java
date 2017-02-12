@@ -2,6 +2,7 @@ package org.usfirst.frc.team20.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -42,26 +43,42 @@ public class Robot extends IterativeRobot {
 		flywheel = new FlyWheel();
 		collector = new GroundCollector();
 		hopper = new Hopper();
-		gear = new GearMechanism();
+		gear = new GearMechanism(flywheel);
 		driver = new DriverControls(drive);
 		operator = new OperatorControls(hopper, gear, flywheel, vision, collector);
-		gearCamera = new DriverVision("Gear Camera", 0);
-		highGoalCamera = new DriverVision("High Goal Camera", 1);
-		gearCamera.startUSBCamera();
-		highGoalCamera.startUSBCamera();
+
+		try{
+			gearCamera = new DriverVision("Gear Camera", 0);
+			gearCamera.startUSBCamera();			
+		}catch(Exception e){
+			System.out.println("Gear Camera Error: " + e.toString());
+		}
+		try{
+			highGoalCamera = new DriverVision("High Goal Camera", 1);
+			highGoalCamera.startUSBCamera();			
+		}catch(Exception e){
+			System.out.println("Gear Camera Error: " + e.toString());
+		}
 
 		chooser = new SendableChooser<String>();
+		
 		//Basic AutoModes
 		chooser.addDefault("Do Nothing", "DoNothing");
 		chooser.addObject("Cross Baseline", "CrossBaseline");
+		
+		chooser.addObject("Auto One", "Auto1");
+		
 		//Starting at the Boiler AutoMode
 		chooser.addObject("Start at Boiler", "StartBoiler");
+		
 		//Just the Gear AutoModes
 		chooser.addObject("Middle Gear", "MiddleGear");
 		chooser.addObject("Right Gear", "RightGear");
 		chooser.addObject("Left Gear", "LeftGear");
+		
 		//Boiler to Gear AutoMode
 		chooser.addObject("Boiler to Closest Gear", "BoilerSideGear");
+		
 		//Gear to Boiler AutoModes
 		chooser.addObject("Red: Middle Gear to Boiler", "RedMiddleBoiler");
 		chooser.addObject("Red: Right Gear to Boiler", "RedRightBoiler");
@@ -69,9 +86,11 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Blue: Middle Gear to Boiler", "BlueMiddleBoiler");
 		chooser.addObject("Blue: Right Gear to Boiler", "BlueRightBoiler");
 		chooser.addObject("Blue: Left Gear to Boiler", "BlueLeftBoiler");
+		
 		//Hopper to Boiler AutoModes
 		chooser.addObject("Red: Hopper to Boiler", "RedHopperBoiler");
 		chooser.addObject("Blue: Hopper to Boiler", "BlueHopperBoiler");
+
 		//Gear to Hopper AutoModes
 		chooser.addObject("Red: Middle Gear to Hopper", "RedMiddleHopper");
 		chooser.addObject("Red: Right Gear to Hopper", "RedRightHopper");
@@ -107,10 +126,16 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+		Scheduler.getInstance().run();
 		switch (autoSelected) {
-
+		case "Auto1":
+			System.out.println("Running Auto One");
+			auto.auto1();
+			break;
+			
 		//Basic AutoModes
 		case "DoNothing":
+			System.out.println("Do Nothing");
 			auto.doNothing();
 			break;	
 		case "CrossBaseline":
@@ -125,6 +150,7 @@ public class Robot extends IterativeRobot {
 
 		//Start at the Boiler AutoMode
 		case "StartBoiler":
+			System.out.println("Start at Boiler");
 			if(drive.leftEncoder()){	
 				auto.startBoiler();
 			}else if(drive.rightEncoder()){
@@ -312,6 +338,7 @@ public class Robot extends IterativeRobot {
 * This function is called periodically during operator control
 */
 	public void teleopPeriodic() {
+		System.out.println("Auto Mode: " + chooser);
 		driver.driverControls();
 		operator.operatorControls();
 		SmartDashboard.putNumber("Flywheel RPM", flywheel.flywheelSpeed());

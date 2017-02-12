@@ -73,21 +73,21 @@ public class AutoFunctions {
 				group = Groups.GROUP_3;
 			}
 		}
-		if(state == States.TURN_ANGLE && group == Groups.GROUP_3){
-			drive.turnAngle(angleFromCameraTwo);
-			if(drive.turnAngle(angleFromCameraTwo)){
-				drive.stopDrive();
-				state = States.GO_DISTANCE;
-				group = Groups.GROUP_3;
-			}
-		}
-		if(state == States.GO_DISTANCE && group == Groups.GROUP_3){
-			drive.driveDistanceStraightLeftEncoder(0.8, distanceFromCameraTwo);
-			if(drive.driveDistanceStraightLeftEncoder(0.8, distanceFromCameraTwo)){
-				drive.stopDrive();
-				state = States.WAIT_FOR_GEAR;
-			}
-		}
+//		if(state == States.TURN_ANGLE && group == Groups.GROUP_3){
+//			drive.turnAngle(angleFromCameraTwo);
+//			if(drive.turnAngle(angleFromCameraTwo)){
+//				drive.stopDrive();
+//				state = States.GO_DISTANCE;
+//				group = Groups.GROUP_3;
+//			}
+//		}
+//		if(state == States.GO_DISTANCE && group == Groups.GROUP_3){
+//			drive.driveDistanceStraightLeftEncoder(0.8, distanceFromCameraTwo);
+//			if(drive.driveDistanceStraightLeftEncoder(0.8, distanceFromCameraTwo)){
+//				drive.stopDrive();
+//				state = States.WAIT_FOR_GEAR;
+//			}
+//		}
 	}
 	public void backUpFromBoilerTurnAndTarget(){
 		hardDistanceHardAngle(AutoConstants.backUpSpeed, AutoConstants.backUpFromBoilerDistance,
@@ -214,13 +214,13 @@ public class AutoFunctions {
 		hardDistanceHardAngle(AutoConstants.backUpSpeed, AutoConstants.backUpFromPegDistance,
 				AutoConstants.rightPegToBoilerBlueAngle);
 		visionTarget();
-
+		state = States.DONE;
 	}
 	public void hopperToBoilerRed(){
-
+		
 	}
 	public void hopperToBoilerBlue(){
-
+		
 	}
 	public void toHopperRed(){
 		//TODO

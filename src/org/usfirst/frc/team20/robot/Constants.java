@@ -20,8 +20,8 @@ public class Constants {
 	public static final int DRIVERTRAIN_RETRACT_PORT = 2;
 	public static final int HOPPER_EXTEND_PORT = 1;
 	public static final int HOPPER_RETRACT_PORT = 0;
-	public static final int GEAR_EXTEND_PORT = 5;
-	public static final int GEAR_RETRACT_PORT = 6;
+	public static final int GEAR_EXTEND_PORT = 6;
+	public static final int GEAR_RETRACT_PORT = 7;
 
 	//Sockets
 	public static final int VISION_SOCKET_PORT_NUMBER = 0;
@@ -34,11 +34,11 @@ public class Constants {
 	public static final double FLYWHEEL_F = 0.0165;
 
 	//NavX PID
-	public static final double NavX_P = 0.025;
-	public static final double NavX_I = 0.001;
+	public static final double NavX_P = 0.035;
+	public static final double NavX_I = 0.00090;
 	public static final double NavX_D = 0.00;
 	public static final double NavX_F = 0.00;
-	public static final double NavX_Tolerance_Degrees = 2.0f;
+	public static final double NavX_Tolerance_Degrees = 1.0f;
 	
 	//Bump Switch
 	public static final int GEAR_BUMP_SWITCH_PORT_ONE = 0;

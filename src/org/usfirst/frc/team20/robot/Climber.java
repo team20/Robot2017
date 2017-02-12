@@ -9,6 +9,7 @@ public class Climber {
 		climberMaster = new CANTalon(Constants.CLIMBER_MASTER_PORT);
 		climberFollower = new CANTalon(Constants.CLIMBER_MASTER_PORT);
 		climberFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
+		climberFollower.reverseOutput(true);
 		climberFollower.set(climberMaster.getDeviceID());
 	}
 	

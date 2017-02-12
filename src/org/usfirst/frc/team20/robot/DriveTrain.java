@@ -14,29 +14,25 @@ public class DriveTrain implements PIDOutput {
 	DriverStation d = DriverStation.getInstance();
 	DoubleSolenoid shifter = new DoubleSolenoid(Constants.DRIVETRAIN_EXTEND_PORT,
 			Constants.DRIVERTRAIN_RETRACT_PORT);
-	CANTalon masterRight;
-	CANTalon followerRightOne;
-	CANTalon followerRightTwo;
-	CANTalon masterLeft;
-	CANTalon followerLeftOne;
-	CANTalon followerLeftTwo;
-	AHRS gyro;
+	CANTalon masterRight, followerRightOne, followerRightTwo;
+	CANTalon masterLeft, followerLeftOne, followerLeftTwo;
 	PIDController turnController;
+	AHRS gyro;
 	int state;
-	double turnAngle = 0.0;
-	double startingAngle = 0, adjustment;
-	double rotateToAngleRate;
-	double currentRotationRate;
+	double turnAngle = 0.0, startingAngle = 0.0;
+	double adjustment, rotateToAngleRate, currentRotationRate;
 	double multiplier;
 	boolean kArcadeStandard_Reported = false;
 	
 	public DriveTrain(VisionTargeting v) {
+		//Setting the Motor Port Numbers
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
 		followerRightOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_ONE);
 		followerRightTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_TWO);
 		masterLeft = new CANTalon(Constants.DRIVETRAIN_MASTER_LEFT_MOTOR_PORT);
 		followerLeftOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_ONE);
 		followerLeftTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO);
+		//Setting the Follower Motors to Their Respective Masters
 		followerRightOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerRightOne.set(masterRight.getDeviceID());
 		followerRightTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
@@ -45,6 +41,7 @@ public class DriveTrain implements PIDOutput {
 		followerLeftOne.set(masterLeft.getDeviceID());
 		followerLeftTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerLeftTwo.set(masterLeft.getDeviceID());
+		//Setting the Encoders on the Master Motors
 //		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 //		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		masterRight.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -53,12 +50,12 @@ public class DriveTrain implements PIDOutput {
 	}
 	
 	public void initializeNavx(){
-			gyro = new AHRS(SerialPort.Port.kMXP);
+		gyro = new AHRS(SerialPort.Port.kMXP);
 	}
 	
 	public void setTurnController(){
-		turnController = new PIDController(Constants.NavX_P, Constants.NavX_I, Constants.NavX_D, Constants.NavX_F, gyro,
-				this);
+		turnController = new PIDController(Constants.NavX_P, Constants.NavX_I, Constants.NavX_D,
+				Constants.NavX_F, gyro, this);
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(Constants.NavX_Tolerance_Degrees);
@@ -229,39 +226,6 @@ public class DriveTrain implements PIDOutput {
 		 }
 		 return doneTurning;
 	}
-
-//	private void TurnAngle(){
-//		currentRotationRate = rotateToAngleRate;
-//		try {
-//			turnDrive(0.0, currentRotationRate);
-//			System.out.println(gyro.getAngle());
-//		} catch (RuntimeException ex) {
-//			DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
-//		}
-//	}
-//	
-//	public void turnAngle(double turnAngle) {
-//		if (state == States.GET_CAMERA_ANGLE){ 
-//			System.out.println("++++ GetCameraAngle Turn Angle =  " + turnAngle);
-//			state = States.SET_PID_LOOP;
-//		}
-//		if (state == States.SET_PID_LOOP){
-//				setTurnController();
-//				System.out.println("++++++++++++++++++++++++Set Pid Loop ************** ");
-//				state = States.TURN_ANGLE;
-//		}
-//		if (state == States.TURN_ANGLE) {
-//			System.out.println("++++++++++++++++++++++++Turn Angle " + turnAngle + " navx angle " + gyro.getAngle());
-//			System.out.println("++++++++++++++++++++++++currentRotationRate " + currentRotationRate);
-//			TurnAngle();
-//			if (Math.abs(currentRotationRate) < .23 && Math.abs(turnAngle - gyro.getAngle()) < .3) {
-//				currentRotationRate = 0;
-//				TurnAngle();
-//				turnController.disable();
-//				state = States.DONE;
-//			}
-//		}
-//	}
 
 	@Override
 	public void pidWrite(double output) {

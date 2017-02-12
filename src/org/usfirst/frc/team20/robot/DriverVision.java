@@ -15,7 +15,6 @@ public class DriverVision {
 			server.startAutomaticCapture(name, usbPort);
 		}catch(Exception e){
 			System.out.println(name + " Not Working: " + e.toString());
-
 		}
 	}
 }
