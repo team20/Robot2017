@@ -57,5 +57,11 @@ public class FlyWheel {
 	public void stopFlywheel(){
 		flywheelMaster.set(0);
 	}
+	public boolean flyCurrent(){
+		if (flywheelMaster.getOutputCurrent() >= 100 || flywheelFollower.getOutputCurrent() >= 100){
+			return false;
+		}
+		return true;
+	}
 }
  
