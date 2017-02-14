@@ -231,4 +231,17 @@ public class DriveTrain implements PIDOutput {
 	public void pidWrite(double output) {
 		rotateToAngleRate = output;
 	}
+	public boolean talonCurrentLeft(){
+		if (masterLeft.getOutputCurrent() >= 100 || followerLeftOne.getOutputCurrent() >= 100 || followerLeftTwo.getOutputCurrent() >= 100){
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean talonCurrentRight(){
+		if (masterRight.getOutputCurrent() >= 100 || followerRightOne.getOutputCurrent() >= 100 || followerRightTwo.getOutputCurrent() >= 100){
+			return false;
+		}
+		return true;
+	}
 }
