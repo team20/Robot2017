@@ -344,6 +344,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Flywheel RPM", flywheel.flywheelSpeed());
 		SmartDashboard.putBoolean("Flywheel Ready", flywheel.flywheelReady());
 		SmartDashboard.putBoolean("Have Gear", gear.haveGear);
+		SmartDashboard.putBoolean("Right Current Good", drive.talonCurrentRight()); //TODO determine max acceptable current
+		SmartDashboard.putBoolean("Left Current Good", drive.talonCurrentLeft());   //Stall current is 133 amps
+		SmartDashboard.putBoolean("Flywheel Current Good", flywheel.flyCurrent());
 	}
 
 	/**
