@@ -1,4 +1,4 @@
-package org.usfirst.frc.team20.robot;
+	package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -6,42 +6,42 @@ import com.ctre.CANTalon.FeedbackDeviceStatus;
 import com.ctre.CANTalon.TalonControlMode;
 
 public class FlyWheel {
-	CANTalon flywheelMaster, flywheelFollower;
-	
+//	CANTalon flywheelMaster, flywheelFollower;
+//	
 	public FlyWheel(){
-		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MASTER_PORT);
-		flywheelFollower = new CANTalon(Constants.FLYWHEEL_FOLLOWER_PORT);
-		flywheelFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
-		flywheelFollower.reverseOutput(true);
-		flywheelFollower.set(flywheelMaster.getDeviceID());
+//		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MASTER_PORT);
+//		flywheelFollower = new CANTalon(Constants.FLYWHEEL_FOLLOWER_PORT);
+//		flywheelFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
+//		flywheelFollower.reverseOutput(true);
+//		flywheelFollower.set(flywheelMaster.getDeviceID());
 	}	
-	
+//	
 	public void shoot(double speed){
-		flywheelMaster.changeControlMode(TalonControlMode.Voltage);
-		flywheelMaster.set(-speed);
+//		flywheelMaster.changeControlMode(TalonControlMode.Voltage);
+//		flywheelMaster.set(-speed);
 	}
-	public void setPID(double p, double i, double d, double f){
-		flywheelMaster.setP(p);
-		flywheelMaster.setI(i);
-		flywheelMaster.setD(d);
-		flywheelMaster.setF(f);
-	}
+//	public void setPID(double p, double i, double d, double f){
+//		flywheelMaster.setP(p);
+//		flywheelMaster.setI(i);
+//		flywheelMaster.setD(d);
+//		flywheelMaster.setF(f);
+//	}
 	public boolean shootWithEncoders(double RPMS){
-		boolean flywheelEncoder = false;
+//		boolean flywheelEncoder = false;
 		boolean shooting = true;
-		try{
-			FeedbackDeviceStatus sensorStatusFlywheel = flywheelMaster.isSensorPresent(FeedbackDevice.QuadEncoder);
-			flywheelEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusFlywheel);
-		}catch(Exception e){
-			System.out.println("Flywheel Encoders Error: " + e.toString() + "              " + flywheelEncoder);
-			flywheelMaster.changeControlMode(TalonControlMode.PercentVbus);
-			flywheelMaster.set(0.75);
-		}
-		flywheelMaster.changeControlMode(TalonControlMode.Speed);
-		System.out.println(RPMS + "RPMS");
-		double cps = RPMS/60*1024;	//cycles per second
-		System.out.println(cps + "CPS");
-		flywheelMaster.set(cps);
+//		try{
+//			FeedbackDeviceStatus sensorStatusFlywheel = flywheelMaster.isSensorPresent(FeedbackDevice.QuadEncoder);
+//			flywheelEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusFlywheel);
+//		}catch(Exception e){
+//			System.out.println("Flywheel Encoders Error: " + e.toString() + "              " + flywheelEncoder);
+//			flywheelMaster.changeControlMode(TalonControlMode.PercentVbus);
+//			flywheelMaster.set(0.75);
+//		}
+//		flywheelMaster.changeControlMode(TalonControlMode.Speed);
+//		System.out.println(RPMS + "RPMS");
+//		double cps = RPMS/60*1024;	//cycles per second
+//		System.out.println(cps + "CPS");
+//		flywheelMaster.set(cps);
 		return shooting;
 	}
 	public boolean flywheelReady(){
@@ -52,10 +52,11 @@ public class FlyWheel {
 		}
 	}
 	public double flywheelSpeed(){
-		return flywheelMaster.getSpeed()/4096*10*60;
+//		return flywheelMaster.getSpeed()/4096*10*60;
+		return 2.0;
 	}
 	public void stopFlywheel(){
-		flywheelMaster.set(0);
+//		flywheelMaster.set(0);
 	}
 	public boolean flyCurrent(){
 		if (flywheelMaster.getOutputCurrent() >= 100 || flywheelFollower.getOutputCurrent() >= 100){

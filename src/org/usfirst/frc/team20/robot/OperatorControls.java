@@ -54,7 +54,7 @@ public class OperatorControls {
 			gear.gearFlapOut();
 		}
 		if (operatorJoy.getButtonDUp()) {
-			flywheel.setPID(0.0003, 0.0, 0.0, 0.165);
+//			flywheel.setPID(0.0003, 0.0, 0.0, 0.165);
 			shooting = true;
 			flywheel.shootWithEncoders(3000.0);
 		}

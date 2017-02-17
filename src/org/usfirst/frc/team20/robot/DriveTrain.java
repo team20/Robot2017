@@ -28,19 +28,19 @@ public class DriveTrain implements PIDOutput {
 		//Setting the Motor Port Numbers
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
 		followerRightOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_ONE);
-		followerRightTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_TWO);
+//		followerRightTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_TWO);
 		masterLeft = new CANTalon(Constants.DRIVETRAIN_MASTER_LEFT_MOTOR_PORT);
 		followerLeftOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_ONE);
-		followerLeftTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO);
+//		followerLeftTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO);
 		//Setting the Follower Motors to Their Respective Masters
 		followerRightOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerRightOne.set(masterRight.getDeviceID());
-		followerRightTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
-		followerRightTwo.set(masterRight.getDeviceID());
+//		followerRightTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
+//		followerRightTwo.set(masterRight.getDeviceID());
 		followerLeftOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerLeftOne.set(masterLeft.getDeviceID());
-		followerLeftTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
-		followerLeftTwo.set(masterLeft.getDeviceID());
+//		followerLeftTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
+//		followerLeftTwo.set(masterLeft.getDeviceID());
 		//Setting the Encoders on the Master Motors
 //		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 //		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
@@ -65,21 +65,22 @@ public class DriveTrain implements PIDOutput {
 	}
 	
 	public void drive(double speed, double rightTurn, double leftTurn) { // drives
-		if (speed < 0.1 && speed > -0.1) { //forward
+		if (speed != 0) { //forward
 			gyro.reset();
 			startingAngle = gyro.getYaw();
 			adjustment = 0;
 		}
-		if (gyro.getYaw() > 0.1)
-			adjustment = (speed * 0.1); // 0.125 can be changed so that it is
-											// > 0.1 and < 0.14
-		else if (gyro.getYaw() < -0.1)
-			adjustment = -(speed * 0.1);// 0.125 can be changed so that it is
-											// > 0.1 and < 0.14
-		else
+		if (gyro.getYaw() > 0){
+			adjustment = (speed * 0.1); // 0.125 can be changed so that it is > 0.1 and < 0.14
+		}else if (gyro.getYaw() < 0){
+			adjustment = -(speed * 0.1);// 0.125 can be changed so that it is > 0.1 and < 0.14
+		}else{
 			adjustment = 0;
-		
-		masterRight.set(speed - rightTurn + leftTurn - adjustment);
+		}
+		if(speed < 0){
+			adjustment = -adjustment;
+		}
+		masterRight.set(speed - rightTurn + leftTurn + adjustment);
 		masterLeft.set(-speed + leftTurn - rightTurn);
 	}
 	
@@ -109,17 +110,15 @@ public class DriveTrain implements PIDOutput {
 	}
 	public boolean driveDistanceStraightLeftEncoder(double speed, double inches){
 		boolean doneDriving = false;
-		System.out.println("Speed " + speed); // .5
-		System.out.println("multiplier " + multiplier); // 6.5
-		System.out.println("distance" + inches); // 80
-		double	currentRotationRate = rotateToAngleRate;
+		currentRotationRate = rotateToAngleRate;
 		System.out.println("CurrentRR: " + currentRotationRate);
 		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
-			System.out.println("Done");
+			System.out.println("*****# Inches" + masterLeft.getEncPosition()/1024*Math.PI*4);			
+			System.out.println("******************* Done Driving");
 			stopDrive();
 			doneDriving = true;
 		}else{
-			turnDrive(.65, currentRotationRate);
+			turnDrive(speed, currentRotationRate);
 			System.out.println("Navx = " + gyro.getAngle());
 			doneDriving = false;
 		}
@@ -138,7 +137,7 @@ public class DriveTrain implements PIDOutput {
 			stopDrive();
 			doneDriving = true;
 		}else{
-			turnDrive(.65, currentRotationRate);
+			drive(speed, 0.0, 0.0);
 			System.out.println("Navx = " + gyro.getAngle());
 			doneDriving = false;
 		}
@@ -199,24 +198,22 @@ public class DriveTrain implements PIDOutput {
 			}
 		}
 		masterRight.set(rightMotorSpeed);
-		masterLeft.set(leftMotorSpeed);
+		masterLeft.set(-leftMotorSpeed);
 	}
-
 	public boolean turnAngle(double turnAngle){
 		double angle = turnAngle;
 		boolean doneTurning = false;
-		double	currentRotationRate = rotateToAngleRate;
-		 if (Math.abs(angle - gyro.getAngle()) < .6 && Math.abs(currentRotationRate) < .3){
-				currentRotationRate = 0;
+		currentRotationRate = rotateToAngleRate;
+		if (Math.abs(angle - gyro.getAngle()) < .6 && Math.abs(currentRotationRate) < .3){
+			System.out.println("**********************Stopped Turning");	
+			currentRotationRate = 0;
 				turnDrive(0.0, 0);
-				//turnController.disable();
 				doneTurning = true;	
-			}
-		 else
-		 {
+			}else{
 			 try {
+				 System.out.println("**********************Turning");
 				 turnDrive(0.0, currentRotationRate);
-				 //Timer.delay(0.004);
+				 System.out.println("Current Rotation Rate: " + currentRotationRate);
 				 System.out.println("Navx " + gyro.getAngle());
 				 System.out.println(" currentRotationRate  = " + currentRotationRate);
 				 System.out.println(" Math.abs(angle - hrs.getAngle()) = " +  Math.abs(angle -gyro.getAngle()) );
@@ -230,5 +227,6 @@ public class DriveTrain implements PIDOutput {
 	@Override
 	public void pidWrite(double output) {
 		rotateToAngleRate = output;
+		System.out.println("********************************************** PID WRITTEN");
 	}
-}
+}  

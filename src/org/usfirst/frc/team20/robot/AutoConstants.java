@@ -2,22 +2,22 @@ package org.usfirst.frc.team20.robot;
 
 public class AutoConstants {	//TODO tune all distances and angles
 	//Speeds
-	public static final double targetingSpeed = 0.8;
-	public static final double backUpSpeed = -1.0;
+	public static final double TARGETING_SPEED = 0.8;
+	public static final double BACK_UP_SPEED = -1.0;
 	//Hard Distances
-	public static final double crossBaselineDistance = 100;
-	public static final double middlePegDistance = 94;	
-	public static final double sidePegHardDistance = 90;
-	public static final double backUpFromPegDistance = 5;
-	public static final double backUpFromBoilerDistance = 10;
+	public static final double CROSS_BASELINE_DISTANCE = 100;
+	public static final double MIDDLE_PEG_DISTANCE = 94;	
+	public static final double SIDE_PEG_HARD_DISTANCE = 90;
+	public static final double BACK_UP_FROM_PEG_DISTANCE = 5;
+	public static final double BACK_UP_FROM_BOILER_DISTANCE = 10;
 	//Hard Angles
-	public static final double leftPegHardAngle = 45;
-	public static final double rightPegHardAngle = -45;
-	public static final double middlePegToBoilerRedAngle = 20;
-	public static final double middlePegToBoilerBlueAngle = -20;
-	public static final double leftPegToBoilerRedAngle = 5;
-	public static final double leftPegToBoilerBlueAngle = 5;
-	public static final double rightPegToBoilerRedAngle = 5;
-	public static final double rightPegToBoilerBlueAngle = 5;
-	public static final double boilerToSidePegAngle = 180;
+	public static final double LEFT_PEG_HARD_ANGLE = 20;
+	public static final double RIGHT_PEG_HARD_ANGLE = -20;
+	public static final double RED_MIDDLE_PEG_TO_BOILER_ANGLE = 20;
+	public static final double BLUE_MIDDLE_PEG_TO_BOILER_ANGLE = -20;
+	public static final double RED_LEFT_PEG_TO_BOILER_ANGLE = 5;
+	public static final double BLUE_LEFT_PEG_TO_BOILER_ANGLE = 5;
+	public static final double RED_RIGHT_PEG_TO_BOILER_ANGLE = 5;
+	public static final double BLUE_RIGHT_PEG_TO_BOILER_ANGLE = 5;
+	public static final double BOILER_TO_SIDE_PEG_ANGLE = 180;
 }

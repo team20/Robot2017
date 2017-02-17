@@ -47,18 +47,18 @@ public class Robot extends IterativeRobot {
 		driver = new DriverControls(drive);
 		operator = new OperatorControls(hopper, gear, flywheel, vision, collector);
 
-		try{
-			gearCamera = new DriverVision("Gear Camera", 0);
-			gearCamera.startUSBCamera();			
-		}catch(Exception e){
-			System.out.println("Gear Camera Error: " + e.toString());
-		}
-		try{
-			highGoalCamera = new DriverVision("High Goal Camera", 1);
-			highGoalCamera.startUSBCamera();			
-		}catch(Exception e){
-			System.out.println("Gear Camera Error: " + e.toString());
-		}
+//		try{
+//			gearCamera = new DriverVision("Gear Camera", 0);
+//			gearCamera.startUSBCamera();			
+//		}catch(Exception e){
+//			System.out.println("Gear Camera Error: " + e.toString());
+//		}
+//		try{
+//			highGoalCamera = new DriverVision("High Goal Camera", 1);
+//			highGoalCamera.startUSBCamera();			
+//		}catch(Exception e){
+//			System.out.println("Gear Camera Error: " + e.toString());
+//		}
 
 		chooser = new SendableChooser<String>();
 		
@@ -126,6 +126,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+		auto.rightPeg();
 		Scheduler.getInstance().run();
 		switch (autoSelected) {
 		case "Auto1":
