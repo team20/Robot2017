@@ -5,7 +5,7 @@ public class AutoFunctions {
 	FlyWheel flywheel;
 	VisionTargeting vision;
 	GroundCollector collector;
-	Hopper hopper;
+	FuelTank tank;
 	GearMechanism gear;
 	Util util;
 	int state;
@@ -13,15 +13,18 @@ public class AutoFunctions {
 	double distanceFromCamera = 0.0;
 	double angleFromCamera = 0.0;
 
-	public AutoFunctions(DriveTrain d, FlyWheel f, GroundCollector c, VisionTargeting vT, Hopper h, GearMechanism g) {
+	public AutoFunctions(DriveTrain d, FlyWheel f, GroundCollector c, VisionTargeting vT, FuelTank h, GearMechanism g) {
 		drive = d;
 		flywheel = f;
 		vision = vT;
 		collector = c;
-		hopper = h;
+		tank = h;
 		gear = g;
 		util = new Util();
-		drive.initializeNavx();
+//		state = States.GO_DISTANCE;
+//		group = Groups.GROUP_1;
+		state = States.TURN_ANGLE;
+		group = Groups.GROUP_1;
 	}
 
 	private void runBeforeTargeting() {
@@ -36,32 +39,31 @@ public class AutoFunctions {
 //		drive.turnController.enable();
 	}
 
-	private void hardDistanceHardAngle(double speed, double hardDistance, double hardAngle) {
+	private boolean hardDistanceHardAngle(double speed, double hardDistance, double hardAngle) {
 		if (state == States.GO_DISTANCE && group == Groups.GROUP_1) {
 			System.out.println("*******************************************Drive Straight 1");
-			drive.driveDistanceStraightLeftEncoder(speed, hardDistance);
 			if (drive.driveDistanceStraightLeftEncoder(speed, hardDistance)) {
 				System.out.println("*******************************************Done Driving");
-				drive.stopDrive();
+				drive.turnDrive(0.0,0.0);
 				state = States.TURN_ANGLE;
 				group = Groups.GROUP_1;
 			}
 		}
 		if (state == States.TURN_ANGLE && group == Groups.GROUP_1) {
 			System.out.println("*******************************************Turn Angle 1");
-			drive.turnAngle(hardAngle);
 			if (drive.turnAngle(hardAngle)) {
 				drive.stopDrive();
 				state = States.TURN_ANGLE;
 				group = Groups.GROUP_2;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	private void visionTarget() {
 		runBeforeTargeting();
 		if (state == States.TURN_ANGLE && group == Groups.GROUP_2) {
-			drive.turnAngle(angleFromCamera);
 			System.out.println("*******************************************Drive Straight 2");
 			if (drive.turnAngle(angleFromCamera)) {
 				drive.stopDrive();
@@ -71,7 +73,6 @@ public class AutoFunctions {
 		}
 		if (state == States.GO_DISTANCE && group == Groups.GROUP_2) {
 			System.out.println("*******************************************Turn Angle 2");
-			drive.driveDistanceStraightLeftEncoder(0.8, distanceFromCamera);
 			if (drive.driveDistanceStraightLeftEncoder(0.8, distanceFromCamera)) {
 				drive.stopDrive();
 				state = States.TURN_ANGLE;
@@ -155,11 +156,10 @@ public class AutoFunctions {
 	}
 
 	public void toRightPeg() {
-		state = States.GO_DISTANCE;
-		group = Groups.GROUP_1;
-		hardDistanceHardAngle(AutoConstants.TARGETING_SPEED, AutoConstants.SIDE_PEG_HARD_DISTANCE,
-				AutoConstants.RIGHT_PEG_HARD_ANGLE);
-		visionTarget();
+		if(hardDistanceHardAngle(AutoConstants.TARGETING_SPEED, AutoConstants.SIDE_PEG_HARD_DISTANCE,
+				AutoConstants.RIGHT_PEG_HARD_ANGLE)){
+			visionTarget();			
+		}
 //		if (state == States.WAIT_FOR_GEAR) {
 //			if (gear.haveGear) {
 //				state = States.DONE;
@@ -219,43 +219,43 @@ public class AutoFunctions {
 		state = States.DONE;
 	}
 
-	public void hopperToBoilerRed() {
+	public void tankToBoilerRed() {
 
 	}
 
-	public void hopperToBoilerBlue() {
+	public void tankToBoilerBlue() {
 
 	}
 
-	public void toHopperRed() {
+	public void totankRed() {
 		// TODO
 	}
 
-	public void toHopperBlue() {
+	public void totankBlue() {
 		// TODO
 	}
 
-	public void middlePegToHopperRed() {
+	public void middlePegTotankRed() {
 		// TODO
 	}
 
-	public void middlePegToHopperBlue() {
+	public void middlePegTotankBlue() {
 		// TODO
 	}
 
-	public void leftPegToHopperRed() {
+	public void leftPegTotankRed() {
 		// TODO
 	}
 
-	public void leftPegToHopperBlue() {
+	public void leftPegTotankBlue() {
 		// TODO
 	}
 
-	public void rightPegToHopperRed() {
+	public void rightPegTotankRed() {
 		// TODO
 	}
 
-	public void rightPegToHopperBlue() {
+	public void rightPegTotankBlue() {
 		// TODO
 	}
 
@@ -263,9 +263,9 @@ public class AutoFunctions {
 		boolean shooting = true;
 		flywheel.shootWithEncoders(RPMS);
 		collector.intake(1);
-		hopper.hopperMotorIntoFlywheel(1);
+		tank.tankMotorIntoFlywheel(1);
 		if (shooting) {
-			hopper.runAgitator();
+			tank.runAgitator();
 		}
 	}
 

@@ -29,23 +29,25 @@ public class Robot extends IterativeRobot {
 	GearMechanism gear;
 	DriverControls driver;
 	OperatorControls operator;
-	Hopper hopper;
+	FuelTank tank;
 	double rotateToAngleRate;
 
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+	@Override
 	public void robotInit() {
 		//Initilization
 		station = DriverStation.getInstance();
 		drive = new DriveTrain(vision);
 		flywheel = new FlyWheel();
 		collector = new GroundCollector();
-		hopper = new Hopper();
+		tank = new FuelTank();
 		gear = new GearMechanism(flywheel);
 		driver = new DriverControls(drive);
-		operator = new OperatorControls(hopper, gear, flywheel, vision, collector);
+		operator = new OperatorControls(tank, gear, flywheel, vision, collector);
+
 
 //		try{
 //			gearCamera = new DriverVision("Gear Camera", 0);
@@ -87,17 +89,17 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Blue: Right Gear to Boiler", "BlueRightBoiler");
 		chooser.addObject("Blue: Left Gear to Boiler", "BlueLeftBoiler");
 		
-		//Hopper to Boiler AutoModes
-		chooser.addObject("Red: Hopper to Boiler", "RedHopperBoiler");
-		chooser.addObject("Blue: Hopper to Boiler", "BlueHopperBoiler");
+		//tank to Boiler AutoModes
+		chooser.addObject("Red: tank to Boiler", "RedtankBoiler");
+		chooser.addObject("Blue: tank to Boiler", "BluetankBoiler");
 
-		//Gear to Hopper AutoModes
-		chooser.addObject("Red: Middle Gear to Hopper", "RedMiddleHopper");
-		chooser.addObject("Red: Right Gear to Hopper", "RedRightHopper");
-		chooser.addObject("Red: Left Gear to Hopper", "RedLeftHopper");
-		chooser.addObject("Blue: Middle Gear to Hopper", "BlueMiddleHopper");
-		chooser.addObject("Blue: Right Gear to Hopper", "BlueRightHopper");
-		chooser.addObject("Blue: Left Gear to Hopper", "BlueLeftHopper");
+		//Gear to tank AutoModes
+		chooser.addObject("Red: Middle Gear to tank", "RedMiddletank");
+		chooser.addObject("Red: Right Gear to tank", "RedRighttank");
+		chooser.addObject("Red: Left Gear to tank", "RedLefttank");
+		chooser.addObject("Blue: Middle Gear to tank", "BlueMiddletank");
+		chooser.addObject("Blue: Right Gear to tank", "BlueRighttank");
+		chooser.addObject("Blue: Left Gear to tank", "BlueLefttank");
 
 		SmartDashboard.putData("Auto choices", chooser);
 	}
@@ -113,11 +115,12 @@ public class Robot extends IterativeRobot {
 	 * switch structure below with additional strings. If using the
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
+	@Override
 	public void autonomousInit() {
 		autoSelected = (String) chooser.getSelected();
 		autoSelected = SmartDashboard.getString("Auto Selector", "Do Nothing");
 		vision = new VisionTargeting("10.0.20.9");
-		functions = new AutoFunctions(drive, flywheel, collector, vision, hopper, gear);
+		functions = new AutoFunctions(drive, flywheel, collector, vision, tank, gear);
 		auto = new AutoModes(functions);
 		System.out.println("Auto selected: " + autoSelected);
 	}
@@ -125,8 +128,10 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during autonomous
 	 */
+	@Override
 	public void autonomousPeriodic() {
 		auto.rightPeg();
+		System.out.println("Encoder Value" + drive.masterLeft.getEncPosition()/1024*Math.PI*4);
 		Scheduler.getInstance().run();
 		switch (autoSelected) {
 		case "Auto1":
@@ -136,8 +141,8 @@ public class Robot extends IterativeRobot {
 			
 		//Basic AutoModes
 		case "DoNothing":
-			System.out.println("Do Nothing");
-			auto.doNothing();
+//			System.out.println("Do Nothing");
+//			auto.doNothing();
 			break;	
 		case "CrossBaseline":
 			if(drive.leftEncoder()){
@@ -257,77 +262,77 @@ public class Robot extends IterativeRobot {
 			}
 			break;
 			
-		//AutoModes That Go From the Hopper to the Boiler
-		case "RedHopperBoiler":
+		//AutoModes That Go From the tank to the Boiler
+		case "RedtankBoiler":
 			if(drive.leftEncoder()){	
-				auto.hopperBoilerRed();
+				auto.tankBoilerRed();
 			}else if(drive.rightEncoder()){
-				autoR.hopperBoilerRed();
+				autoR.tankBoilerRed();
 			}else{
 				auto.doNothing();
 			}
 			break;			
-		case "BlueHopperBoiler":
+		case "BluetankBoiler":
 			if(drive.leftEncoder()){	
-				auto.hopperBoilerBlue();
+				auto.tankBoilerBlue();
 			}else if(drive.rightEncoder()){
-				autoR.hopperBoilerBlue();
+				autoR.tankBoilerBlue();
 			}else{
 				auto.doNothing();
 			}
 			break;
 			
-		//AutoModes That Place a Gear Then Go to the Hopper
-		case "RedMiddleHopper":
+		//AutoModes That Place a Gear Then Go to the tank
+		case "RedMiddletank":
 			if(drive.leftEncoder()){	
-				auto.middleHopperRed();
+				auto.middletankRed();
 			}else if(drive.rightEncoder()){
-				autoR.middleHopperRed();
+				autoR.middletankRed();
 			}else{
 				auto.doNothing();
 			}
 			break;
-		case "RedRightHopper":
+		case "RedRighttank":
 			if(drive.leftEncoder()){	
-				auto.rightHopperRed();
+				auto.righttankRed();
 			}else if(drive.rightEncoder()){
-				autoR.rightHopperRed();
+				autoR.righttankRed();
 			}else{
 				auto.doNothing();
 			}
 			break;
-		case "RedLeftHopper":
+		case "RedLefttank":
 			if(drive.leftEncoder()){	
-				auto.leftHopperRed();
+				auto.lefttankRed();
 			}else if(drive.rightEncoder()){
-				autoR.leftHopperRed();
+				autoR.lefttankRed();
 			}else{
 				auto.doNothing();
 			}
 			break;
-		case "BlueMiddleHopper":
+		case "BlueMiddletank":
 			if(drive.leftEncoder()){	
-				auto.middleHopperBlue();
+				auto.middletankBlue();
 			}else if(drive.rightEncoder()){
-				autoR.middleHopperBlue();
+				autoR.middletankBlue();
 			}else{
 				auto.doNothing();
 			}
 			break;
-		case "BlueRightHopper":
+		case "BlueRighttank":
 			if(drive.leftEncoder()){	
-				auto.rightHopperBlue();
+				auto.righttankBlue();
 			}else if(drive.rightEncoder()){
-				autoR.rightHopperBlue();
+				autoR.righttankBlue();
 			}else{
 				auto.doNothing();
 			}
 			break;
-		case "BlueLeftHopper":
+		case "BlueLefttank":
 			if(drive.leftEncoder()){	
-				auto.leftHopperBlue();
+				auto.lefttankBlue();
 			}else if(drive.rightEncoder()){
-				autoR.leftHopperBlue();
+				autoR.lefttankBlue();
 			}else{
 				auto.doNothing();
 			}
@@ -338,18 +343,19 @@ public class Robot extends IterativeRobot {
 /**
 * This function is called periodically during operator control
 */
+	@Override
 	public void teleopPeriodic() {
-		System.out.println("Auto Mode: " + chooser);
 		driver.driverControls();
 		operator.operatorControls();
 		SmartDashboard.putNumber("Flywheel RPM", flywheel.flywheelSpeed());
-		SmartDashboard.putBoolean("Flywheel Ready", flywheel.flywheelReady());
+		SmartDashboard.putBoolean("Flywheel Ready", flywheel.flywheelReady(3000));
 		SmartDashboard.putBoolean("Have Gear", gear.haveGear);
 	}
 
 	/**
 	 * This function is called periodically during test mode
 	 */
+	@Override
 	public void testPeriodic() {
 		
 	}

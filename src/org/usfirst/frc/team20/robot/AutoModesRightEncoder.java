@@ -32,38 +32,38 @@ public class AutoModesRightEncoder {
 		functions.backUpFromBoilerTurnAndTarget();
 	}
 
-	public void middleHopperRed(){	//robot puts a gear on the middle peg and then triggers a hopper
+	public void middletankRed(){	//robot puts a gear on the middle peg and then triggers a tank
 		functions.toMiddlePeg();
-		functions.middlePegToHopperRed();
+		functions.middlePegTotankRed();
 	}
 	
-	public void middleHopperBlue(){	//robot puts a gear on the middle peg and then triggers a hopper
+	public void middletankBlue(){	//robot puts a gear on the middle peg and then triggers a tank
 		functions.toMiddlePeg();
-		functions.middlePegToHopperBlue();
+		functions.middlePegTotankBlue();
 	}
 	
-	public void leftHopperRed(){	//robot puts a gear on the left peg and then triggers a hopper
+	public void lefttankRed(){	//robot puts a gear on the left peg and then triggers a tank
 //		functions.toSidePeg();
 		functions.toLeftPeg();
-		functions.leftPegToHopperRed();
+		functions.leftPegTotankRed();
 	}
 
-	public void leftHopperBlue(){	//robot puts a gear on the left peg and then triggers a hopper
+	public void lefttankBlue(){	//robot puts a gear on the left peg and then triggers a tank
 //		functions.toSidePeg();
 		functions.toLeftPeg();
-		functions.leftPegToHopperBlue();
+		functions.leftPegTotankBlue();
 	}
 
-	public void rightHopperRed(){	//robot puts a gear on the right peg and then triggers a hopper
+	public void righttankRed(){	//robot puts a gear on the right peg and then triggers a tank
 //		functions.toSidePeg();
 		functions.toRightPeg();
-		functions.rightPegToHopperRed();
+		functions.rightPegTotankRed();
 	}
 
-	public void rightHopperBlue(){	//robot puts a gear on the right peg and then triggers a hopper
+	public void righttankBlue(){	//robot puts a gear on the right peg and then triggers a tank
 //		functions.toSidePeg();
 		functions.toRightPeg();
-		functions.rightPegToHopperBlue();
+		functions.rightPegTotankBlue();
 	}
 	
 	public void middleBoilerRed(){	//robot puts a gear on the middle peg and then shoots at the boiler
@@ -112,16 +112,16 @@ public class AutoModesRightEncoder {
 		functions.stopFlywheel();
 	}
 	
-	public void hopperBoilerRed(){	//robot dumps hopper and then shoots at boiler
-		functions.toHopperRed();
-		functions.hopperToBoilerRed();
+	public void tankBoilerRed(){	//robot dumps tank and then shoots at boiler
+		functions.totankRed();
+		functions.tankToBoilerRed();
 		functions.shoot(3000.0);
 		functions.stopFlywheel();
 	}
 	
-	public void hopperBoilerBlue(){	//robot dumps hopper and then shoots at boiler
-		functions.toHopperBlue();
-		functions.hopperToBoilerBlue();
+	public void tankBoilerBlue(){	//robot dumps tank and then shoots at boiler
+		functions.totankBlue();
+		functions.tankToBoilerBlue();
 		functions.shoot(3000.0);
 		functions.stopFlywheel();
 	}

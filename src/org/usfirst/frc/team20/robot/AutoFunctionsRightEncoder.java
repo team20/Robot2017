@@ -5,7 +5,7 @@ public class AutoFunctionsRightEncoder {
 	FlyWheel flywheel;
 	VisionTargeting vision;
 	GroundCollector collector;
-	Hopper hopper;
+	FuelTank tank;
 	GearMechanism gear;
 	Util util;
 	int state;
@@ -15,13 +15,13 @@ public class AutoFunctionsRightEncoder {
 	double distanceFromCameraTwo = 0.0;
 	double angleFromCameraTwo = 0.0;
 	
-	public AutoFunctionsRightEncoder(DriveTrain d, FlyWheel f, GroundCollector c, VisionTargeting vT, Hopper h,
+	public AutoFunctionsRightEncoder(DriveTrain d, FlyWheel f, GroundCollector c, VisionTargeting vT, FuelTank h,
 			GearMechanism g){
 		drive = d;
 		flywheel = f;
 		vision = vT;
 		collector = c;	
-		hopper = h;
+		tank = h;
 		gear = g;
 		util = new Util();
 	}
@@ -217,43 +217,43 @@ public class AutoFunctionsRightEncoder {
 		visionTarget();
 		state = States.DONE;
 	}
-	public void hopperToBoilerRed(){
+	public void tankToBoilerRed(){
 		
 	}
-	public void hopperToBoilerBlue(){
+	public void tankToBoilerBlue(){
 		
 	}
-	public void toHopperRed(){
+	public void totankRed(){
 		//TODO
 	}
-	public void toHopperBlue(){
+	public void totankBlue(){
 		//TODO
 	}
-	public void middlePegToHopperRed(){
+	public void middlePegTotankRed(){
 		//TODO
 	}
-	public void middlePegToHopperBlue(){
+	public void middlePegTotankBlue(){
 		//TODO
 	}
-	public void leftPegToHopperRed(){
+	public void leftPegTotankRed(){
 		//TODO
 	}
-	public void leftPegToHopperBlue(){
+	public void leftPegTotankBlue(){
 		//TODO
 	}
-	public void rightPegToHopperRed(){
+	public void rightPegTotankRed(){
 		//TODO
 	}
-	public void rightPegToHopperBlue(){
+	public void rightPegTotankBlue(){
 		//TODO
 	}
 	public void shoot(double RPMS){
 		boolean shooting = true;
 		flywheel.shootWithEncoders(RPMS);
 		collector.intake(1);
-		hopper.hopperMotorIntoFlywheel(1);
+		tank.tankMotorIntoFlywheel(1);
 		if(shooting){
-			hopper.runAgitator();
+			tank.runAgitator();
 		}
 	}
 	public void stopFlywheel(){

@@ -4,29 +4,29 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class Hopper {
-	CANTalon hopperOuttake;
+public class FuelTank {
+	CANTalon tankMotor;
 	private DoubleSolenoid agitatorPistons;
 	DriverStation station;
 	double initialMatchTime;
-	boolean hopperToFlywheel;
+	boolean tankToFlywheel;
 	
-	public Hopper(){
-		hopperOuttake = new CANTalon(Constants.HOPPER_COLLECTOR_MOTOR_PORT);
+	public FuelTank(){
+		tankMotor = new CANTalon(Constants.FUEL_TANK_COLLECTOR_MOTOR_PORT);
 		agitatorPistons = new DoubleSolenoid(1, 0);
 		station = DriverStation.getInstance();
 		initialMatchTime = station.getMatchTime();
-		hopperToFlywheel = false;
+		tankToFlywheel = false;
 	}
 	
-	public void hopperMotorIntoFlywheel(double speed){
-		hopperOuttake.set(-speed);
+	public void tankMotorIntoFlywheel(double speed){
+		tankMotor.set(-speed);
 	}	
-	public void hopperMotorIntoHopper(double speed){
-		hopperOuttake.set(speed);
+	public void tankMotorIntoTank(double speed){
+		tankMotor.set(speed);
 	}
-	public void stopHopper(){
-		hopperOuttake.set(0);
+	public void stopTank(){
+		tankMotor.set(0);
 	}
 	private void retractAgitator() {
 		agitatorPistons.set(DoubleSolenoid.Value.kReverse);
@@ -50,7 +50,4 @@ public class Hopper {
 			actuateAgitator();
 		}
 	}
-	public void neturalAgitator() {
-		agitatorPistons.set(DoubleSolenoid.Value.kOff);
-	}	
 }

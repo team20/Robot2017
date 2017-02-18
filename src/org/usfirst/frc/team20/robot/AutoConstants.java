@@ -11,8 +11,8 @@ public class AutoConstants {	//TODO tune all distances and angles
 	public static final double BACK_UP_FROM_PEG_DISTANCE = 5;
 	public static final double BACK_UP_FROM_BOILER_DISTANCE = 10;
 	//Hard Angles
-	public static final double LEFT_PEG_HARD_ANGLE = 20;
-	public static final double RIGHT_PEG_HARD_ANGLE = -20;
+	public static final double LEFT_PEG_HARD_ANGLE = -20;
+	public static final double RIGHT_PEG_HARD_ANGLE = 20;
 	public static final double RED_MIDDLE_PEG_TO_BOILER_ANGLE = 20;
 	public static final double BLUE_MIDDLE_PEG_TO_BOILER_ANGLE = -20;
 	public static final double RED_LEFT_PEG_TO_BOILER_ANGLE = 5;

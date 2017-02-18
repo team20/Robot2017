@@ -22,7 +22,7 @@ public class GearMechanism {
 		gearFlap.set(DoubleSolenoid.Value.kForward);
 	}
 	public void checkGear(){
-		if(gearBumpSwitch1.get() || gearBumpSwitch2.get() || flywheel.shootWithEncoders(3000)){
+		if(gearBumpSwitch1.get() || gearBumpSwitch2.get() || flywheel.flywheelReady(3000)){
 			haveGear = true;
 			gearFlapIn();
 		}

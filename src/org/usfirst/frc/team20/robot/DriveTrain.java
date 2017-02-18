@@ -7,10 +7,9 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SerialPort;
 
-public class DriveTrain implements PIDOutput {
+public class DriveTrain {
 	DriverStation d = DriverStation.getInstance();
 	DoubleSolenoid shifter = new DoubleSolenoid(Constants.DRIVETRAIN_EXTEND_PORT,
 			Constants.DRIVERTRAIN_RETRACT_PORT);
@@ -23,63 +22,70 @@ public class DriveTrain implements PIDOutput {
 	double adjustment, rotateToAngleRate, currentRotationRate;
 	double multiplier;
 	boolean kArcadeStandard_Reported = false;
+	boolean setSetpoint;
 	
 	public DriveTrain(VisionTargeting v) {
 		//Setting the Motor Port Numbers
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
 		followerRightOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_ONE);
-//		followerRightTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_TWO);
+		followerRightTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_TWO);
 		masterLeft = new CANTalon(Constants.DRIVETRAIN_MASTER_LEFT_MOTOR_PORT);
 		followerLeftOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_ONE);
-//		followerLeftTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO);
+		followerLeftTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO);
 		//Setting the Follower Motors to Their Respective Masters
 		followerRightOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerRightOne.set(masterRight.getDeviceID());
-//		followerRightTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
-//		followerRightTwo.set(masterRight.getDeviceID());
+		followerRightTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
+		followerRightTwo.set(masterRight.getDeviceID());
 		followerLeftOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerLeftOne.set(masterLeft.getDeviceID());
-//		followerLeftTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
-//		followerLeftTwo.set(masterLeft.getDeviceID());
+		followerLeftTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
+		followerLeftTwo.set(masterLeft.getDeviceID());
 		//Setting the Encoders on the Master Motors
-//		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-//		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		masterRight.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		masterLeft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		masterLeft.setEncPosition(0);
+		masterRight.setEncPosition(0);
 		multiplier = 6.5;
+		gyro = new AHRS(SerialPort.Port.kMXP);
+		gyro.reset();
+		System.out.println("Initial NavX Angle" + gyro.getYaw());
+//		turnController = new PIDController(Constants.NavX_P, Constants.NavX_I, Constants.NavX_D,
+//				Constants.NavX_F, gyro, this);
+//		turnController.setInputRange(-180.0f, 180.0f);
+//		turnController.setOutputRange(-1.0, 1.0);
+//		turnController.setAbsoluteTolerance(Constants.NavX_Tolerance_Degrees);
+//		turnController.setContinuous(false);
+//		setSetpoint = false;
+//		turnController.enable();
+//		Timer.delay(0.5);
 	}
 	
-	public void initializeNavx(){
-		gyro = new AHRS(SerialPort.Port.kMXP);
+	public double testNavx(){
+		return gyro.getRoll();
 	}
 	
 	public void setTurnController(){
-		turnController = new PIDController(Constants.NavX_P, Constants.NavX_I, Constants.NavX_D,
-				Constants.NavX_F, gyro, this);
-		turnController.setInputRange(-180.0f, 180.0f);
-		turnController.setOutputRange(-1.0, 1.0);
-		turnController.setAbsoluteTolerance(Constants.NavX_Tolerance_Degrees);
-		turnController.setContinuous(true);
 		turnController.setSetpoint(turnAngle);
 		turnController.enable();
 	}
 	
 	public void drive(double speed, double rightTurn, double leftTurn) { // drives
 		if (speed != 0) { //forward
-			gyro.reset();
-			startingAngle = gyro.getYaw();
+//			gyro.reset();
+//			startingAngle = gyro.getYaw();
 			adjustment = 0;
 		}
-		if (gyro.getYaw() > 0){
-			adjustment = (speed * 0.1); // 0.125 can be changed so that it is > 0.1 and < 0.14
-		}else if (gyro.getYaw() < 0){
-			adjustment = -(speed * 0.1);// 0.125 can be changed so that it is > 0.1 and < 0.14
-		}else{
-			adjustment = 0;
-		}
-		if(speed < 0){
-			adjustment = -adjustment;
-		}
+//		if (gyro.getYaw() > 0){
+//			adjustment = (speed * 0.1); // 0.125 can be changed so that it is > 0.1 and < 0.14
+//		}else if (gyro.getYaw() < 0){
+//			adjustment = -(speed * 0.1);// 0.125 can be changed so that it is > 0.1 and < 0.14
+//		}else{
+//			adjustment = 0;
+//		}
+//		if(speed < 0){
+//			adjustment = -adjustment;
+//		}
 		masterRight.set(speed - rightTurn + leftTurn + adjustment);
 		masterLeft.set(-speed + leftTurn - rightTurn);
 	}
@@ -113,15 +119,15 @@ public class DriveTrain implements PIDOutput {
 		currentRotationRate = rotateToAngleRate;
 		System.out.println("CurrentRR: " + currentRotationRate);
 		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
-			System.out.println("*****# Inches" + masterLeft.getEncPosition()/1024*Math.PI*4);			
 			System.out.println("******************* Done Driving");
-			stopDrive();
+			turnDrive(0.0, 0.0);
 			doneDriving = true;
 		}else{
+			System.out.println("***** Inches " + masterLeft.getEncPosition()/1024*Math.PI*4);			
 			turnDrive(speed, currentRotationRate);
-			System.out.println("Navx = " + gyro.getAngle());
 			doneDriving = false;
 		}
+		System.out.println("Done Driving? " + doneDriving);
 		return doneDriving;
 	}	
 		
@@ -198,35 +204,35 @@ public class DriveTrain implements PIDOutput {
 			}
 		}
 		masterRight.set(rightMotorSpeed);
-		masterLeft.set(-leftMotorSpeed);
+		masterLeft.set(-leftMotorSpeed*0.95);
 	}
-	public boolean turnAngle(double turnAngle){
-		double angle = turnAngle;
+	public boolean turnAngle(double angle){
+//		System.out.println("Set Angle " + angle);
+//		System.out.println("Turn Controller Setpoint " + turnController.getSetpoint());
+		turnAngle = angle;
+		if(!setSetpoint) {
+			setTurnController();
+			setSetpoint = true;
+		}
 		boolean doneTurning = false;
 		currentRotationRate = rotateToAngleRate;
-		if (Math.abs(angle - gyro.getAngle()) < .6 && Math.abs(currentRotationRate) < .3){
-			System.out.println("**********************Stopped Turning");	
+		if (Math.abs(angle - gyro.getYaw()) < .6 && Math.abs(currentRotationRate) < .3) {
+			System.out.println("**********************Stopped Turning");
 			currentRotationRate = 0;
-				turnDrive(0.0, 0);
-				doneTurning = true;	
-			}else{
-			 try {
-				 System.out.println("**********************Turning");
-				 turnDrive(0.0, currentRotationRate);
-				 System.out.println("Current Rotation Rate: " + currentRotationRate);
-				 System.out.println("Navx " + gyro.getAngle());
-				 System.out.println(" currentRotationRate  = " + currentRotationRate);
-				 System.out.println(" Math.abs(angle - hrs.getAngle()) = " +  Math.abs(angle -gyro.getAngle()) );
-			 	} catch ( RuntimeException ex ) {
-			 		DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
-			 	}
-		 }
-		 return doneTurning;
-	}
-
-	@Override
-	public void pidWrite(double output) {
-		rotateToAngleRate = output;
-		System.out.println("********************************************** PID WRITTEN");
+			turnDrive(0.0, 0);
+			doneTurning = true;
+		} else {
+			try {
+//				System.out.println("**********************Turning");
+				turnDrive(0.0, currentRotationRate);
+				System.out.println("Current Rotation Rate: " + currentRotationRate);
+				System.out.println("Navx " + gyro.getAngle());
+//				System.out.println(" currentRotationRate  = " + currentRotationRate);
+//				System.out.println(" Math.abs(angle - gyro.getAngle()) = " + Math.abs(angle - gyro.getYaw()));
+			} catch (RuntimeException ex) {
+				DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
+			}
+		}
+		return doneTurning;
 	}
 }  
