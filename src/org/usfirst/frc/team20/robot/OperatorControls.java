@@ -5,17 +5,15 @@ public class OperatorControls {
 	FuelTank tank;
 	GearMechanism gear;
 	FlyWheel flywheel;
-	VisionTargeting vision;
 	GroundCollector collector;
 	boolean shooting;
 	boolean tankToFlywheel;
 
-	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, VisionTargeting v, GroundCollector c) {
+	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, GroundCollector c) {
 		operatorJoy = new Controller(1);
 		tank = h;
 		gear = g;
 		flywheel = f;
-		vision = v;
 		collector = c;
 		flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
 		shooting = false;

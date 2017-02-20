@@ -5,13 +5,11 @@ public class DriverControls {
 	DriveTrain drive;
 	Climber climb;
 	double speedStraight, speedLeft, speedRight;
-	AutoFunctions functions;
 	boolean driveShift;
-	public DriverControls(DriveTrain d, Climber c, AutoFunctions f){
+	public DriverControls(DriveTrain d, Climber c){
 		driverJoy = new Controller(0);
 		drive = d;
 		climb = c;
-		functions = f;
 		speedStraight = 0;
 		speedLeft = 0;
 		speedRight = 0;
@@ -19,24 +17,6 @@ public class DriverControls {
 	}
 	
 	public void driverControls(){
-		//Driver Code with the NavX Not Working
-		 if(drive.testNavx() < -180 || drive.testNavx() > 180){
-			System.out.println("NavX Not Working");
-			speedStraight = driverJoy.getLeftYAxis();
-			speedLeft = driverJoy.getLeftTriggerAxis();
-			speedRight = driverJoy.getRightTriggerAxis();
-			if (speedStraight != 0 || speedLeft > 0 || speedRight > 0) {
-				drive.masterRight.set(speedStraight - speedRight + speedLeft);
-				drive.masterLeft.set(-speedStraight + speedLeft - speedRight);
-			}
-			if (driverJoy.getButtonLeftBumper()) {
-				drive.shiftHigh();
-			}
-			if (driverJoy.getButtonRightBumper()) {
-				drive.shiftLow();
-			}						
-		}
-		
  		//Driver Code with the NavX Working
 		if(driverJoy.getRightTriggerAxis() > 0.1){
 			speedStraight = driverJoy.getRightTriggerAxis();
