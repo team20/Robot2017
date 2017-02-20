@@ -47,25 +47,26 @@ public class RaoControls {
 		//flywheel.flywheelSpeed();
 		gear.moveFlaps();
  		//Driver Code
-		System.out.println(speedStraight + " Speed Straight");
-		System.out.println(speedRight + " Speed Right");
-		System.out.println(speedLeft + " Speed Left");
-		if(raoJoy.getRightTriggerAxis() > 0.1){
-			speedStraight = raoJoy.getRightTriggerAxis();
-		}else{
+		
+		if(raoJoy.getLeftYAxis() > 0.1){
+			speedStraight = raoJoy.getLeftYAxis();
+		}else if(raoJoy.getLeftYAxis() < -0.1){
+			speedStraight = raoJoy.getLeftYAxis();
+ 		}else{
  			speedStraight = 0.0;
  		}
-		if(raoJoy.getLeftXAxis() < -0.1){
-			speedLeft = -raoJoy.getLeftXAxis();			
+		speedStraight = -speedStraight;
+		if(raoJoy.getLeftTriggerAxis() > 0.1){
+			speedLeft = raoJoy.getLeftTriggerAxis();			
 		}else{
 			speedLeft = 0.0;
 		}
-		if(raoJoy.getLeftXAxis() > 0.1){
-			speedRight = raoJoy.getLeftXAxis();
+		if(raoJoy.getRightTriggerAxis() > 0.1){
+			speedRight = raoJoy.getRightTriggerAxis();
 		}else{
 			speedRight = 0.0;
 		}
-		if (speedStraight > 0 || speedStraight < 0 || speedLeft < 0 || speedRight > 0) {
+		if (speedStraight > 0 || speedStraight < 0 || speedLeft > 0 || speedRight > 0) {
 			drive.drive(speedStraight, speedRight, speedLeft);
 		}else{
 			drive.stopDrive();
@@ -88,11 +89,12 @@ public class RaoControls {
 		if (raoJoy.getButtonY()) {
 			collector.intake(1);
 			tank.tankMotorIntoTank(1);
+			tank.retractAgitator();
 		}
 		if (raoJoy.getButtonA()) {
 			collector.outtake(1);
-			tank.tankMotorIntoFlywheel(1);
-			tankToFlywheel = true;
+			//tank.tankMotorIntoFlywheel(1);
+			//tankToFlywheel = true;
 		}
 		if(raoJoy.getButtonX()){
 			collector.stopCollector();
@@ -118,6 +120,7 @@ public class RaoControls {
 			collector.stopCollector();
 			shooting = false;
 			tankToFlywheel = false;
+			tank.retractAgitator();
 		}
 		try {
 			voltageFile.WriteToFile(Double.toString(flywheel.flywheelMaster.getOutputVoltage()));
@@ -130,6 +133,9 @@ public class RaoControls {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(speedStraight + " Speed Straight");
+		System.out.println(speedRight + " Speed Right");
+		System.out.println(speedLeft + " Speed Left");
 		
 	}
 }
