@@ -35,12 +35,16 @@ public class DriveTrain {
 		//Setting the Follower Motors to Their Respective Masters
 		followerRightOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerRightOne.set(masterRight.getDeviceID());
+		followerRightOne.reverseOutput(true);
 		followerRightTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerRightTwo.set(masterRight.getDeviceID());
+		followerRightTwo.reverseOutput(true);
 		followerLeftOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerLeftOne.set(masterLeft.getDeviceID());
+		followerLeftOne.reverseOutput(true);
 		followerLeftTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerLeftTwo.set(masterLeft.getDeviceID());
+		followerLeftTwo.reverseOutput(true);
 		//Setting the Encoders on the Master Motors
 		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
@@ -73,7 +77,7 @@ public class DriveTrain {
 	public void drive(double speed, double rightTurn, double leftTurn) { // drives
 		if (speed != 0) { //forward
 //			gyro.reset();
-//			startingAngle = gyro.getYaw();
+//			startingAngle = gyro.getRoll();
 			adjustment = 0;
 		}
 //		if (gyro.getYaw() > 0){
@@ -118,7 +122,7 @@ public class DriveTrain {
 		boolean doneDriving = false;
 		currentRotationRate = rotateToAngleRate;
 		System.out.println("CurrentRR: " + currentRotationRate);
-		if(masterLeft.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
+		if(masterLeft.getEncPosition()/4096*Math.PI*4 > (inches*multiplier)){
 			System.out.println("******************* Done Driving");
 			turnDrive(0.0, 0.0);
 			doneDriving = true;
@@ -133,22 +137,20 @@ public class DriveTrain {
 		
 	public boolean driveDistanceStraightRightEncoder(double speed, double inches) {
 		boolean doneDriving = false;
-		System.out.println("Speed " + speed); // .5
-		System.out.println("multiplier " + multiplier); // 6.5
-		System.out.println("distance" + inches); // 80
-		double	currentRotationRate = rotateToAngleRate;
+		currentRotationRate = rotateToAngleRate;
 		System.out.println("CurrentRR: " + currentRotationRate);
-		if(masterRight.getEncPosition()/1024*Math.PI*4 > (inches*multiplier)){
-			System.out.println("Done");
-			stopDrive();
+		if(masterRight.getEncPosition()/4096*Math.PI*4 > (inches*multiplier)){
+			System.out.println("******************* Done Driving");
+			turnDrive(0.0, 0.0);
 			doneDriving = true;
 		}else{
-			drive(speed, 0.0, 0.0);
-			System.out.println("Navx = " + gyro.getAngle());
+			System.out.println("***** Inches " + masterRight.getEncPosition()/1024*Math.PI*4);			
+			turnDrive(speed, currentRotationRate);
 			doneDriving = false;
 		}
+		System.out.println("Done Driving? " + doneDriving);
 		return doneDriving;
-	}
+	}	
 	
 	public void turnRight(double speed) { // turns right
 		masterRight.set(-speed);

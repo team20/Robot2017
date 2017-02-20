@@ -7,21 +7,20 @@ public class Climber {
 	
 	public Climber(){
 		climberMaster = new CANTalon(Constants.CLIMBER_MASTER_PORT);
-		climberFollower = new CANTalon(Constants.CLIMBER_MASTER_PORT);
+		climberFollower = new CANTalon(Constants.CLIMBER_FOLLOWER_PORT);
 		climberFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
-		climberFollower.reverseOutput(true);
 		climberFollower.set(climberMaster.getDeviceID());
+		climberFollower.reverseOutput(true);
 	}
 	
 	public void climb(double speed){
-		climberMaster.set(speed);
+//		if(climberMaster.getOutputCurrent() > 50){
+//			stopClimbing();
+//		}else{
+			climberMaster.set(speed);			
+//		}
 	}
 	public void stopClimbing(){
 		climberMaster.set(0);
-	}
-	public void checkVoltage(){
-		if(climberMaster.getBusVoltage() > 9){	//TODO test how large volts should be
-			stopClimbing();
-		}
 	}
 }

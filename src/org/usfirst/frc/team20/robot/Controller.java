@@ -28,6 +28,9 @@ public class Controller {
 	public boolean getButtonBack(){
 		return joy.getRawButton(7);
 	}
+	public boolean getButtonStart(){
+		return joy.getRawButton(8);
+	}
 	public boolean getButtonDUp(){
 		return joy.getPOV() == 0;
 	}
@@ -57,5 +60,11 @@ public class Controller {
 	}
 	public double getRightYAxis(){
 		return joy.getRawAxis(5);
+	}
+	public boolean getLeftAxisButton(){
+		return joy.getRawButton(9);
+	}
+	public boolean getRightAxisButton(){
+		return joy.getRawButton(10);
 	}
 }

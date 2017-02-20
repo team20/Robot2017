@@ -10,43 +10,46 @@ public class OperatorControls {
 	boolean shooting;
 	boolean tankToFlywheel;
 
-	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, VisionTargeting v, GroundCollector c){
+	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, VisionTargeting v, GroundCollector c) {
 		operatorJoy = new Controller(1);
 		tank = h;
 		gear = g;
 		flywheel = f;
 		vision = v;
 		collector = c;
-		flywheel.setPID(0.0003, 0.0, 0.0, 0.165);
+		flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
 		shooting = false;
 		tankToFlywheel = false;
 	}
 
-	public void operatorControls(){
-		if (operatorJoy.getButtonA()) {
+	public void operatorControls() {
+		gear.moveFlaps();
+		if (operatorJoy.getButtonY()) {
+			tank.retractAgitator();
 			collector.intake(1);
 			tank.tankMotorIntoTank(1);
 		}
-		if (operatorJoy.getButtonB()) {
+		if (operatorJoy.getButtonA()) {
 			collector.outtake(1);
-			tank.tankMotorIntoFlywheel(1);
-			tankToFlywheel = true;
 		}
-		if(operatorJoy.getButtonX()){
+		if (operatorJoy.getButtonX() || operatorJoy.getButtonB()) {
 			collector.stopCollector();
 			tank.stopTank();
 			tankToFlywheel = false;
 		}
-//		if (operatorJoy.getButtonRightBumper()) {
-//			gear.gearFlapIn();
-//		}
-//		if (operatorJoy.getButtonLeftBumper()) {
-//			gear.gearFlapOut();
-//		}
-		if (operatorJoy.getButtonY()) {
-			flywheel.shootWithEncoders(3000.0);
-			collector.intake(1);
-			tank.tankMotorIntoFlywheel(1);
+		if (operatorJoy.getButtonStart()) {
+			flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
+		}
+		if(flywheel.flywheelMaster.getOutputCurrent()>50){
+			flywheel.setPID(0,0,0,Constants.FLYWHEEL_F);
+		}else{
+			flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
+		}
+		if (operatorJoy.getRightTriggerAxis() > 0) {
+			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
+				collector.intake(1);
+				tank.tankMotorIntoFlywheel(1);
+			}
 			shooting = true;
 		}
 		if (tankToFlywheel || shooting) {

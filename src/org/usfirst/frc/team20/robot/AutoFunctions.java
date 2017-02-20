@@ -13,12 +13,12 @@ public class AutoFunctions {
 	double distanceFromCamera = 0.0;
 	double angleFromCamera = 0.0;
 
-	public AutoFunctions(DriveTrain d, FlyWheel f, GroundCollector c, VisionTargeting vT, FuelTank h, GearMechanism g) {
+	public AutoFunctions(DriveTrain d, FlyWheel f, GroundCollector c, VisionTargeting vT, FuelTank t, GearMechanism g) {
 		drive = d;
 		flywheel = f;
 		vision = vT;
 		collector = c;
-		tank = h;
+		tank = t;
 		gear = g;
 		util = new Util();
 //		state = States.GO_DISTANCE;
@@ -61,7 +61,7 @@ public class AutoFunctions {
 		return false;
 	}
 
-	private void visionTarget() {
+	public void visionTarget() {
 		runBeforeTargeting();
 		if (state == States.TURN_ANGLE && group == Groups.GROUP_2) {
 			System.out.println("*******************************************Drive Straight 2");
@@ -88,7 +88,7 @@ public class AutoFunctions {
 			visionTarget();
 		}
 		if (state == States.WAIT_FOR_GEAR) {
-			if (gear.haveGear) {
+			if (gear.checkGear()) {
 				state = States.DONE;
 			}
 		}
@@ -136,7 +136,7 @@ public class AutoFunctions {
 			}
 		}
 		if (state == States.WAIT_FOR_GEAR) {
-			if (gear.haveGear) {
+			if (gear.checkGear()) {
 				state = States.DONE;
 			}
 		}
@@ -149,7 +149,7 @@ public class AutoFunctions {
 				AutoConstants.LEFT_PEG_HARD_ANGLE);
 		visionTarget();
 		if (state == States.WAIT_FOR_GEAR) {
-			if (gear.haveGear) {
+			if (gear.checkGear()) {
 				state = States.DONE;
 			}
 		}
@@ -219,43 +219,43 @@ public class AutoFunctions {
 		state = States.DONE;
 	}
 
-	public void tankToBoilerRed() {
+	public void HopperToBoilerRed() {
 
 	}
 
-	public void tankToBoilerBlue() {
+	public void HopperToBoilerBlue() {
 
 	}
 
-	public void totankRed() {
+	public void toHopperRed() {
 		// TODO
 	}
 
-	public void totankBlue() {
+	public void toHopperBlue() {
 		// TODO
 	}
 
-	public void middlePegTotankRed() {
+	public void middlePegToHopperRed() {
 		// TODO
 	}
 
-	public void middlePegTotankBlue() {
+	public void middlePegToHopperBlue() {
 		// TODO
 	}
 
-	public void leftPegTotankRed() {
+	public void leftPegToHopperRed() {
 		// TODO
 	}
 
-	public void leftPegTotankBlue() {
+	public void leftPegToHopperBlue() {
 		// TODO
 	}
 
-	public void rightPegTotankRed() {
+	public void rightPegToHopperRed() {
 		// TODO
 	}
 
-	public void rightPegTotankBlue() {
+	public void rightPegToHopperBlue() {
 		// TODO
 	}
 
