@@ -1,4 +1,4 @@
-package org.usfirst.frc.team20.robot;
+  package org.usfirst.frc.team20.robot;
 
 public class OperatorControls {
 	Controller operatorJoy;
@@ -24,8 +24,8 @@ public class OperatorControls {
 		gear.moveFlaps();
 		if (operatorJoy.getButtonY()) {
 			tank.retractAgitator();
-			collector.intake(1);
-			tank.tankMotorIntoTank(1);
+			collector.intake(0.90);
+			tank.tankMotorIntoTank(0.95);
 		}
 		if (operatorJoy.getButtonA()) {
 			collector.outtake(1);
@@ -45,7 +45,7 @@ public class OperatorControls {
 		}
 		if (operatorJoy.getRightTriggerAxis() > 0) {
 			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
-				collector.intake(1);
+				collector.intake(1);	//TODO tune speed (one ball at a time)
 				tank.tankMotorIntoFlywheel(1);
 			}
 			shooting = true;

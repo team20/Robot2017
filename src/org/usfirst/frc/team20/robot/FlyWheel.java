@@ -10,8 +10,7 @@ public class FlyWheel {
 	CANTalon flywheelFollower;
 	boolean flywheelEncoder;
 	public FlyWheel(){
-		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MOTOR_PORT);
-//		flywheelMaster.setStatusFrameRateMs(StatusFrameRate, 20);
+		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MASTER_PORT);
 		flywheelFollower = new CANTalon(Constants.FLYWHEEL_FOLLOWER_PORT);
 		flywheelFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
 		flywheelFollower.set(flywheelMaster.getDeviceID());

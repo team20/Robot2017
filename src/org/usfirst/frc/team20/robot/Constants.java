@@ -6,17 +6,15 @@ public class Constants {
 	public static final int DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_ONE = 2; //Right Front
 	public static final int DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_TWO = 3; //Right Back
 	public static final int DRIVETRAIN_MASTER_LEFT_MOTOR_PORT = 10; //Left Top
-	public static final int DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_ONE = 12; //Left Front
+	public static final int DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_ONE = 9; //Left Front
 	public static final int DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO = 8; //Left Back
 	public static final int CLIMBER_MASTER_PORT = 1; //Climb Right
 	public static final int CLIMBER_FOLLOWER_PORT = 11; //Climb Left
 	public static final int GROUND_COLLECTOR_MOTOR_PORT = 5; //Collector
-	public static final int FLYWHEEL_MOTOR_PORT = 6; //Fly Wheel
-	public static final int FLYWHEEL_FOLLOWER_PORT = 9;
+	public static final int FLYWHEEL_MASTER_PORT = 6; //Fly Wheel
+	public static final int FLYWHEEL_FOLLOWER_PORT = 12;
 	public static final int FUEL_TANK_COLLECTOR_MOTOR_PORT = 7; //Fuel Tank
-
-//	public static final int FLYWHEEL_FOLLOWER_PORT = 10;
-		
+	
 	//Solenoids
 	public static final int DRIVETRAIN_EXTEND_PORT = 0;
 	public static final int DRIVERTRAIN_RETRACT_PORT = 1;
@@ -36,8 +34,8 @@ public class Constants {
 	public static final double FLYWHEEL_SPEED = 2900.0;
 
 	//NavX PID
-	public static final double NavX_P = 0.025;
-	public static final double NavX_I = 0.003;
+	public static final double NavX_P = 0.1;
+	public static final double NavX_I = 0.0001;
 	public static final double NavX_D = 0.00;
 	public static final double NavX_F = 0.00;
 	public static final double NavX_Tolerance_Degrees = 0.5;

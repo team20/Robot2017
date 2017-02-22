@@ -29,8 +29,7 @@ public class Robot extends IterativeRobot implements PIDOutput {
 	DriveTrain drive;
 	FlyWheel flywheel;
 	GroundCollector collector;
-	DriverVision frontCamera;
-	DriverVision backCamera;
+	DriverVision driverCamera;
 	GearMechanism gear;
 	FuelTank tank;
 	Climber climb;
@@ -40,13 +39,15 @@ public class Robot extends IterativeRobot implements PIDOutput {
 	PIDController turnController;
 	AHRS gyro;
 	Util util;
-//	TsarControls tsar;
+	TsarControls tsar;
 	RocketScript getNewScript = new RocketScript();
-	String [] rocketScriptData;
+	String[] rocketScriptData;
 	int rocketScriptCurrentCount, rocketScriptLength = 0;
 	double rotateToAngleRate, currentRotationRate;
 	double angleFromCamera = 0.0, distanceFromCamera = 0.0;
 	boolean shooting = false;
+	double turnCameraAngle = 0.0;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -54,59 +55,63 @@ public class Robot extends IterativeRobot implements PIDOutput {
 
 	@Override
 	public void robotInit() {
-		//Initilization
+		// Initilization
 		station = DriverStation.getInstance();
 		flywheel = new FlyWheel();
 		collector = new GroundCollector();
 		tank = new FuelTank();
 		gear = new GearMechanism(flywheel, operator);
 		climb = new Climber();
+		drive = new DriveTrain();
 		driver = new DriverControls(drive, climb);
 		operator = new OperatorControls(tank, gear, flywheel, collector);
 		compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
 		drive.shiftHigh();
 		flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
-//		driverCamera = new DriverVision("Driver Camera", 0);
-//		driverCamera.startUSBCamera();
-		
+
+		// driverCamera = new DriverVision("Driver Camera", 0);
+		// driverCamera.startUSBCamera();
+
 		gyro = new AHRS(SerialPort.Port.kMXP);
+		gyro.reset();
 		util = new Util();
 		myDrive = new RobotDrive(drive.masterRight, drive.masterLeft);
 		myDrive.setExpiration(1.0);
-		turnController = new PIDController(Constants.NavX_P, Constants.NavX_I, Constants.NavX_D, Constants.NavX_F, gyro, this);
-		turnController.setInputRange(-180.0f,  180.0f);
+		turnController = new PIDController(Constants.NavX_P, Constants.NavX_I, Constants.NavX_D, Constants.NavX_F, gyro,
+				this);
+		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(Constants.NavX_Tolerance_Degrees);
 		turnController.setContinuous(true);
 		Timer.delay(0.05);
-		
+
 		chooser = new SendableChooser<String>();
-		
-		//Basic AutoModes
+
+		// Basic AutoModes
 		chooser.addDefault("Do Nothing", "DoNothing");
 		chooser.addObject("Cross Baseline", "CrossBaseline");
-		
-		//Starting at the Boiler AutoMode
+
+		// Starting at the Boiler AutoMode
 		chooser.addObject("Start at Boiler and Keep Shooting", "StayAtBoilerAndShoot");
-		
-		//Just the Gear AutoModes
+
+		// Just the Gear AutoModes
 		chooser.addObject("Middle Gear", "MiddleGear");
 		chooser.addObject("Right Gear", "RightGear");
 		chooser.addObject("Left Gear", "LeftGear");
-		
-		//Boiler to Gear AutoModes
+
+		// Boiler to Gear AutoModes
 		chooser.addObject("Boiler to Closest Gear", "BoilerToClosestSideGear");
 		chooser.addObject("Red: Boiler to Middle Gear", "BoilerToMiddleGearRed");
 		chooser.addObject("Blue: Boiler to Middle Gear", "BoilerToMiddleGearBlue");
 
-		//Gear to Boiler AutoModes
+		// Gear to Boiler AutoModes
 		chooser.addObject("Red: Middle Gear to Boiler", "MiddleGearToBoilerRed");
 		chooser.addObject("Blue: Middle Gear to Boiler", "MiddleGearToBoilerBlue");
 		chooser.addObject("Red: Right Gear to Boiler", "RightGearToBoilerRed");
 		chooser.addObject("Blue: Left Gear to Boiler", "LeftGearToBoilerBlue");
 
-		//Hopper to Boiler AutoModes
+		// Hopper to Boiler AutoModes
 		chooser.addObject("Red: Hopper to Boiler", "HopperToBoilerRed");
 		chooser.addObject("Blue: Hopper to Boiler", "HopperToBoilerBlue");
 
@@ -125,8 +130,11 @@ public class Robot extends IterativeRobot implements PIDOutput {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	public void autonomousInit() {
+		drive.masterLeft.setVoltageRampRate(60);
+		drive.masterRight.setVoltageRampRate(60);
+
 		autoSelected = (String) chooser.getSelected();
-		autoSelected = SmartDashboard.getString("Auto Selector", "Do Nothing");
+		autoSelected = SmartDashboard.getString(autoSelected, "Do Nothing");
 		Scheduler.getInstance().run();
 		System.out.println("Auto selected: " + autoSelected);
 		switch (autoSelected) {
@@ -190,9 +198,8 @@ public class Robot extends IterativeRobot implements PIDOutput {
 			rocketScriptData = getNewScript.hopperToBoilerBlue();
 			rocketScriptLength = rocketScriptData.length;
 			break;
-		}			
+		}
 	}
-
 
 	/**
 	 * This function is called periodically during autonomous
@@ -204,16 +211,17 @@ public class Robot extends IterativeRobot implements PIDOutput {
 			// System.out.println("********running rocketScript counter");
 			String[] values = rocketScriptData[rocketScriptCurrentCount].split(";");
 			System.out.println("Value 1: " + values[0] + " Value 2: " + values[1]);
+
 			if (Integer.parseInt(values[0]) == RobotModes.SMART_DRIVE_STRAIGHT) {
-				double fudgeFactor = Double.parseDouble(values[1]);
-				if (driveStraight(0.65, distanceFromCamera, angleFromCamera + fudgeFactor)) {
+				if (driveStraight(0.65, distanceFromCamera * AutoConstants.DRIVE_STRAIGHT_MULTIPLIER,
+						angleFromCamera)) {
 					rocketScriptCurrentCount++;
 				}
 			}
 
 			if (Integer.parseInt(values[0]) == RobotModes.SMART_TURN_ANGLE) {
 				System.out.println("Smart Turn Angle turning" + angleFromCamera);
-				if (TurnAngle(angleFromCamera)) {
+				if (turnAngle(angleFromCamera)) {
 					drive.masterLeft.setEncPosition(0);
 					rocketScriptCurrentCount++;
 				}
@@ -222,16 +230,18 @@ public class Robot extends IterativeRobot implements PIDOutput {
 
 			if (Integer.parseInt(values[0]) == RobotModes.GET_CAMERA_ANGLE) {
 				String getSocketData;
-				gyro.reset();
-				Timer.delay(0.5);
+//				gyro.reset();
+//				Timer.delay(2); //was 0.5
 				getSocketData = util.getCameraAngle();
+				System.out.println(getSocketData);
 				String[] socketValues = getSocketData.split("\\*");
 				distanceFromCamera = Double.parseDouble(socketValues[0]);
-				angleFromCamera = Float.parseFloat(socketValues[1]);
+				angleFromCamera = Double.parseDouble(socketValues[1]);
 				System.out.println("Distance from camera: " + distanceFromCamera);
 				System.out.println("Angle from camera: " + angleFromCamera);
 				turnController.reset();
-				turnController.setSetpoint(angleFromCamera);
+				turnController.setSetpoint(gyro.getYaw() + angleFromCamera);
+				turnCameraAngle = gyro.getYaw() + angleFromCamera;
 				turnController.enable();
 				rocketScriptCurrentCount++;
 			}
@@ -239,10 +249,11 @@ public class Robot extends IterativeRobot implements PIDOutput {
 			if (Integer.parseInt(values[0]) == RobotModes.RAW_TURN_ANGLE) {
 				if (turnRoughAngle(Double.parseDouble(values[1]))) {
 					rocketScriptCurrentCount++;
+					System.out.println("Roll Value: " + gyro.getYaw());
 				}
 			}
 			if (Integer.parseInt(values[0]) == RobotModes.RAW_DRIVE_STRAIGHT) {
-				if (dumbDriveStraight(1.0, Double.parseDouble(values[1]), 6.5)) {
+				if (dumbDriveStraight(0.8, Double.parseDouble(values[1]))) {
 					drive.masterLeft.setEncPosition(0);
 					gyro.reset();
 					rocketScriptCurrentCount++;
@@ -261,31 +272,35 @@ public class Robot extends IterativeRobot implements PIDOutput {
 					rocketScriptCurrentCount++;
 				}
 			}
-			if(Integer.parseInt(values[0]) == RobotModes.STOP_SHOOTING){
+			if (Integer.parseInt(values[0]) == RobotModes.STOP_SHOOTING) {
 				flywheel.stopFlywheel();
 				collector.stopCollector();
 				tank.stopTank();
+			}
+			if (Integer.parseInt(values[0]) == RobotModes.WAIT_FOR_GEAR) {
+				if (gear.checkGear() == false) {
+					rocketScriptCurrentCount++;
+				}
 			}
 		}
 	}
 
 	@Override
 	public void teleopInit() {
-		myDrive.free();
-		turnController.disable();
+		drive.masterLeft.setVoltageRampRate(60);
+		drive.masterRight.setVoltageRampRate(60);
 		flywheel.stopFlywheel();
 		collector.stopCollector();
-		shooting = false;
+		operator.shooting = false;
 		tank.stopTank();
 		flywheel.flywheelMaster.configPeakOutputVoltage(12.0f, 0.0f);
-		drive = new DriveTrain();
 	}
-	
-/**
-* This function is called periodically during operator control
-*/
-	
-	@Override	
+
+	/**
+	 * This function is called periodically during operator control
+	 */
+
+	@Override
 	public void teleopPeriodic() {
 		driver.driverControls();
 		operator.operatorControls();
@@ -299,15 +314,17 @@ public class Robot extends IterativeRobot implements PIDOutput {
 	 */
 	@Override
 	public void testPeriodic() {
-		
+
 	}
 
-	private boolean TurnAngle(double cameraAngle){
+	private boolean turnAngle(double cameraAngle) {
 		boolean doneTurning = false;
+		cameraAngle = turnCameraAngle;
 		currentRotationRate = rotateToAngleRate;
-		if (Math.abs(cameraAngle - gyro.getAngle()) < .6 && Math.abs(currentRotationRate) < .5) {
-			currentRotationRate = 0;
-			myDrive.arcadeDrive(0.0, 0);
+		if (Math.abs(cameraAngle - gyro.getYaw()) < .6 && Math.abs(currentRotationRate) < .5) {
+			System.out.println("NavX Angle: " + gyro.getYaw());
+			currentRotationRate = 0.0;
+			myDrive.arcadeDrive(0.0, 0.0);
 			doneTurning = true;
 		} else {
 			try {
@@ -319,73 +336,95 @@ public class Robot extends IterativeRobot implements PIDOutput {
 		return doneTurning;
 	}
 
-	public boolean turnRoughAngle(double turnAngle){
-		if(turnAngle < 0){
-			if(Math.abs(gyro.getYaw()-turnAngle) < 5){
-				myDrive.arcadeDrive(0,0);
-				return true;
-			}else{
-				myDrive.arcadeDrive(0,-.5);
-			}
-		}else{
-			if(Math.abs(gyro.getYaw()-turnAngle)<5){
+	public boolean turnRoughAngle(double turnAngle) {
+		if (turnAngle < 0) {
+			if (Math.abs(gyro.getYaw() - turnAngle) < 5) {
 				myDrive.arcadeDrive(0, 0);
 				return true;
-			}else{
-				myDrive.arcadeDrive(0,.5);
+			} else {
+				myDrive.arcadeDrive(0, -0.5);
+			}
+		} else {
+			if (Math.abs(gyro.getYaw() - turnAngle) < 5) {
+				myDrive.arcadeDrive(0, 0);
+				return true;
+			} else {
+				myDrive.arcadeDrive(0, .5);
 			}
 		}
 		return false;
 	}
-	
-	public boolean dumbDriveStraight(double speed, double inches, double multiplier){
-		if(Math.abs(drive.masterLeft.getEncPosition()/4096 *Math.PI*4) > Math.abs(inches * multiplier)){
-			myDrive.arcadeDrive(0, 0);
-			return true;
-		}else{
-			if(inches > 0) {
-				drive.masterRight.set(speed);
-				drive.masterLeft.set(-speed);
+
+	public boolean dumbDriveStraight(double speed, double inches) {
+		if (drive.leftEncoder()) {
+			if (Math.abs(drive.masterLeft.getEncPosition() / 4096 * Math.PI * 4) > Math.abs(inches)
+					* AutoConstants.DRIVE_STRAIGHT_MULTIPLIER) {
+				myDrive.arcadeDrive(0, 0);
+				return true;
+			} else {
+				if (inches > 0) {
+					drive.masterRight.set(speed);
+					drive.masterLeft.set(-speed);
+				} else {
+					drive.masterRight.set(-speed);
+					drive.masterLeft.set(speed);
+				}
 			}
-			else {
-				drive.masterRight.set(-speed);
-				drive.masterLeft.set(speed);
+			return false;
+		} else if (drive.rightEncoder()) {
+			if (Math.abs(drive.masterRight.getEncPosition() / 4096 * Math.PI * 4) > Math.abs(inches)
+					* AutoConstants.DRIVE_STRAIGHT_MULTIPLIER) {
+				myDrive.arcadeDrive(0, 0);
+				return true;
+			} else {
+				if (inches > 0) {
+					drive.masterRight.set(speed);
+					drive.masterLeft.set(-speed);
+				} else {
+					drive.masterRight.set(-speed);
+					drive.masterLeft.set(speed);
+				}
 			}
 		}
-		return false;
+		return true;
 	}
-	public boolean driveStraight(double speed, double inches, double angle){
+
+	public boolean driveStraight(double speed, double inches, double angle) {
 		boolean doneDriving = false;
+		angle = turnCameraAngle;
 		currentRotationRate = rotateToAngleRate;
-		if(drive.leftEncoder()){
-			if(drive.masterLeft.getEncPosition()/4096*Math.PI*4 > (inches*AutoConstants.DRIVE_STRAIGHT_MULTIPLIER)){
-				 myDrive.arcadeDrive(0, 0);
-	  			doneDriving = true;
-			}
-			else{
-				  turnController.setSetpoint(angle);
-				  turnController.enable();
-				  myDrive.arcadeDrive(speed, currentRotationRate);
-			}
-			return doneDriving;			
-		}else if(drive.rightEncoder()){
-			if(drive.masterRight.getEncPosition()/4096*Math.PI*4 > (inches*AutoConstants.DRIVE_STRAIGHT_MULTIPLIER)){
-				 myDrive.arcadeDrive(0, 0);
-	  			doneDriving = true;
-			}
-			else{
-				  turnController.setSetpoint(angle);
-				  turnController.enable();
-				  myDrive.arcadeDrive(speed, currentRotationRate);
+		if (drive.leftEncoder()) {
+			if (drive.masterLeft.getEncPosition() / 4096 * Math.PI
+					* 4 > (inches * AutoConstants.DRIVE_STRAIGHT_MULTIPLIER)) {
+				myDrive.arcadeDrive(0, 0);
+				doneDriving = true;
+			} else {
+				turnController.reset();
+				turnController.setSetpoint(angle);
+				turnController.enable();
+				myDrive.arcadeDrive(speed, currentRotationRate);
 			}
 			return doneDriving;
-		}else{
+		} else if (drive.rightEncoder()) {
+			if (drive.masterRight.getEncPosition() / 4096 * Math.PI
+					* 4 > (inches * AutoConstants.DRIVE_STRAIGHT_MULTIPLIER)) {
+				myDrive.arcadeDrive(0, 0);
+				doneDriving = true;
+			} else {
+				turnController.reset();
+				turnController.setSetpoint(angle);
+				turnController.enable();
+				myDrive.arcadeDrive(speed, currentRotationRate);
+			}
+			return doneDriving;
+		} else {
 			drive.stopDrive();
 			return true;
 		}
 	}
+
 	@Override
 	public void pidWrite(double output) {
-		rotateToAngleRate = output*0.8;
+		rotateToAngleRate = output * 0.70;
 	}
 }
