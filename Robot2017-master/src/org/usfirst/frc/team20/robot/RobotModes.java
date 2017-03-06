@@ -8,4 +8,7 @@ public class RobotModes {
 	public static final int RAW_DRIVE_STRAIGHT = 5;
 	public static final int SHOOTING = 6;
 	public static final int STOP_SHOOTING = 7;
+	public static final int WAIT_FOR_GEAR = 8;
+	public static final int ROCKET_TURN = 9;
+	
 }

@@ -18,7 +18,6 @@ public class DriveTrain {
 	double multiplier;
 	boolean kArcadeStandard_Reported = false;
 	boolean setSetpoint;
-	boolean highGear;
 	
 	public DriveTrain() {
 		//Setting the Motor Port Numbers
@@ -44,8 +43,10 @@ public class DriveTrain {
 		followerLeftTwo.set(masterLeft.getDeviceID());
 		followerLeftTwo.reverseOutput(true);
 		//Setting the Encoders on the Master Motors
+		
 		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		
 		masterLeft.setEncPosition(0);
 		masterRight.setEncPosition(0);
 		multiplier = 6.5;
@@ -55,21 +56,11 @@ public class DriveTrain {
 		masterRight.reset();
 	}		
 	public void drive(double speed, double rightTurn, double leftTurn) { // drives
-		if(shifter.get() == DoubleSolenoid.Value.kReverse){
-			//rightTurn*=.9;
-			//leftTurn*=.9;
-			if (speed != 0) { //forward
-				adjustment = 0;
-			}
-			masterRight.set(speed - rightTurn + leftTurn + adjustment);
-			masterLeft.set(-speed + leftTurn - rightTurn);
-		}else{
-			if (speed != 0) { //forward
-				adjustment = 0;
-			}
-			masterRight.set(speed - rightTurn + leftTurn + adjustment);
-			masterLeft.set(-speed + leftTurn - rightTurn);
+		if (speed != 0) { //forward
+			adjustment = 0;
 		}
+		masterRight.set(speed - rightTurn + leftTurn + adjustment);
+		masterLeft.set(-speed + leftTurn - rightTurn);
 	}
 	
 	public boolean leftEncoder(){
@@ -111,13 +102,11 @@ public class DriveTrain {
 	}
 
 	public void shiftHigh() { // shifts into high gear ratio
-		highGear = true;
 		shifter.set(DoubleSolenoid.Value.kReverse);
 	}
 
 	public void shiftLow() { // shifts into low gear ratio
 		shifter.set(DoubleSolenoid.Value.kForward);
-		highGear = false;
 	}
 	
 	public boolean turnAngle(double angle){

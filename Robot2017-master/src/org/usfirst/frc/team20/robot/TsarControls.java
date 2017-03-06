@@ -47,22 +47,22 @@ public class TsarControls {
 		System.out.println(speedStraight + " Speed Straight");
 		System.out.println(speedRight + " Speed Right");
 		System.out.println(speedLeft + " Speed Left");
-		if(raoJoy.getRightTriggerAxis() > 0.1){
-			speedStraight = raoJoy.getRightTriggerAxis();
+		if(raoJoy.getLeftYAxis() >.1 || raoJoy.getLeftYAxis() < -.1){
+			speedStraight = -raoJoy.getLeftYAxis();
 		}else{
- 			speedStraight = 0.0;
- 		}
-		if(raoJoy.getLeftXAxis() < -0.1){
-			speedLeft = -raoJoy.getLeftXAxis();			
-		}else{
-			speedLeft = 0.0;
+			speedStraight = 0;
 		}
-		if(raoJoy.getLeftXAxis() > 0.1){
-			speedRight = raoJoy.getLeftXAxis();
+		if(raoJoy.getRightTriggerAxis() > .1){
+			speedRight = raoJoy.getRightTriggerAxis();
 		}else{
-			speedRight = 0.0;
+			speedRight = 0;
 		}
-		if (speedStraight > 0 || speedStraight < 0 || speedLeft < 0 || speedRight > 0) {
+		if(raoJoy.getLeftTriggerAxis() > .1){
+			speedLeft = raoJoy.getLeftTriggerAxis();
+		}else{
+			speedLeft = 0;
+		}
+		if (speedStraight > 0 || speedStraight < 0 || speedLeft > 0 || speedRight > 0) {
 			drive.drive(speedStraight, speedRight, speedLeft);
 		}else{
 			drive.stopDrive();
