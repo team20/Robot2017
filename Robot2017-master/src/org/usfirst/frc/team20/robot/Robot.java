@@ -250,7 +250,7 @@ public class Robot extends IterativeRobot  {
 				collector.stopCollector();
 				tank.stopTank();
 			}
-			if (Integer.parseInt(values[0]) == RobotModes.WAIT_FOR_GEAR) {
+			if (Integer.parseInt(values[0]) == RobotModes.WAIT_FOR_GEAR) {	//TODO add a counter so it doesn't drive immedately after it is lifted
 				if (gear.checkGear() == false) {
 					rocketScriptCurrentCount++;
 				}
@@ -289,9 +289,7 @@ public class Robot extends IterativeRobot  {
 	@Override
 	public void testPeriodic() {
 		System.out.println("gyro = " + gyro.getAngle());
-		System.out.println("gyro, yaw = " + gyro.getYaw());
-		
-	    	   
+		System.out.println("gyro, yaw = " + gyro.getYaw());   	   
 		//   System.out.println("enc = " + drive.masterRight.getEncPosition());
 	}
 
@@ -355,7 +353,7 @@ public class Robot extends IterativeRobot  {
 				} 	
 			}
 			return false;
-		} else if (drive.rightEncoder()) {
+		} else if (drive.rightEncoder()) {	//TODO make ticks a constant, Jesus. Why. 
 			if (Math.abs((double) (drive.masterRight.getEncPosition() -  startingENCClicks)) > Math.abs(inches * 667.00 )){
 			//if (Math.abs(drive.masterRight.getEncPosition() / 4096 * Math.PI * 4) > Math.abs(inches)
 				//	* AutoConstants.DRIVE_STRAIGHT_MULTIPLIER) {
