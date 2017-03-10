@@ -1,3 +1,4 @@
+//Author: Roland Rao, Sydney Walker and Ben Hogan
 package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
