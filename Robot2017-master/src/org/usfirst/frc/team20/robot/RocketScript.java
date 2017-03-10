@@ -1,3 +1,4 @@
+//Author: Sydney Walker
 package org.usfirst.frc.team20.robot;
 
 public class RocketScript {
