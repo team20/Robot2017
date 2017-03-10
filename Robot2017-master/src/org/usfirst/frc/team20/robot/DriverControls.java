@@ -1,3 +1,4 @@
+//Author: Roland Rao and Atharva Gawde
 package org.usfirst.frc.team20.robot;
 
 import edu.wpi.first.wpilibj.Timer;
