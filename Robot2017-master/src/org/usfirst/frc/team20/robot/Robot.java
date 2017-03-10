@@ -53,6 +53,7 @@ public class Robot extends IterativeRobot  {
     int startingENCClicks;
     boolean gotStartingENCClicks = false;
     int autoModeSubStep = 0;
+    boolean resetGyro = false;
 	
 
 	/**
@@ -140,7 +141,7 @@ public class Robot extends IterativeRobot  {
 		Scheduler.getInstance().run();
 		autoSelected = "testCode";
 		System.out.println("Auto selected: " + autoSelected);
-		rocketScriptData = getNewScript.leftGear();
+		rocketScriptData = getNewScript.testCode();
 		rocketScriptCurrentCount = 0;
 		rocketScriptLength = rocketScriptData.length;
 	
@@ -159,30 +160,36 @@ public class Robot extends IterativeRobot  {
 			String[] values = rocketScriptData[rocketScriptCurrentCount].split(";");
 		
 			if (Integer.parseInt(values[0]) == RobotModes.SMART_DRIVE_STRAIGHT) {
+				if (resetGyro == false){
+					gyro.reset();
+					Timer.delay(.1);
+					resetGyro = true;
+				}
+
 				if (driveStraight(0.60, (distanceFromCamera * AutoConstants.DRIVE_STRAIGHT_MULTIPLIER) - 20,
 						angleFromCamera)) {//turnCameraAngle)) {
+					resetGyro = false;
 					rocketScriptCurrentCount++;
 				}
 			}
 
-			if (Integer.parseInt(values[0]) == RobotModes.SMART_TURN_ANGLE) {
-				if (turnAngle(angleFromCamera)) {
-					drive.masterLeft.setEncPosition(0);
-					rocketScriptCurrentCount++;
-				}
-			} 
 			if (Integer.parseInt(values[0]) == RobotModes.ROCKET_TURN) {
+				if (resetGyro == false){
+					gyro.reset();
+					Timer.delay(.1);
+					resetGyro = true;
+				}
+					
 				if (rocketTurn(Double.parseDouble(values[1]))){
 					rocketScriptCurrentCount++;
+					resetGyro = false;
 				}
 				
 			}
 
 			if (Integer.parseInt(values[0]) == RobotModes.GET_CAMERA_ANGLE) {
 				//System.out.println("Turn camera ");
-				String getSocketData;
-				if (autoModeSubStep == 0)
-				{
+			    	String getSocketData;
 					Timer.delay(1.0);
 					getSocketData = util.getCameraAngle();
 					String [] socketValues = getSocketData.split("\\*");	
@@ -192,46 +199,33 @@ public class Robot extends IterativeRobot  {
 					autoModeSubStep = 1;
 					gyro.reset();
 					Timer.delay(0.5);
-				} else if (autoModeSubStep == 1)
-				{
-					System.out.println("angleFromCamera    " + angleFromCamera);
-					System.out.println("************" + gyro.getAngle());
-					if (rocketTurn(angleFromCamera))
-					{
-							System.out.println("************" + gyro.getAngle());
-							autoModeSubStep = 2;
-							gyro.reset();
-							Timer.delay(0.5);
-					}					
-				} else if (autoModeSubStep == 2)
-				{
-					//System.out.println("distanceFromCamera    " + distanceFromCamera);
-					if (dumbDriveStraight(0.5, distanceFromCamera)) {
-						gotStartingENCClicks = false;
-						autoModeSubStep = 0;
-						rocketScriptCurrentCount++;
-					}
 				}
-				
-			//	turnController.reset();
-//				turnController.setSetpoint(angleFromCamera);
-//				turnController.enable();
+			
+			if (Integer.parseInt(values[0]) == RobotModes.TURN_CAMERA_ANGLE) {
+			    if 	(rocketTurnCamera())
+			    {
+			    	rocketScriptCurrentCount++;
+			    	resetGyro = false;
+			    }
 			}
-
-			if (Integer.parseInt(values[0]) == RobotModes.RAW_TURN_ANGLE) {
-
-				if (rocketTurn(Double.parseDouble(values[1]))) {
+			
+			if (Integer.parseInt(values[0]) == RobotModes.GO_CAMERA_DISTANCE)
+			{
+				if (cameraDriveStraight())
 					rocketScriptCurrentCount++;
-					drive.masterLeft.setEncPosition(0);
-				}
- 			}  
-			if (Integer.parseInt(values[0]) == RobotModes.RAW_DRIVE_STRAIGHT) {
-				if (dumbDriveStraight(0.5, Double.parseDouble(values[1]))) {
+				    resetGyro = false;
+			}
+			
+
+			if (Integer.parseInt(values[0]) == RobotModes.FAST_DRIVE_STRAIGHT) {
+				if (fastDriveStraight(0.77, Double.parseDouble(values[1]))) {
 					gotStartingENCClicks = false;
 					gyro.reset();
 					rocketScriptCurrentCount++;
+					
 				}
 			}
+
 			if (Integer.parseInt(values[0]) == RobotModes.SHOOTING) {
 				flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 				if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
@@ -250,7 +244,7 @@ public class Robot extends IterativeRobot  {
 				collector.stopCollector();
 				tank.stopTank();
 			}
-			if (Integer.parseInt(values[0]) == RobotModes.WAIT_FOR_GEAR) {	//TODO add a counter so it doesn't drive immedately after it is lifted
+			if (Integer.parseInt(values[0]) == RobotModes.WAIT_FOR_GEAR) {
 				if (gear.checkGear() == false) {
 					rocketScriptCurrentCount++;
 				}
@@ -289,56 +283,34 @@ public class Robot extends IterativeRobot  {
 	@Override
 	public void testPeriodic() {
 		System.out.println("gyro = " + gyro.getAngle());
-		System.out.println("gyro, yaw = " + gyro.getYaw());   	   
+		System.out.println("gyro, yaw = " + gyro.getYaw());
+		
+	    	   
 		//   System.out.println("enc = " + drive.masterRight.getEncPosition());
 	}
 
-	private boolean turnAngle(double cameraAngle) {
-		boolean doneTurning = false;
-		currentRotationRate = rotateToAngleRate;
-		if (Math.abs(cameraAngle - gyro.getYaw()) < 2.0) {
-			currentRotationRate = 0.0;
-			myDrive.arcadeDrive(0.0, 0.0);
-			doneTurning = true;
-		} else {
-			try {
-				rocketTurn(cameraAngle);
-			} catch (RuntimeException ex) {
-				DriverStation.reportError("Error communicating with drive system: " + ex.getMessage(), true);
-			}
-		}
-		return doneTurning;
+	private void resetGyro() {
+		gyro.reset();
 	}
+	
+    // auto 
 
-	public boolean turnRoughAngle(double turnAngle) {
-		if (turnAngle < 0) {
-			if (Math.abs(gyro.getYaw() - turnAngle) < 5) {
-				myDrive.arcadeDrive(0, 0);
-				return true;
-			} else {
-				myDrive.arcadeDrive(0, -0.6);
-			}
-		} else {
-			if (Math.abs(gyro.getYaw() - turnAngle) < 5) {
-				myDrive.arcadeDrive(0, 0);
-				return true;
-			} else {
-				myDrive.arcadeDrive(0, .6);
-			}
-		}
-		return false;
+	public boolean cameraDriveStraight()
+	{
+		return fastDriveStraight(0.5, distanceFromCamera);
 	}
-
-	public boolean dumbDriveStraight(double speed, double inches) {
+	public boolean fastDriveStraight(double speed, double inches) {
 		if (drive.leftEncoder()) {
 			//if (Math.abs((double) drive.masterLeft.getEncPosition() / 4096.0 * Math.PI * 4) > Math.abs(inches)
 			//		* AutoConstants.DRIVE_STRAIGHT_MULTIPLIER) {
 			if (gotStartingENCClicks == false) {
+				gyro.reset();
 				gotStartingENCClicks = true;
 				startingENCClicks =  drive.masterLeft.getEncPosition();
+				Timer.delay(.1);
 				System.out.println("Start ENC click value = " +  startingENCClicks);
 			}
-			if (Math.abs((double)( drive.masterLeft.getEncPosition() - startingENCClicks)) > Math.abs(inches * 667.00 )){
+			if (Math.abs((double)( drive.masterLeft.getEncPosition() - startingENCClicks)) > Math.abs(inches * Constants.CLICKS_PER_INCH )){
 				drive.masterLeft.set(0.00);
 				drive.masterRight.set(0.00);
 				//myDrive.arcadeDrive(0, 0);
@@ -346,14 +318,18 @@ public class Robot extends IterativeRobot  {
 				return true;
 			} else {
 				if (inches > 0) {
-					myDrive.arcadeDrive(speed, 0);
+					if (Math.abs((double)( drive.masterLeft.getEncPosition() - startingENCClicks) ) > Math.abs(inches * Constants.CLICKS_PER_INCH *.60 ))
+						speed = 0.35;
+					myDrive.arcadeDrive(speed, -(gyro.getAngle()* .07));
+					//Timer.delay(.05);
 					//myDrive.arcadeDrive(speed,0);
 				} else {
-					//myDrive.arcadeDrive(-speed,0);
+					myDrive.arcadeDrive(-speed,-(gyro.getAngle()* .07));
+					//Timer.delay(.05);
 				} 	
 			}
 			return false;
-		} else if (drive.rightEncoder()) {	//TODO make ticks a constant, Jesus. Why. 
+		} else if (drive.rightEncoder()) {
 			if (Math.abs((double) (drive.masterRight.getEncPosition() -  startingENCClicks)) > Math.abs(inches * 667.00 )){
 			//if (Math.abs(drive.masterRight.getEncPosition() / 4096 * Math.PI * 4) > Math.abs(inches)
 				//	* AutoConstants.DRIVE_STRAIGHT_MULTIPLIER) {
@@ -365,31 +341,45 @@ public class Robot extends IterativeRobot  {
 				return true;
 			} else {
 				if (inches > 0) {
-					drive.masterRight.set(speed);
-					drive.masterLeft.set(-speed);
+					//drive.masterRight.set(speed);
+					//drive.masterLeft.set(-speed);
+					myDrive.arcadeDrive(speed, -(gyro.getAngle()* .07));
+					//Timer.delay(.05);
 				} else {
-					drive.masterRight.set(-speed);
-					drive.masterLeft.set(speed);
+					myDrive.arcadeDrive(-speed,-(gyro.getAngle()* .07));
+					//Timer.delay(.05);
+					//drive.masterRight.set(-speed);
+					//drive.masterLeft.set(speed);
 				}
 			}
 		}
 		return true;
 	}
-
+		
+	
+// You need to run 	
+   public boolean rocketTurnCamera()
+   {
+	return  rocketTurn(angleFromCamera);
+   }
+	
 	public boolean rocketTurn(double angleToTurn) {
 		boolean weAreDone = false;
 		if (angleToTurn > 1) {
 			System.out.println("Positive angle");
 			if ((angleToTurn - gyro.getAngle()) < 1.00) {
 				weAreDone = true;
-				myDrive.arcadeDrive(0, 0);
+				//myDrive.arcadeDrive(0, 0);
+				drive.masterLeft.set(0.00);   //  .40
+				drive.masterRight.set(0.00);
 				System.out.println(
 						"*******************************navx = " + gyro.getAngle() + "\n Angle to turn " + angleToTurn);
 
 			} else {
+				//drive.masterLeft.set(-0.40);//-.40
+				//drive.masterRight.set(0.00);
 				drive.masterLeft.set(-0.40);
 				drive.masterRight.set(-0.40);
-				
 	//			myDrive.arcadeDrive(0, .55);
 			}
 		}
@@ -397,11 +387,16 @@ public class Robot extends IterativeRobot  {
 		if (angleToTurn < 1) {
 			if ((angleToTurn - gyro.getAngle()) > -1.00) {
 				weAreDone = true;
-				myDrive.arcadeDrive(0, 0);
+				//myDrive.arcadeDrive(0, 0);
+				drive.masterLeft.set(0.00);   //  .40
+				drive.masterRight.set(0.00);
+
 				System.out.println(
 						"*******************************navx = " + gyro.getAngle() + "\n Angle to turn " + angleToTurn);
 			} else {
 				//myDrive.arcadeDrive(0, -.55);
+				//drive.masterLeft.set(0.00);   //  .40
+				//drive.masterRight.set(0.40);
 				drive.masterLeft.set(0.40);
 				drive.masterRight.set(0.40);
 		

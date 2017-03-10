@@ -14,7 +14,7 @@ public class Constants {
 	public static final int FLYWHEEL_MASTER_PORT = 6; //Fly Wheel
 	public static final int FLYWHEEL_FOLLOWER_PORT = 12;
 	public static final int FUEL_TANK_COLLECTOR_MOTOR_PORT = 7; //Fuel Tank
-	
+	public static final double CLICKS_PER_INCH = 650.00;              // DEFAULT 667 
 	//Solenoids
 	public static final int DRIVETRAIN_EXTEND_PORT = 0;
 	public static final int DRIVERTRAIN_RETRACT_PORT = 1;
