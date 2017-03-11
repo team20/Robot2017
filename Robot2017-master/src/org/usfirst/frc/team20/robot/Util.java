@@ -1,4 +1,3 @@
-//Author: Rahul Shah
 package org.usfirst.frc.team20.robot;
 
 import java.io.File;
@@ -34,16 +33,24 @@ public class Util {
 	public String getCameraAngle() {
 		String angleDistance = "";
 		try {
-			System.out.println("*******Trying to turn angle");
+			System.out.println("*******Trying to Get Angle");
 			angleDistance = readSocket("10.0.20.79", 9999, "009");
-			System.out.println("*******Turned angle  ********** = " + angleDistance);
+			System.out.println("*******Got Angle********** = " + angleDistance);
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 		}
 
 		return angleDistance;
 	}
-
+	public void shutDownPi(){
+		String angleDistance = "";
+		try {
+			System.out.println("*******Shutting Down Pi");
+			angleDistance = readSocket("10.0.20.79", 9999, "005");
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
+	}
 	public String readSocket(String ipAddress, int Port, String sentence) throws IOException {
 		String socketString = "-1";
 		DatagramSocket clientSocket;

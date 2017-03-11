@@ -1,7 +1,4 @@
-//Author: Roland Rao and Atharva Gawde
 package org.usfirst.frc.team20.robot;
-
-import edu.wpi.first.wpilibj.Timer;
 
 public class DriverControls {
 	Controller driverJoy;
@@ -24,7 +21,6 @@ public class DriverControls {
 		if(driverJoy.getRightTriggerAxis() > 0.1){
 			speedStraight = driverJoy.getRightTriggerAxis();
 		}else if(driverJoy.getLeftTriggerAxis() > 0.1){
-			System.out.println("Backwards");
 			speedStraight = -driverJoy.getLeftTriggerAxis();
  		}else{
  			speedStraight = 0.0;
@@ -49,7 +45,6 @@ public class DriverControls {
 		}
 		if(driverJoy.getButtonB()){
 			drive.shiftLow();
-			Timer.delay(.01);
 		}
 		if(driverJoy.getButtonA()){
 			climb.climb(1);

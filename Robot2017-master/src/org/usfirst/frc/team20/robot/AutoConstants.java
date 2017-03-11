@@ -9,8 +9,8 @@ public class AutoConstants {	//TODO tune all distances and angles
 	
 	//Hard Distances
 	public static final String CROSS_BASELINE_DISTANCE = "120";
-	public static final String MIDDLE_PEG_DISTANCE = "94";	
-	public static final String RIGHT_PEG_HARD_DISTANCE = "85.0";
+	public static final String MIDDLE_PEG_DISTANCE = "84";	
+	public static final String RIGHT_PEG_HARD_DISTANCE = "65.0";
 	public static final String LEFT_PEG_HARD_DISTANCE = "75";
 	public static final String BACK_UP_FROM_PEG_DISTANCE = "-5";
 	public static final String BACK_UP_FROM_BOILER_DISTANCE = "-30";
@@ -21,7 +21,7 @@ public class AutoConstants {	//TODO tune all distances and angles
 
 	//Hard Angles
 	public static final String LEFT_PEG_HARD_ANGLE = "40";
-	public static final String RIGHT_PEG_HARD_ANGLE = "-40";
+	public static final String RIGHT_PEG_HARD_ANGLE = "-50";
 	public static final String BOILER_TO_SIDE_PEG_HARD_ANGLE = "180";
 	public static final String BOILER_TO_MIDDLE_PEG_HARD_ANGLE_RED = "-90";
 	public static final String BOILER_TO_MIDDLE_PEG_HARD_ANGLE_BLUE = "90";

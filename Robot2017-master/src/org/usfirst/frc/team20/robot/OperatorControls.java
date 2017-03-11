@@ -1,5 +1,4 @@
-//Author: Rahul Shah and Ronak Parida
-package org.usfirst.frc.team20.robot;
+  package org.usfirst.frc.team20.robot;
 
 public class OperatorControls {
 	Controller operatorJoy;
@@ -25,28 +24,12 @@ public class OperatorControls {
 		gear.moveFlaps();
 		if (operatorJoy.getButtonY()) {
 			tank.retractAgitator();
-			collector.intake(.9);
-			tank.tankMotorIntoTank(.95);
+			collector.intake(0.90);
+			tank.tankMotorIntoTank(0.95);
 		}
 		if (operatorJoy.getButtonA()) {
 			collector.outtake(1);
 		}
-		if(operatorJoy.getButtonDUp()){
-			gear.automated = true;
-		}
-		if(operatorJoy.getButtonDDown()){
-			gear.automated = false;
-		}
-		if(operatorJoy.getButtonDRight() && !gear.automated){
-			gear.gearFlapIn();
-		}
-		if(operatorJoy.getButtonDLeft() && !gear.automated){
-			gear.gearFlapOut();
-		}
-		
-//		if (operatorJoy.getButtonDUp()){
-//			flywheel.shootWithEncoders(5000);			SECOND FLYWHEEL SPEED *** DOES NOT WORK ***
-//		}
 		if (operatorJoy.getButtonX() || operatorJoy.getButtonB()) {
 			collector.stopCollector();
 			tank.stopTank();
@@ -55,16 +38,15 @@ public class OperatorControls {
 		if (operatorJoy.getButtonStart()) {
 			flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 		}
-		//TODO ask Roland what this is
-//		if(flywheel.flywheelMaster.getOutputCurrent()>50){
-//			flywheel.setPID(0,0,0,Constants.FLYWHEEL_F);
-//		}else{
-//			flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
-//		}
+		if(flywheel.flywheelMaster.getOutputCurrent()>50){
+			flywheel.setPID(0,0,0,Constants.FLYWHEEL_F);
+		}else{
+			flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
+		}
 		if (operatorJoy.getRightTriggerAxis() > 0) {
-			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) { // was Constants.flywheelSpeed
-				collector.intake(1);
-				tank.tankMotorIntoFlywheel(0.25); // was 1
+			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
+				collector.intake(1);	//TODO tune speed (one ball at a time)
+				tank.tankMotorIntoFlywheel(1);
 			}
 			shooting = true;
 		}
@@ -77,7 +59,6 @@ public class OperatorControls {
 			collector.stopCollector();
 			shooting = false;
 			tankToFlywheel = false;
-			tank.retractAgitator();
 		}
 	}
 }
