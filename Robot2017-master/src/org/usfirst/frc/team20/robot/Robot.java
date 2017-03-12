@@ -99,20 +99,20 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Right Gear", 4);
 		chooser.addObject("Left Gear", 5);
 
-		// Boiler to Gear AutoModes
-		chooser.addObject("Boiler to Closest Gear", 6);
-		chooser.addObject("Red: Boiler to Middle Gear", 7);
-		chooser.addObject("Blue: Boiler to Middle Gear", 8);
-
-		// Gear to Boiler AutoModes
-		chooser.addObject("Red: Middle Gear to Boiler", 9);
-		chooser.addObject("Blue: Middle Gear to Boiler", 10);
-		chooser.addObject("Red: Right Gear to Boiler", 11);
-		chooser.addObject("Blue: Left Gear to Boiler", 12);
+//		// Boiler to Gear AutoModes
+//		chooser.addObject("Boiler to Closest Gear", 6);
+//		chooser.addObject("Red: Boiler to Middle Gear", 7);
+//		chooser.addObject("Blue: Boiler to Middle Gear", 8);
+//
+//		// Gear to Boiler AutoModes
+//		chooser.addObject("Red: Middle Gear to Boiler", 9);
+//		chooser.addObject("Blue: Middle Gear to Boiler", 10);
+//		chooser.addObject("Red: Right Gear to Boiler", 11);
+//		chooser.addObject("Blue: Left Gear to Boiler", 12);
 
 		// Hopper to Boiler AutoModes
 		chooser.addObject("Red: Hopper to Boiler", 13);
-		chooser.addObject("Blue: Hopper to Boiler", 14);
+		chooser.addObject("Blue: Hopper to Boiler", 14);	//Note: untuned
 		
 		chooser.addObject("Right Gear Without Camera", 15);
 		chooser.addObject("Left Gear Without Camera", 16);
@@ -298,7 +298,7 @@ public class Robot extends IterativeRobot {
 				flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 				rocketScriptCurrentCount++;
 			}
-			//			if(Integer.parseInt(values[0]) == RobotModes.ARC_TURN){
+//			if(Integer.parseInt(values[0]) == RobotModes.ARC_TURN){
 //				arcTurn(Double.parseDouble(values[1]), Double.parseDouble(values[2]), Boolean.parseBoolean(values[3]));
 //			}
 		}
@@ -316,7 +316,6 @@ public class Robot extends IterativeRobot {
 		drive.masterRight.setVoltageRampRate(60);
 		drive.masterLeft.setVoltageRampRate(60);
 		gear.automated = true;
-//		util.shutDownPi();
 //		alex = new AlexDrive(drive, climb);
 //		tsar = new TsarControls(drive, climb, tank, gear, flywheel, collector);
 	}
@@ -348,10 +347,12 @@ public class Robot extends IterativeRobot {
 		// System.out.println("enc = " + drive.masterRight.getEncPosition());
 	}
 	//Auto Methods
+	public boolean turnWithCamera() {
+		return fastDriveStraight(0.60, 7.0, angleFromCamera); //was 5 inches
+	}
 	public boolean cameraDriveStraight() {
 		return fastDriveStraight(0.60, distanceFromCamera, angleFromCamera);
 	}
-
 	public boolean fastDriveStraight(double speed, double inches, double angleToDrive) {
 		if (drive.leftEncoder()) {
 			if (gotStartingENCClicks == false) {
@@ -415,9 +416,6 @@ public class Robot extends IterativeRobot {
 		} else {
 			return true;
 		}
-	}
-	public boolean turnWithCamera() {
-		return fastDriveStraight(0.60, 7.0, angleFromCamera); //was 5 inches
 	}
 //	public boolean arcTurn(double middleToLongSide, double middleToShortSide, boolean direction) {//half of the long side of an elipse b is half the short side and c is the robot with
 //        double leftArc;

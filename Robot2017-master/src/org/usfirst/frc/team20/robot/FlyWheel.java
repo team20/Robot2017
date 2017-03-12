@@ -37,18 +37,18 @@ public class FlyWheel {
 	}
 	public void shootWithEncoders(double RPMS){
 		flywheelMaster.changeControlMode(TalonControlMode.Speed);
-		double cps = RPMS/600*4096;	//was RPMS/600*4096 cycles per second
+		double cps = RPMS/600*4096;
 		flywheelMaster.set(cps);
 	}
 	public boolean flywheelReady(double RPMS){
-		if(RPMS - 100 < flywheelSpeed() && flywheelSpeed() < RPMS + 100){
+		if(RPMS - 70 < flywheelSpeed() && flywheelSpeed() < RPMS + 70){
 			return true;
 		}else{
 			return false;
 		}
 	}
 	public double flywheelSpeed(){
-		return flywheelMaster.getSpeed()/4096*10*60;
+		return flywheelMaster.getSpeed()/4096*600;
 	}
 	public void stopFlywheel(){
 		flywheelMaster.set(0);

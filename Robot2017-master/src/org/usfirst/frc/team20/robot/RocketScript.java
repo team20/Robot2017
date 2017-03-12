@@ -167,7 +167,18 @@ public class RocketScript {
 	}
 
 	public String[] hopperToBoilerBlue() {
-		String[] autoCode = new String[4];
+		String[] autoCode = new String[11];
+		autoCode[0] = fastDriveStraight + ";" + AutoConstants.KPA_DISTANCE_ONE_BLUE + ";" + AutoConstants.KPA_ANGLE_ONE_BLUE;
+		autoCode[1] = fastDriveStraight + ";" + AutoConstants.KPA_DISTANCE_TWO_BLUE + ";" + AutoConstants.KPA_ANGLE_TWO_BLUE;
+		autoCode[2] = fastDriveStraight + ";" + AutoConstants.KPA_DISTANCE_THREE_BLUE + ";" + AutoConstants.KPA_ANGLE_THREE_BLUE;
+		autoCode[3] = wait + ";" + AutoConstants.KPA_WAIT_HOPPER;
+		autoCode[4] = fastDriveStraight + ";" + AutoConstants.KPA_DISTANCE_FOUR_BLUE + ";" + AutoConstants.KPA_ANGLE_FOUR_BLUE;
+		autoCode[5] = fastDriveStraight + ";" + AutoConstants.KPA_DISTANCE_FIVE_BLUE + ";" + AutoConstants.KPA_ANGLE_FIVE_BLUE;
+		autoCode[6] = fastDriveStraight + ";" + AutoConstants.KPA_DISTANCE_SIX_BLUE + ";" + AutoConstants.KPA_ANGLE_SIX_BLUE;
+		autoCode[7] = fastDriveStraight + ";" + AutoConstants.KPA_DISTANCE_SEVEN_BLUE + ";" + AutoConstants.KPA_ANGLE_SEVEN_BLUE;
+		autoCode[8] = spinUp + ";" + "NULL";
+		autoCode[9] = fastDriveStraight + ";" + AutoConstants.KPA_DISTANCE_EIGHT_BLUE + ";" + AutoConstants.KPA_ANGLE_EIGHT_BLUE;
+		autoCode[10] = shoot + ";" + "50";
 		return autoCode;
 	}
 //	public String[] hopperToBoilerRed() {

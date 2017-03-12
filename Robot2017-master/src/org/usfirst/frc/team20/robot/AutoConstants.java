@@ -42,26 +42,42 @@ public class AutoConstants {	//TODO tune all distances and angles
 	public static final String SIDE_PEG_TO_BOILER_ANGLE = "180";
 
 	//40kPa Stuff
+	public static final String KPA_WAIT_HOPPER = "2";		 
 	//Red
-	public static final String KPA_DISTANCE_ONE_RED = "90";	//GOOD
-	public static final String KPA_ANGLE_ONE_RED = "0";		//GOOD
-	public static final String KPA_DISTANCE_TWO_RED = "10";	//GOOD
-	public static final String KPA_ANGLE_TWO_RED = "-90";	//GOOD
-	public static final String KPA_DISTANCE_THREE_RED = "17";	//GOOD
-	public static final String KPA_ANGLE_THREE_RED = "0";		//GOOD
-	public static final String KPA_WAIT_HOPPER = "2";		//GOOD
-	public static final String KPA_DISTANCE_FOUR_RED = "-20";	//GOOD
-	public static final String KPA_ANGLE_FOUR_RED = "0";		//GOOD
-	public static final String KPA_DISTANCE_FIVE_RED = "-25";	//GOOD
-	public static final String KPA_ANGLE_FIVE_RED = "-90";		//GOOD
-	public static final String KPA_DISTANCE_SIX_RED = "72";	//GOOD
-	public static final String KPA_ANGLE_SIX_RED = "0";		//GOOD
-	public static final String KPA_DISTANCE_SEVEN_RED = "20";	//GOOD
-	public static final String KPA_ANGLE_SEVEN_RED = "50";		//GOOD
-	public static final String KPA_DISTANCE_EIGHT_RED = "20";	//GOOD
-	public static final String KPA_ANGLE_EIGHT_RED = "0";		//GOOD
+	public static final String KPA_DISTANCE_ONE_RED = "90";	 
+	public static final String KPA_ANGLE_ONE_RED = "0";		 
+	public static final String KPA_DISTANCE_TWO_RED = "10";	 
+	public static final String KPA_ANGLE_TWO_RED = "-90";	 
+	public static final String KPA_DISTANCE_THREE_RED = "17";	 
+	public static final String KPA_ANGLE_THREE_RED = "0";		 
+	public static final String KPA_DISTANCE_FOUR_RED = "-20";	 
+	public static final String KPA_ANGLE_FOUR_RED = "0";		 
+	public static final String KPA_DISTANCE_FIVE_RED = "-25";	 
+	public static final String KPA_ANGLE_FIVE_RED = "-90";		 
+	public static final String KPA_DISTANCE_SIX_RED = "72";	 
+	public static final String KPA_ANGLE_SIX_RED = "0";		 
+	public static final String KPA_DISTANCE_SEVEN_RED = "20";	 
+	public static final String KPA_ANGLE_SEVEN_RED = "50";		 
+	public static final String KPA_DISTANCE_EIGHT_RED = "20";	 
+	public static final String KPA_ANGLE_EIGHT_RED = "0";		 
 
 	//Blue
+	public static final String KPA_DISTANCE_ONE_BLUE = "90";	 
+	public static final String KPA_ANGLE_ONE_BLUE = "0";		 
+	public static final String KPA_DISTANCE_TWO_BLUE = "10";	 
+	public static final String KPA_ANGLE_TWO_BLUE = "90";	 
+	public static final String KPA_DISTANCE_THREE_BLUE = "17";	 
+	public static final String KPA_ANGLE_THREE_BLUE = "0";
+	public static final String KPA_DISTANCE_FOUR_BLUE = "-20";	 
+	public static final String KPA_ANGLE_FOUR_BLUE = "0";		 
+	public static final String KPA_DISTANCE_FIVE_BLUE = "-25";	 
+	public static final String KPA_ANGLE_FIVE_BLUE = "90";		 
+	public static final String KPA_DISTANCE_SIX_BLUE = "72";	 
+	public static final String KPA_ANGLE_SIX_BLUE = "0";		 
+	public static final String KPA_DISTANCE_SEVEN_BLUE = "20";	 
+	public static final String KPA_ANGLE_SEVEN_BLUE = "-50";		 
+	public static final String KPA_DISTANCE_EIGHT_BLUE = "20";	 
+	public static final String KPA_ANGLE_EIGHT_BLUE = "0";
 
 //	//40kPa Stuff
 //	public static final double ARC_SPEED = 0.85;	
