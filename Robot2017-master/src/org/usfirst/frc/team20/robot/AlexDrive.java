@@ -1,4 +1,3 @@
-//Author: Roland Rao
 package org.usfirst.frc.team20.robot;
 
 public class AlexDrive {
@@ -44,7 +43,7 @@ public class AlexDrive {
 		if(alexJoy.getButtonB()){
 			drive.shiftLow();
 		}
-		if(alexJoy.getButtonB()){
+		if(alexJoy.getButtonX()){
 			climb.climb(1);
 		}
 		if(climb.climberMaster.getOutputCurrent()>50 || climb.climberFollower.getOutputCurrent()>50){

@@ -12,9 +12,9 @@ public class Constants {
 	public static final int CLIMBER_FOLLOWER_PORT = 11; //Climb Left
 	public static final int GROUND_COLLECTOR_MOTOR_PORT = 5; //Collector
 	public static final int FLYWHEEL_MASTER_PORT = 6; //Fly Wheel
-	public static final int FLYWHEEL_FOLLOWER_PORT = 12;
+//	public static final int FLYWHEEL_FOLLOWER_PORT = 12;
 	public static final int FUEL_TANK_COLLECTOR_MOTOR_PORT = 7; //Fuel Tank
-	public static final double CLICKS_PER_INCH = 650.00;              // DEFAULT 667 
+
 	//Solenoids
 	public static final int DRIVETRAIN_EXTEND_PORT = 0;
 	public static final int DRIVERTRAIN_RETRACT_PORT = 1;
@@ -27,11 +27,11 @@ public class Constants {
 	public static final int PI_SOCKET_PORT_NUMBER = 0;
 	
 	//FlyWheel
-	public static final double FLYWHEEL_P = .5; //0.003
+	public static final double FLYWHEEL_P = 0.2; //0.003
 	public static final double FLYWHEEL_I = 0.0; //0.0
 	public static final double FLYWHEEL_D = 0.0; //0.0
-	public static final double FLYWHEEL_F = 0.031;	//0.0165
-	public static final double FLYWHEEL_SPEED = 2900.0;
+	public static final double FLYWHEEL_F = 0.032;	//0.0165
+	public static final double FLYWHEEL_SPEED = 3900.0;
 
 	//NavX PID
 	public static final double NavX_P = 0.036;
