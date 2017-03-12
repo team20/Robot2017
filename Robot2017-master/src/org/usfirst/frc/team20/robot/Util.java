@@ -7,7 +7,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 
 public class Util {
 	File file;
@@ -34,25 +33,14 @@ public class Util {
 	public String getCameraAngle() {
 		String angleDistance = "";
 		try {
-			System.out.println("*******Trying to Get Angle");
-			angleDistance = readSocket("10.0.20.79", 5801, "009");
-			System.out.println("*******Got Angle********** = " + angleDistance);
+			System.out.println("*******Trying to turn angle");
+			angleDistance = readSocket("10.0.20.79", 9999, "009");
+			System.out.println("*******Turned angle  ********** = " + angleDistance);
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 		}
 
 		return angleDistance;
-	}
-
-	public String shutDownPi() {
-		String shutDown = "";
-		try {
-			System.out.println("*******Shutting Down Pi");
-			shutDown = readSocket("10.0.20.79", 5801, "005");
-		} catch (NumberFormatException | IOException e) {
-			e.printStackTrace();
-		}
-		return shutDown;
 	}
 
 	public String readSocket(String ipAddress, int Port, String sentence) throws IOException {
@@ -66,24 +54,19 @@ public class Util {
 			System.out.println("sentence = " + sentence);
 			sendData = sentence.getBytes();
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, Port);
+
 			clientSocket.send(sendPacket);
 			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-			try {
-				clientSocket.receive(receivePacket);
-				String modifiedSentence = new String(receivePacket.getData());
-				System.out.println("FROM SERVER:" + modifiedSentence);
-				socketString = modifiedSentence;
-				clientSocket.close();
-				System.out.println("done");
-			} catch (SocketTimeoutException x) {
-				System.out.println("Timeout Reached! " + x.toString());
-				clientSocket.close();
-				return "0";
-			}
+			clientSocket.receive(receivePacket);
+			String modifiedSentence = new String(receivePacket.getData());
+			System.out.println("FROM SERVER:" + modifiedSentence);
+			socketString = modifiedSentence;
+			clientSocket.close();
+			System.out.println("done");
 		} catch (SocketException e) {
 			System.out.println("Socket error: " + e.toString());
-			return socketString;
 		}
+
 		return socketString;
 	}
 }

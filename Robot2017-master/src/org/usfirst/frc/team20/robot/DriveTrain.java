@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class DriveTrain {
 	DriverStation d = DriverStation.getInstance();
-	DoubleSolenoid shifter = new DoubleSolenoid(Constants.DRIVETRAIN_EXTEND_PORT, Constants.DRIVERTRAIN_RETRACT_PORT);
+	DoubleSolenoid shifter = new DoubleSolenoid(Constants.DRIVETRAIN_EXTEND_PORT,
+			Constants.DRIVERTRAIN_RETRACT_PORT);
 	CANTalon masterRight, followerRightOne, followerRightTwo;
 	CANTalon masterLeft, followerLeftOne, followerLeftTwo;
 	int state;
@@ -18,9 +19,9 @@ public class DriveTrain {
 	boolean kArcadeStandard_Reported = false;
 	boolean setSetpoint;
 	boolean highGear;
-
+	
 	public DriveTrain() {
-		// Setting the Motor Port Numbers
+		//Setting the Motor Port Numbers
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
 		masterRight.reverseOutput(false);
 		followerRightOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_RIGHT_MOTOR_PORT_ONE);
@@ -29,7 +30,7 @@ public class DriveTrain {
 		masterLeft.reverseOutput(false);
 		followerLeftOne = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_ONE);
 		followerLeftTwo = new CANTalon(Constants.DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO);
-		// Setting the Follower Motors to Their Respective Masters
+		//Setting the Follower Motors to Their Respective Masters
 		followerRightOne.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerRightOne.set(masterRight.getDeviceID());
 		followerRightOne.reverseOutput(true);
@@ -42,72 +43,69 @@ public class DriveTrain {
 		followerLeftTwo.changeControlMode(CANTalon.TalonControlMode.Follower);
 		followerLeftTwo.set(masterLeft.getDeviceID());
 		followerLeftTwo.reverseOutput(true);
-		// Setting the Encoders on the Master Motors
+		//Setting the Encoders on the Master Motors
 		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		masterLeft.setEncPosition(0);
 		masterRight.setEncPosition(0);
 		multiplier = 6.5;
 	}
-
-	public void resetTalons() {
+	public void resetTalons(){
 		masterLeft.reset();
 		masterRight.reset();
-	}
-
+	}		
 	public void drive(double speed, double rightTurn, double leftTurn) { // drives
-		if (shifter.get() == DoubleSolenoid.Value.kReverse) {
-			rightTurn *= .95;
-			leftTurn *= .95;
-			if (speed != 0) { // forward
+		if(shifter.get() == DoubleSolenoid.Value.kReverse){
+			rightTurn*=.95;
+			leftTurn*=.95;
+			if (speed != 0) { //forward
 				adjustment = 0;
 			}
 			masterRight.set(speed - rightTurn + leftTurn + adjustment);
 			masterLeft.set(-speed + leftTurn - rightTurn);
-		} else {
-			if (speed != 0) { // forward
+		}else{
+			if (speed != 0) { //forward
 				adjustment = 0;
 			}
 			masterRight.set(speed - rightTurn + leftTurn + adjustment);
 			masterLeft.set(-speed + leftTurn - rightTurn);
 		}
 	}
-
-	public boolean leftEncoder() {
+	
+	public boolean leftEncoder(){
 		boolean leftEncoder = false;
-		try {
-			FeedbackDeviceStatus sensorStatusLeft = masterLeft.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
-			leftEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusLeft);
-		} catch (Exception e) {
+		try{
+		FeedbackDeviceStatus sensorStatusLeft = masterLeft.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
+		leftEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusLeft);
+		}catch(Exception e){
 			System.out.println("Left Encoder Error: " + e.toString());
 			rightEncoder();
 		}
 		return leftEncoder;
 	}
 
-	public boolean rightEncoder() {
+	public boolean rightEncoder(){
 		boolean rightEncoder = false;
-		try {
-			FeedbackDeviceStatus sensorStatusRight = masterRight
-					.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
+		try{
+			FeedbackDeviceStatus sensorStatusRight = masterRight.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
 			rightEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusRight);
-		} catch (Exception e) {
+		}catch(Exception e){
 			System.out.println("Right Encoder Error: " + e.toString());
 		}
 		return rightEncoder;
 	}
-
+	
 	public void turnRight(double speed) { // turns right
 		masterRight.set(-speed);
 		masterLeft.set(-speed);
 	}
-
+	
 	public void turnLeft(double speed) { // turns left
 		masterRight.set(speed);
 		masterLeft.set(speed);
 	}
-
-	public void stopDrive() {
+	
+	public void stopDrive(){
 		masterRight.set(0);
 		masterLeft.set(0);
 	}
@@ -121,49 +119,8 @@ public class DriveTrain {
 		shifter.set(DoubleSolenoid.Value.kForward);
 		highGear = false;
 	}
-
-	public boolean turnAngle(double angle) {
+	
+	public boolean turnAngle(double angle){
 		return false;
 	}
-
-	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
-		double leftMotorSpeed;
-		double rightMotorSpeed;
-		if (squaredInputs) {
-			// square the inputs (while preserving the sign) to increase fine
-			// control
-			// while permitting full power
-			if (moveValue >= 0.0) {
-				moveValue = moveValue * moveValue;
-			} else {
-				moveValue = -(moveValue * moveValue);
-			}
-			if (rotateValue >= 0.0) {
-				rotateValue = rotateValue * rotateValue;
-			} else {
-				rotateValue = -(rotateValue * rotateValue);
-			}
-		}
-
-		if (moveValue > 0.0) {
-			if (rotateValue > 0.0) {
-				leftMotorSpeed = moveValue - rotateValue;
-				rightMotorSpeed = Math.max(moveValue, rotateValue);
-			} else {
-				leftMotorSpeed = Math.max(moveValue, -rotateValue);
-				rightMotorSpeed = moveValue + rotateValue;
-			}
-		} else {
-			if (rotateValue > 0.0) {
-				leftMotorSpeed = -Math.max(-moveValue, rotateValue);
-				rightMotorSpeed = moveValue + rotateValue;
-			} else {
-				leftMotorSpeed = moveValue - rotateValue;
-				rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
-			}
-		}
-		masterRight.set(rightMotorSpeed);
-		masterLeft.set(-leftMotorSpeed);
-	}
-
-}
+}  

@@ -3,7 +3,7 @@ package org.usfirst.frc.team20.robot;
 import java.io.IOException;
 
 public class TsarControls {
-	Controller tsarJoy;
+	Controller raoJoy;
 	DriveTrain drive;
 	Climber climb;
 	FuelTank tank;
@@ -19,7 +19,7 @@ public class TsarControls {
 	Util currentFile = new Util();
 	Util speedFile = new Util();
 	public TsarControls(DriveTrain d, Climber c, FuelTank t, GearMechanism g, FlyWheel f, GroundCollector co){
-		tsarJoy = new Controller(0);
+		raoJoy = new Controller(0);
 		drive = d;
 		climb = c;
 		tank = t;
@@ -35,6 +35,7 @@ public class TsarControls {
 			currentFile.createFile("Current");
 			speedFile.createFile("Speed");
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -46,18 +47,18 @@ public class TsarControls {
 		System.out.println(speedStraight + " Speed Straight");
 		System.out.println(speedRight + " Speed Right");
 		System.out.println(speedLeft + " Speed Left");
-		if(tsarJoy.getRightTriggerAxis() > 0.1){
-			speedStraight = tsarJoy.getRightTriggerAxis();
+		if(raoJoy.getRightTriggerAxis() > 0.1){
+			speedStraight = raoJoy.getRightTriggerAxis();
 		}else{
  			speedStraight = 0.0;
  		}
-		if(tsarJoy.getLeftXAxis() < -0.1){
-			speedLeft = -tsarJoy.getLeftXAxis();			
+		if(raoJoy.getLeftXAxis() < -0.1){
+			speedLeft = -raoJoy.getLeftXAxis();			
 		}else{
 			speedLeft = 0.0;
 		}
-		if(tsarJoy.getLeftXAxis() > 0.1){
-			speedRight = tsarJoy.getLeftXAxis();
+		if(raoJoy.getLeftXAxis() > 0.1){
+			speedRight = raoJoy.getLeftXAxis();
 		}else{
 			speedRight = 0.0;
 		}
@@ -66,49 +67,49 @@ public class TsarControls {
 		}else{
 			drive.stopDrive();
 		}
-		if (tsarJoy.getButtonDRight()) {
+		if (raoJoy.getButtonDRight()) {
 			drive.shiftHigh();
 		}
-		if (tsarJoy.getButtonDLeft()) {
+		if (raoJoy.getButtonDLeft()) {
 			drive.shiftLow();
 		}
-		if(tsarJoy.getButtonDUp()){
+		if(raoJoy.getButtonDUp()){
 			climb.climb(1);
 		}
-		if(tsarJoy.getButtonDDown()){
+		if(raoJoy.getButtonDDown()){
 			climb.stopClimbing();
 		}
 
 		
 		//Operator Code
-		if (tsarJoy.getButtonY()) {
+		if (raoJoy.getButtonY()) {
 			collector.intake(1);
 			tank.tankMotorIntoTank(1);
 		}
-		if (tsarJoy.getButtonA()) {
+		if (raoJoy.getButtonA()) {
 			collector.outtake(1);
 			tank.tankMotorIntoFlywheel(1);
 			tankToFlywheel = true;
 		}
-		if(tsarJoy.getButtonX()){
+		if(raoJoy.getButtonX()){
 			collector.stopCollector();
 			tank.stopTank();
 			tankToFlywheel = false;
 		}
-		if(tsarJoy.getButtonB()){
+		if(raoJoy.getButtonB()){
 			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
 				collector.intake(1);
 				tank.tankMotorIntoFlywheel(1);
 			}
 			shooting = true;
 		}
-		if (tsarJoy.getButtonStart()) {
+		if (raoJoy.getButtonStart()) {
 			flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 		}
 		if (tankToFlywheel || shooting) {
 			tank.runAgitator();
 		}
-		if (tsarJoy.getButtonBack()) {
+		if (raoJoy.getButtonBack()) {
 			flywheel.stopFlywheel();
 			tank.stopTank();
 			collector.stopCollector();
@@ -123,6 +124,7 @@ public class TsarControls {
 			currentFile.WriteToFile(",");
 			speedFile.WriteToFile(",");
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
