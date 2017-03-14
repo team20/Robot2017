@@ -1,3 +1,4 @@
+//Author: Maxwell Hoffman
 package org.usfirst.frc.team20.robot;
 
 import edu.wpi.first.wpilibj.CameraServer;

@@ -1,3 +1,4 @@
+//Author: Roland Rao
 package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
@@ -7,19 +8,24 @@ import com.ctre.CANTalon.TalonControlMode;
 
 public class FlyWheel {
 	CANTalon flywheelMaster;
-//	CANTalon flywheelFollower;
+	CANTalon flywheelFollower;
 	boolean flywheelEncoder;
 	public FlyWheel(){
 		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MASTER_PORT);
-//		flywheelMaster.setStatusFrameRateMs(StatusFrameRate, 20);
-//		flywheelFollower = new CANTalon(Constants.FLYWHEEL_FOLLOWER_PORT);
-//		flywheelFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
-//		flywheelFollower.set(flywheelMaster.getDeviceID());
-//		flywheelFollower.reverseOutput(true);
+		flywheelMaster.reverseOutput(false);
+		flywheelFollower = new CANTalon(Constants.FLYWHEEL_FOLLOWER_PORT);
+		flywheelFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
+		flywheelFollower.set(flywheelMaster.getDeviceID());
+		flywheelFollower.reverseOutput(true);
 		flywheelEncoder = false;
 		flywheelMaster.configPeakOutputVoltage(12.0f, 0.0f);
 	}	
 
+	public boolean flywheelEncoder(){
+		FeedbackDeviceStatus sensorStatusFlywheel = flywheelMaster.isSensorPresent(FeedbackDevice.QuadEncoder);
+		flywheelEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusFlywheel);
+		return flywheelEncoder;
+	}
 	public void shoot(double speed){
 		flywheelMaster.changeControlMode(TalonControlMode.Voltage);
 		flywheelMaster.set(-speed);
@@ -30,18 +36,13 @@ public class FlyWheel {
 		flywheelMaster.setD(d);
 		flywheelMaster.setF(f);
 	}
-	public boolean flywheelEncoder(){
-		FeedbackDeviceStatus sensorStatusFlywheel = flywheelMaster.isSensorPresent(FeedbackDevice.QuadEncoder);
-		flywheelEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusFlywheel);
-		return flywheelEncoder;
-	}
 	public void shootWithEncoders(double RPMS){
 		flywheelMaster.changeControlMode(TalonControlMode.Speed);
 		double cps = RPMS/600*4096;
 		flywheelMaster.set(cps);
 	}
 	public boolean flywheelReady(double RPMS){
-		if(RPMS - 70 < flywheelSpeed() && flywheelSpeed() < RPMS + 70){
+		if(RPMS - Constants.FLYWHEEL_DEADBAND < flywheelSpeed() && flywheelSpeed() < RPMS + Constants.FLYWHEEL_DEADBAND){
 			return true;
 		}else{
 			return false;
@@ -54,4 +55,3 @@ public class FlyWheel {
 		flywheelMaster.set(0);
 	}
 }
- 

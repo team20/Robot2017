@@ -1,3 +1,4 @@
+//Author: Daniel Pickett
 package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
@@ -15,6 +16,7 @@ public class FuelTank {
 	
 	public FuelTank(){
 		tankMotor = new CANTalon(Constants.FUEL_TANK_COLLECTOR_MOTOR_PORT);
+		tankMotor.reverseOutput(false);
 		agitatorPistons = new DoubleSolenoid(Constants.TANK_EXTEND_PORT, Constants.TANK_RETRACT_PORT);
 		station = DriverStation.getInstance();
 		initialMatchTime = station.getMatchTime();

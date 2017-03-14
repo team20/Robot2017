@@ -12,7 +12,7 @@ public class Constants {
 	public static final int CLIMBER_FOLLOWER_PORT = 11; //Climb Left
 	public static final int GROUND_COLLECTOR_MOTOR_PORT = 5; //Collector
 	public static final int FLYWHEEL_MASTER_PORT = 6; //Fly Wheel
-//	public static final int FLYWHEEL_FOLLOWER_PORT = 12;
+	public static final int FLYWHEEL_FOLLOWER_PORT = 12;
 	public static final int FUEL_TANK_COLLECTOR_MOTOR_PORT = 7; //Fuel Tank
 
 	//Solenoids
@@ -32,7 +32,8 @@ public class Constants {
 	public static final double FLYWHEEL_D = 0.0; //0.0
 	public static final double FLYWHEEL_F = 0.032;	//0.0165
 	public static final double FLYWHEEL_SPEED = 3900.0;
-
+	public static final double FLYWHEEL_DEADBAND = 70.0;
+	
 	//NavX PID
 	public static final double NavX_P = 0.036;
 	public static final double NavX_I = 0.001;

@@ -1,3 +1,4 @@
+//Author: Sydney Walker
 package org.usfirst.frc.team20.robot;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -5,7 +6,6 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
-//import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -33,18 +33,17 @@ public class Robot extends IterativeRobot {
 	Climber climb;
 	DriverControls driver;
 	OperatorControls operator;
+	//AlexDrive alex;
+	//TsarControls tsar;
 	Compressor compressor;
 	AHRS gyro = new AHRS(SerialPort.Port.kMXP); // DO NOT PUT IN ROBOT INIT
 	Util util;
-//	AlexDrive alex;
-//	TsarControls tsar;
 	RocketScript getNewScript = new RocketScript();
 	String[] rocketScriptData;
 	int rocketScriptCurrentCount, rocketScriptLength = 0;
 	double rotateToAngleRate, currentRotationRate;
 	double angleFromCamera = 0.0, distanceFromCamera = 0.0;
 	boolean shooting = false;
-	// double turnCameraAngle = 0.0;
 	boolean runAutoInit = false;
 	boolean checkButton = false;
 	int startingENCClicks;
@@ -52,6 +51,8 @@ public class Robot extends IterativeRobot {
 	int autoModeSubStep = 0;
 	boolean resetGyro = false;
 	boolean selectAutoMode = false;
+	boolean setStartTime = false;
+	double startTime;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -71,8 +72,8 @@ public class Robot extends IterativeRobot {
 
 		driver = new DriverControls(drive, climb);
 		operator = new OperatorControls(tank, gear, flywheel, collector);
-//		alex = new AlexDrive(drive, climb);
-//		tsar = new TsarControls(drive, climb, tank, gear, flywheel, collector);
+		//alex = new AlexDrive(drive, climb);
+		//tsar = new TsarControls(drive, climb, tank, gear, flywheel, collector);
 
 		compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
@@ -96,8 +97,8 @@ public class Robot extends IterativeRobot {
 
 		// Just the Gear AutoModes
 		chooser.addObject("Middle Gear", 3);
-		chooser.addObject("Right Gear", 4);
-		chooser.addObject("Left Gear", 5);
+		chooser.addObject("Right Gear (Camera)", 4);
+		chooser.addObject("Left Gear (Camera)", 5);
 
 //		// Boiler to Gear AutoModes
 //		chooser.addObject("Boiler to Closest Gear", 6);
@@ -114,8 +115,8 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Red: Hopper to Boiler", 13);
 		chooser.addObject("Blue: Hopper to Boiler", 14);	//Note: untuned
 		
-		chooser.addObject("Right Gear Without Camera", 15);
-		chooser.addObject("Left Gear Without Camera", 16);
+		chooser.addObject("Right Gear (No Camera)", 15);
+		chooser.addObject("Left Gear (No Camera)", 16);
 		
 		SmartDashboard.putData("Auto choices", chooser);
 	}
@@ -135,7 +136,7 @@ public class Robot extends IterativeRobot {
 		drive.masterLeft.setVoltageRampRate(60);
 		drive.masterRight.setVoltageRampRate(60);
 		gyro.reset();
-		Timer.delay(0.5);
+		Timer.delay(0.5);	//TODO check with Barra
 		drive.masterLeft.setEncPosition(0);
 		drive.masterLeft.enable();
 		autoModeSubStep = 0;
@@ -167,7 +168,7 @@ public class Robot extends IterativeRobot {
 				rocketScriptLength = rocketScriptData.length;
 				break;
 			case 3:
-				rocketScriptData = getNewScript.middleGearNC();
+				rocketScriptData = getNewScript.middleGear();
 				rocketScriptLength = rocketScriptData.length;
 				break;
 			case 4:
@@ -251,17 +252,15 @@ public class Robot extends IterativeRobot {
 			if (Integer.parseInt(values[0]) == RobotModes.GO_CAMERA_DISTANCE) {
 				if (cameraDriveStraight())
 					rocketScriptCurrentCount++;
-				resetGyro = false;
+					resetGyro = false;
 			}
-
 			if (Integer.parseInt(values[0]) == RobotModes.FAST_DRIVE_STRAIGHT) {
-				if (fastDriveStraight(0.60, Double.parseDouble(values[1]), Double.parseDouble(values[2]))) { // .77
+				if (fastDriveStraight(Double.parseDouble(values[3]), Double.parseDouble(values[1]), Double.parseDouble(values[2]))) {
 					gotStartingENCClicks = false;
 					gyro.reset();
 					rocketScriptCurrentCount++;
 				}
 			}
-
 			if (Integer.parseInt(values[0]) == RobotModes.SHOOTING) {
 				flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 				System.out.println("Flywheel RPMS " + flywheel.flywheelSpeed());
@@ -316,8 +315,6 @@ public class Robot extends IterativeRobot {
 		drive.masterRight.setVoltageRampRate(60);
 		drive.masterLeft.setVoltageRampRate(60);
 		gear.automated = true;
-//		alex = new AlexDrive(drive, climb);
-//		tsar = new TsarControls(drive, climb, tank, gear, flywheel, collector);
 	}
 
 	/**
@@ -342,24 +339,23 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		System.out.println("gyro = " + gyro.getAngle());
-		System.out.println("gyro, yaw = " + gyro.getYaw());
-		// System.out.println("enc = " + drive.masterRight.getEncPosition());
+		System.out.println("Left: " + drive.masterLeft.getEncPosition());
+		System.out.println("									Right: " + drive.masterRight.getEncPosition());
 	}
 	//Auto Methods
 	public boolean turnWithCamera() {
-		return fastDriveStraight(0.60, 7.0, angleFromCamera); //was 5 inches
+		return fastDriveStraight(AutoConstants.CAMERA_TURN_SPEED, 7.0, angleFromCamera); //was 5 inches
 	}
 	public boolean cameraDriveStraight() {
-		return fastDriveStraight(0.60, distanceFromCamera, angleFromCamera);
+		return fastDriveStraight(AutoConstants.CAMERA_DRIVE_SPEED, distanceFromCamera, angleFromCamera);
 	}
+
 	public boolean fastDriveStraight(double speed, double inches, double angleToDrive) {
 		if (drive.leftEncoder()) {
 			if (gotStartingENCClicks == false) {
 				gyro.reset();
 				gotStartingENCClicks = true;
 				startingENCClicks = drive.masterLeft.getEncPosition();
-				Timer.delay(.1);
 				System.out.println("Start ENC click value = " + startingENCClicks);
 			}
 			if (Math.abs((double) (drive.masterLeft.getEncPosition() - startingENCClicks)) > Math
@@ -367,18 +363,14 @@ public class Robot extends IterativeRobot {
 				drive.masterLeft.set(0.00);
 				drive.masterRight.set(0.00);
 				System.out.println("Final NavX Angle: " + gyro.getAngle());
-				Timer.delay(.1);
 				System.out.println("Enc value after speed 0 " + drive.masterLeft.getEncPosition());
 				return true;
 			} else {
 				if (inches > 0) {
 					if (Math.abs((double) (drive.masterLeft.getEncPosition() - startingENCClicks)) > Math
 							.abs(inches * AutoConstants.TICKS_PER_INCH * .60))
-						speed = 0.35;
-//					drive.arcadeDrive(speed, -((gyro.getAngle() - angleToDrive) * .020), true); // .07
 					myDrive.arcadeDrive(speed, -((gyro.getAngle() - angleToDrive) * .020)); // .07
 				} else {
-//					drive.arcadeDrive(-speed, -((gyro.getAngle() - angleToDrive) * .020), true); // .07
 					myDrive.arcadeDrive(-speed, -((gyro.getAngle() - angleToDrive) * .020)); // .07
 				}
 			}
@@ -389,7 +381,6 @@ public class Robot extends IterativeRobot {
 				gyro.reset();
 				gotStartingENCClicks = true;
 				startingENCClicks = drive.masterRight.getEncPosition();
-				Timer.delay(.1);
 				System.out.println("Start ENC click value = " + startingENCClicks);
 			}
 			if (Math.abs((double) (drive.masterRight.getEncPosition() - startingENCClicks)) > Math
@@ -397,7 +388,6 @@ public class Robot extends IterativeRobot {
 				drive.masterLeft.set(0.00);
 				drive.masterRight.set(0.00);
 				System.out.println("Final NavX Angle: " + gyro.getAngle());
-				Timer.delay(.1);
 				System.out.println("Enc value after speed 0 " + drive.masterRight.getEncPosition());
 				return true;
 			} else {
@@ -405,10 +395,8 @@ public class Robot extends IterativeRobot {
 					if (Math.abs((double) (drive.masterRight.getEncPosition() - startingENCClicks)) > Math
 							.abs(inches * AutoConstants.TICKS_PER_INCH * .60))
 						speed = 0.35;
-//					drive.arcadeDrive(speed, -((gyro.getAngle() - angleToDrive) * .020), true); // .07
 					myDrive.arcadeDrive(speed, -((gyro.getAngle() - angleToDrive) * .020)); // .07
 				} else {
-//					drive.arcadeDrive(-speed, -((gyro.getAngle() - angleToDrive) * .020), true); // .07
 					myDrive.arcadeDrive(-speed, -((gyro.getAngle() - angleToDrive) * .020)); // .07
 				}
 			}
@@ -417,53 +405,54 @@ public class Robot extends IterativeRobot {
 			return true;
 		}
 	}
-//	public boolean arcTurn(double middleToLongSide, double middleToShortSide, boolean direction) {//half of the long side of an elipse b is half the short side and c is the robot with
-//        double leftArc;
-//        double rightArc;
-//        double width = 32.0;
-//    	width /= 2;
-//        double smallA = middleToLongSide - width;
-//        double smallB = middleToShortSide - width;
-//        double largeA = middleToLongSide + width;
-//        double largeB = middleToShortSide + width;
-//        if (direction) {
-//            rightArc = Math.PI*Math.abs(3*(smallA + smallB)-Math.sqrt((3*smallA+smallB)*(middleToLongSide+smallB)))/4;
-//            leftArc = Math.PI*Math.abs(3*(largeA + largeB)-Math.sqrt((3*largeA+largeB)*(largeA+3*largeB)))/4;
-//            if(drive.masterRight.getEncPosition() > rightArc*AutoConstants.TICKS_PER_INCH && drive.masterLeft.getEncPosition() > leftArc*AutoConstants.TICKS_PER_INCH){
-//            	drive.stopDrive();
-//            	return true;
-//            }else if(drive.masterRight.getEncPosition() > rightArc*AutoConstants.TICKS_PER_INCH && drive.masterLeft.getEncPosition() < leftArc*AutoConstants.TICKS_PER_INCH){
-//            	drive.masterLeft.set(AutoConstants.ARC_SPEED);
-//            	drive.masterRight.set(0);
-//            	return false;
-//            }else if(drive.masterLeft.getEncPosition() > leftArc*AutoConstants.TICKS_PER_INCH && drive.masterRight.getEncPosition() < rightArc*AutoConstants.TICKS_PER_INCH){
-//            	drive.masterLeft.set(0);
-//            	drive.masterRight.set(AutoConstants.ARC_SPEED*(rightArc/leftArc));
-//            	return false;
-//            }else{
-//            	drive.masterLeft.set(AutoConstants.ARC_SPEED);
-//            	drive.masterRight.set(AutoConstants.ARC_SPEED*(rightArc/leftArc));
-//            	return false;
-//            }
-//        }else{
-//            rightArc = Math.PI*Math.abs(3*(largeA + largeB)-Math.sqrt((3*largeA+largeB)*(largeA+3*largeB)))/4;
-//            leftArc = Math.PI*Math.abs(3*(smallA + smallB)-Math.sqrt((3*smallA+smallB)*(middleToLongSide+smallB)))/4;
-//            if(drive.masterLeft.getEncPosition() > leftArc*AutoConstants.TICKS_PER_INCH && drive.masterRight.getEncPosition() > rightArc*AutoConstants.TICKS_PER_INCH){
-//            	drive.stopDrive();
-//            	return true;
-//            }else if(drive.masterRight.getEncPosition() > rightArc*AutoConstants.TICKS_PER_INCH && drive.masterLeft.getEncPosition() < leftArc*AutoConstants.TICKS_PER_INCH){
-//            	drive.masterRight.set(0);
-//            	drive.masterLeft.set(AutoConstants.ARC_SPEED);
-//            	return false;
-//            }else if(drive.masterLeft.getEncPosition() > leftArc*AutoConstants.TICKS_PER_INCH && drive.masterRight.getEncPosition() < rightArc*AutoConstants.TICKS_PER_INCH){
-//            	drive.masterRight.set(AutoConstants.ARC_SPEED*(rightArc/leftArc));
-//            	drive.masterLeft.set(0);
-//            	return false;
-//            }else{
-//            	drive.masterRight.set(AutoConstants.ARC_SPEED*(rightArc/leftArc));
-//            	drive.masterLeft.set(AutoConstants.ARC_SPEED);
-//            	return false;
-//            }
-//        }
-//    }
+
+/*	public boolean arcTurn(double middleToLongSide, double middleToShortSide, boolean direction) {//half of the long side of an elipse b is half the short side and c is the robot with
+        double leftArc;
+        double rightArc;
+        double width = 32.0;
+    	width /= 2;
+        double smallA = middleToLongSide - width;
+        double smallB = middleToShortSide - width;
+        double largeA = middleToLongSide + width;
+        double largeB = middleToShortSide + width;
+        if (direction) {
+            rightArc = Math.PI*Math.abs(3*(smallA + smallB)-Math.sqrt((3*smallA+smallB)*(middleToLongSide+smallB)))/4;
+            leftArc = Math.PI*Math.abs(3*(largeA + largeB)-Math.sqrt((3*largeA+largeB)*(largeA+3*largeB)))/4;
+            if(drive.masterRight.getEncPosition() > rightArc*AutoConstants.TICKS_PER_INCH && drive.masterLeft.getEncPosition() > leftArc*AutoConstants.TICKS_PER_INCH){
+            	drive.stopDrive();
+            	return true;
+            }else if(drive.masterRight.getEncPosition() > rightArc*AutoConstants.TICKS_PER_INCH && drive.masterLeft.getEncPosition() < leftArc*AutoConstants.TICKS_PER_INCH){
+            	drive.masterLeft.set(AutoConstants.ARC_SPEED);
+            	drive.masterRight.set(0);
+            	return false;
+            }else if(drive.masterLeft.getEncPosition() > leftArc*AutoConstants.TICKS_PER_INCH && drive.masterRight.getEncPosition() < rightArc*AutoConstants.TICKS_PER_INCH){
+            	drive.masterLeft.set(0);
+            	drive.masterRight.set(AutoConstants.ARC_SPEED*(rightArc/leftArc));
+            	return false;
+            }else{
+            	drive.masterLeft.set(AutoConstants.ARC_SPEED);
+            	drive.masterRight.set(AutoConstants.ARC_SPEED*(rightArc/leftArc));
+            	return false;
+            }
+        }else{
+            rightArc = Math.PI*Math.abs(3*(largeA + largeB)-Math.sqrt((3*largeA+largeB)*(largeA+3*largeB)))/4;
+            leftArc = Math.PI*Math.abs(3*(smallA + smallB)-Math.sqrt((3*smallA+smallB)*(middleToLongSide+smallB)))/4;
+            if(drive.masterLeft.getEncPosition() > leftArc*AutoConstants.TICKS_PER_INCH && drive.masterRight.getEncPosition() > rightArc*AutoConstants.TICKS_PER_INCH){
+            	drive.stopDrive();
+            	return true;
+            }else if(drive.masterRight.getEncPosition() > rightArc*AutoConstants.TICKS_PER_INCH && drive.masterLeft.getEncPosition() < leftArc*AutoConstants.TICKS_PER_INCH){
+            	drive.masterRight.set(0);
+            	drive.masterLeft.set(AutoConstants.ARC_SPEED);
+            	return false;
+            }else if(drive.masterLeft.getEncPosition() > leftArc*AutoConstants.TICKS_PER_INCH && drive.masterRight.getEncPosition() < rightArc*AutoConstants.TICKS_PER_INCH){
+            	drive.masterRight.set(AutoConstants.ARC_SPEED*(rightArc/leftArc));
+            	drive.masterLeft.set(0);
+            	return false;
+            }else{
+            	drive.masterRight.set(AutoConstants.ARC_SPEED*(rightArc/leftArc));
+            	drive.masterLeft.set(AutoConstants.ARC_SPEED);
+            	return false;
+            }
+        }
+    } */
 }

@@ -1,3 +1,4 @@
+//Author: Atharva Gawde and Roland Rao
 package org.usfirst.frc.team20.robot;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -25,7 +26,6 @@ public class DriverControls {
 		if (driverJoy.getRightTriggerAxis() > 0.1) {
 			speedStraight = driverJoy.getRightTriggerAxis();
 		} else if (driverJoy.getLeftTriggerAxis() > 0.1) {
-			System.out.println("Backwards");
 			speedStraight = -driverJoy.getLeftTriggerAxis();
 		} else {
 			speedStraight = 0.0;
@@ -50,20 +50,16 @@ public class DriverControls {
 		}
 		if (driverJoy.getButtonB()) {
 			drive.shiftLow();
-			Timer.delay(.01);
+			Timer.delay(0.01);
 		}
 		if (driverJoy.getButtonA()) {
 			climb.climb(1);
 		}
-		System.out.println(climb.climberMaster.getOutputCurrent() + "\t" + climb.climberFollower.getOutputCurrent());
 		if (climb.climberMaster.getOutputCurrent() > 50 || climb.climberFollower.getOutputCurrent() > 50) {
 			climb.stopClimbing();
 		}
 		if (driverJoy.getButtonX()) {
 			climb.stopClimbing();
 		}
-		// if(driverJoy.getButtonA()){
-		// functions.visionTarget();
-		// }
 	}
 }

@@ -1,9 +1,14 @@
 package org.usfirst.frc.team20.robot;
 
 public class AutoConstants {	//TODO tune all distances and angles
-	public static final double DRIVE_STRAIGHT_MULTIPLIER = 1.4;
+	public static final double STOPPING_CONSTANT = 10.0;
 	public static final double TICKS_PER_INCH = 650.00;   // DEFAULT 667 
-
+	
+	//Speeds
+	public static final double CAMERA_TURN_SPEED = 0.35;
+	public static final double CAMERA_DRIVE_SPEED = 0.35;
+	public static final double DRIVE_STRAIGHT_SPEED = 0.35;
+	
 	//Flywheel Stuff
 	public static final double FLYWHEEL_SPEED = 3000.0;
 	public static final String FLYWHEEL_DELAY_START_BOILER = "2";
