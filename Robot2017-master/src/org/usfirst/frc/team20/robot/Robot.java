@@ -1,4 +1,3 @@
-//Author: Sydney Walker
 package org.usfirst.frc.team20.robot;
 
 import com.kauailabs.navx.frc.AHRS;
