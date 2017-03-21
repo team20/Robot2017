@@ -65,16 +65,15 @@ public class FuelTank {
 //				
 //			}
 //		}
-		counter++;
 //		if(counter%30 == 0 && counter % 10 == 0){
 //			retractAgitator();
 //		}else if(counter % 7 == 0){
 //			actuateAgitator();
 //		}
 		
-		if(counter==28){
+		if(counter==14){
 			actuateAgitator();
-		}else if(counter >= 84){
+		}else if(counter >= 42){
 			retractAgitator();
 			counter = 0;
 		}

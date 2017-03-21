@@ -5,6 +5,7 @@ import com.ctre.CANTalon;
 
 public class Climber {
 	CANTalon climberMaster, climberFollower;
+	boolean safe;
 	
 	public Climber(){
 		climberMaster = new CANTalon(Constants.CLIMBER_MASTER_PORT);
@@ -13,13 +14,16 @@ public class Climber {
 		climberFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
 		climberFollower.set(climberMaster.getDeviceID());
 		climberFollower.reverseOutput(true);
-	}
+		safe = true;
+		}
 	
 	public void climb(double speed){
-		if(climberMaster.getOutputCurrent() > 70){ // Changed from 50 to 70 on 3/12. Still stalls occasionally.
+		if(climberMaster.getOutputCurrent() > Constants.CLIMBER_MAX_VOLTAGE && safe){
 			stopClimbing();
-		}else{
+		}else if(climberMaster.getOutputCurrent() > Constants.CLIMBER_MAX_VOLTAGE && !safe){
 			climberMaster.set(speed);			
+		}else{
+			climberMaster.set(speed);
 		}
 	}
 	public void stopClimbing(){

@@ -55,6 +55,9 @@ public class DriverControls {
 		if (driverJoy.getButtonA()) {
 			climb.climb(1);
 		}
+//		if (driverJoy.getButtonDUp()){
+//			climb.safe = false;
+//		}
 		if (climb.climberMaster.getOutputCurrent() > 50 || climb.climberFollower.getOutputCurrent() > 50) {
 			climb.stopClimbing();
 		}

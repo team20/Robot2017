@@ -54,7 +54,7 @@ public class OperatorControls {
 		if (operatorJoy.getRightTriggerAxis() > 0) {
 			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) { 
 				collector.intake(1);	//TODO make sure it is the same as the one above
-				tank.tankMotorIntoFlywheel(0.25); // was 1
+				tank.tankMotorIntoFlywheel(0.4); // was 1
 			}
 			shooting = true;
 		}

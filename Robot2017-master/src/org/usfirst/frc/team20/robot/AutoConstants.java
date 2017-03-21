@@ -1,13 +1,14 @@
 package org.usfirst.frc.team20.robot;
 
-public class AutoConstants {	//TODO tune all distances and angles
+public class AutoConstants {
 	public static final double STOPPING_CONSTANT = 10.0;
-	public static final double TICKS_PER_INCH = 650.00;   // DEFAULT 667 
+	public static final double TICKS_PER_INCH = 657.0;   // Practice 650, Comp 657
 	
 	//Speeds
 	public static final double CAMERA_TURN_SPEED = 0.35;
 	public static final double CAMERA_DRIVE_SPEED = 0.35;
-	public static final double DRIVE_STRAIGHT_SPEED = 0.35;
+	public static final String DRIVE_STRAIGHT_SPEED = "0.60";	//0.35
+	public static final String TURN_SPEED = "0.35";
 	
 	//Flywheel Stuff
 	public static final double FLYWHEEL_SPEED = 3000.0;
@@ -17,24 +18,25 @@ public class AutoConstants {	//TODO tune all distances and angles
 	public static final String CROSS_BASELINE_DISTANCE = "120";
 	
 	//Peg Autos
-	public static final String MIDDLE_PEG_DISTANCE = "84.0";
+	public static final String MIDDLE_PEG_DISTANCE = "87.0";
 	public static final String RIGHT_PEG_HARD_DISTANCE = "70.0";
-	public static final String LEFT_PEG_HARD_DISTANCE = "81.0";
-	public static final String RIGHT_PEG_DISTANCE_TWO = "68.0";
-	public static final String LEFT_PEG_DISTANCE_TWO = "113.0";
-	
+	public static final String LEFT_PEG_HARD_DISTANCE = "55.0";
+
 	public static final String RIGHT_PEG_HARD_ANGLE = "-55.0";
-	public static final String LEFT_PEG_HARD_ANGLE = "63.0";
-	
+	public static final String LEFT_PEG_HARD_ANGLE = "60.0";
+
+	public static final String RIGHT_PEG_DISTANCE_TWO = "55.0";
+	public static final String LEFT_PEG_DISTANCE_TWO = "60.0";
+		
 	//Back Up Distances
-	public static final String BACK_UP_FROM_PEG_DISTANCE = "-5";
+	public static final String BACK_UP_FROM_PEG_DISTANCE = "-5.0";
 	public static final String BACK_UP_FROM_BOILER_DISTANCE = "-30.0";
 
 	//Boiler to Peg Autos
-	public static final String BOILER_TO_MIDDLE_PEG_DISTANCE = "50";
-	public static final String MIDDLE_PEG_TO_BOILER_DISTANCE_ONE = "50";
-	public static final String MIDDLE_PEG_TO_BOILER_DISTANCE_TWO = "5";
-	public static final String SIDE_PEG_TO_BOILER_DISTANCE = "20";
+	public static final String BOILER_TO_MIDDLE_PEG_DISTANCE = "50.0";
+	public static final String MIDDLE_PEG_TO_BOILER_DISTANCE_ONE = "50.0";
+	public static final String MIDDLE_PEG_TO_BOILER_DISTANCE_TWO = "5.0";
+	public static final String SIDE_PEG_TO_BOILER_DISTANCE = "20.0";
 
 	//Hard Angles
 	public static final String BOILER_TO_SIDE_PEG_HARD_ANGLE = "180";
