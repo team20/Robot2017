@@ -20,5 +20,12 @@ public class GroundCollector {
 	}
 	public void stopCollector(){
 		collector.set(0);
-	}	
+	}
+	public boolean collectorJam(){
+		if(collector.getOutputCurrent() > 50){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }
