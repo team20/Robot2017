@@ -42,7 +42,7 @@ public class TsarControls {
 	
 	public void tsarControls(){	
 		//flywheel.flywheelSpeed();
-		gear.moveFlaps();
+		//gear.moveFlaps();
  		//Driver Code
 		System.out.println(speedStraight + " Speed Straight");
 		System.out.println(speedRight + " Speed Right");

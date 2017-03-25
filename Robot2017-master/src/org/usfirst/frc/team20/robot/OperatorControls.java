@@ -22,25 +22,25 @@ public class OperatorControls {
 	}
 
 	public void operatorControls() {
-		gear.moveFlaps();
+		//gear.moveFlaps();
 		if (operatorJoy.getButtonY()) {
 			tank.retractAgitator();
-			collector.intake(0.9);	//TODO may need to be changed for the comp bot
+			collector.intake(0.85);	//TODO may need to be changed for the comp bot
 			tank.tankMotorIntoTank(0.95);	//TODO may need to be changed for the comp bot
 		}
 		if (operatorJoy.getButtonA()) {
 			collector.outtake(1);
 		}
-		if (operatorJoy.getButtonDUp()) {
-			gear.automated = true;
-		}
-		if (operatorJoy.getButtonDDown()) {
-			gear.automated = false;
-		}
-		if (operatorJoy.getButtonDRight() && !gear.automated) {
+//		if (operatorJoy.getButtonDUp()) {
+//			gear.automated = true;
+//		}
+//		if (operatorJoy.getButtonDDown()) {
+//			gear.automated = false;
+//		}
+		if (operatorJoy.getButtonDRight()) {
 			gear.gearFlapIn();
 		}
-		if (operatorJoy.getButtonDLeft() && !gear.automated) {
+		if (operatorJoy.getButtonDLeft()) {
 			gear.gearFlapOut();
 		}
 		if (operatorJoy.getButtonX() || operatorJoy.getButtonB()) {

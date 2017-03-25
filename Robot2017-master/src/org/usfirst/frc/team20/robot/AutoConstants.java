@@ -20,32 +20,32 @@ public class AutoConstants {
 	public static final String KPA_STOPPING_TIME = "0.2";
 	public static final String KPA_TURNING_DISTANCE = "10.0";
 	
-	public static final String KPA_DISTANCE_ONE = "90.0";
-	public static final String KPA_DISTANCE_TWO = "10.0";	 
-	public static final String KPA_DISTANCE_THREE = "17.0";
-	public static final String KPA_DISTANCE_FOUR = "-20.0";	 
-	public static final String KPA_DISTANCE_FIVE = "-25.0";	 
-	public static final String KPA_DISTANCE_SIX = "72.0";	 
-	public static final String KPA_DISTANCE_SEVEN = "20.0";	 
-	public static final String KPA_DISTANCE_EIGHT = "20.0";	 
-	//Red
+	public static final String KPA_DISTANCE_ONE = "145.0";	//90.0
+	public static final String KPA_DISTANCE_TWO = "15.0";	 //10.0
+	public static final String KPA_DISTANCE_THREE = "17.0";	//17.0
+	public static final String KPA_DISTANCE_FOUR = "-20.0";	 //-20.0
+	public static final String KPA_DISTANCE_FIVE = "-25.0";	 //-25.0
+	public static final String KPA_DISTANCE_SIX = "72.0";	 //72.0
+	public static final String KPA_DISTANCE_SEVEN = "20.0";	 //20.0
+	public static final String KPA_DISTANCE_EIGHT = "20.0";	 //20.0
+	//Blue	//TODO fully fix the blue-red mix up
 	public static final String KPA_ANGLE_ONE_RED = "0.0";
-	public static final String KPA_ANGLE_TWO_RED = "-90.0";	 
-	public static final String KPA_ANGLE_THREE_RED = "0.0";		 
+	public static final String KPA_ANGLE_TWO_RED = "-45.0";	//-90.0
+	public static final String KPA_ANGLE_THREE_RED = "0.0";
 	public static final String KPA_ANGLE_FOUR_RED = "0.0";		 
 	public static final String KPA_ANGLE_FIVE_RED = "-90.0";		 
 	public static final String KPA_ANGLE_SIX_RED = "0.0";		 
 	public static final String KPA_ANGLE_SEVEN_RED = "50.0";		 
 	public static final String KPA_ANGLE_EIGHT_RED = "0.0";		 
 
-	//Blue
+	//Red	//TODO fully fix the blue-red mix up
 	public static final String KPA_ANGLE_ONE_BLUE = "0.0";		 
-	public static final String KPA_ANGLE_TWO_BLUE = "90.0";	 
+	public static final String KPA_ANGLE_TWO_BLUE = "45.0";	//90.0 
 	public static final String KPA_ANGLE_THREE_BLUE = "0.0";
 	public static final String KPA_ANGLE_FOUR_BLUE = "0.0";		 
 	public static final String KPA_ANGLE_FIVE_BLUE = "90.0";		 
 	public static final String KPA_ANGLE_SIX_BLUE = "0.0";		 
-	public static final String KPA_ANGLE_SEVEN_BLUE = "-50.0";		 
+	public static final String KPA_ANGLE_SEVEN_BLUE = "-50.0";
 	public static final String KPA_ANGLE_EIGHT_BLUE = "0.0";
 	
 	//Cross Baseline

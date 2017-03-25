@@ -45,11 +45,12 @@ public class Robot extends IterativeRobot {
 	boolean gotStartingENCClicks = false;
 	int autoModeSubStep = 0;
 	boolean resetGyro = false;
-	boolean selectAutoMode = false;
 	boolean setStartTime = false;
 	boolean setStartTimeFlywheel = false;
 	double startTime;
-
+	int flywheelCount = 0;
+	boolean setStartTimeShoot = false;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -110,24 +111,32 @@ public class Robot extends IterativeRobot {
 		boolean shootBoiler = SmartDashboard.getBoolean("DB/Button 1", false);
 		boolean slamRed = SmartDashboard.getBoolean("DB/Button 2", false);
 		boolean slamBlue = SmartDashboard.getBoolean("DB/Button 3", false);
-		selectAutoMode = true;
+		
 		// // CHANGE BELOW HERE
 		// rocketScriptData = getNewScript.middleGearTimed(); //TODO this is the line you change
 		// rocketScriptLength = rocketScriptData.length;
 		if(middleGear == true){
 			rocketScriptData = getNewScript.middleGearTimed();
 			rocketScriptLength = rocketScriptData.length;
+			gear.gearFlapOut();
+			System.out.println("*******************Middle Gear");
 		}else if(shootBoiler == true){
 			rocketScriptData = getNewScript.stayAtBoilerAndShoot();
 			rocketScriptLength = rocketScriptData.length;
+			gear.gearFlapIn();
+			System.out.println("*******************Start At Boiler and Shoot");
 		}else if(slamRed == true){
 			rocketScriptData = getNewScript.hopperToBoilerRed();
 			rocketScriptLength = rocketScriptData.length;
+			gear.gearFlapIn();
+			System.out.println("*******************Slam Slam Red Alliance");
 		}else if(slamBlue == true){
 			rocketScriptData = getNewScript.hopperToBoilerBlue();
 			rocketScriptLength = rocketScriptData.length;
+			gear.gearFlapIn();
+			System.out.println("*******************Slam Slam Blue Alliance");
 		}else{
-			
+			gear.gearFlapOut();			
 		}
 	}
 
@@ -181,29 +190,40 @@ public class Robot extends IterativeRobot {
 				flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 				System.out.println("Flywheel RPMS " + flywheel.flywheelSpeed());
 				if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
-					collector.intake(1);
-					tank.tankMotorIntoFlywheel(0.4);
-					shooting = true;
+					if (!setStartTimeShoot){
+						startTime = Timer.getFPGATimestamp();
+						setStartTimeShoot = true;
+					}
+					if (Timer.getFPGATimestamp() - startTime > 1.0) {
+						collector.intake(1);
+						tank.tankMotorIntoFlywheel(0.4);
+						shooting = true;
+						System.out.println("Shooting " + Boolean.toString(shooting));
+					}
 				}
 				if (shooting) {
+					flywheelCount++;
+					System.out.println("Flywheel Count: " + flywheelCount);
 					tank.runAgitator();
+					System.out.println("***************Running Agitator");					
 					if (!setStartTimeFlywheel){
 						startTime = Timer.getFPGATimestamp();
 						setStartTimeFlywheel = true;
 					}
-					if (Timer.getFPGATimestamp() - startTime < Double.parseDouble(values[1])) {
+					if (Timer.getFPGATimestamp() - startTime > Double.parseDouble(values[1])) {
 						System.out.println("******************************DONE SHOOTING");
 						rocketScriptCurrentCount++;						
 					}
 				}
-
 			}
 			if (Integer.parseInt(values[0]) == RobotModes.STOP_SHOOTING) {
+				System.out.println("****************Stopping Shooting");
 				flywheel.stopFlywheel();
 				collector.stopCollector();
 				tank.stopTank();
 				shooting = false;
 				setStartTimeFlywheel = false;
+				rocketScriptCurrentCount++;
 			}
 			if (Integer.parseInt(values[0]) == RobotModes.WAIT_FOR_GEAR) {
 				if (gear.checkGear() == false) {
@@ -261,10 +281,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 1", "Flywheel Ready?");
 		SmartDashboard.putString("DB/String 2", "High Gear?");
 		SmartDashboard.putString("DB/String 3", "Collector Jam?");
-		SmartDashboard.putString("DB/String 4", Double.toString(flywheel.flywheelSpeed()));
-		SmartDashboard.putString("DB/String 5", Boolean.toString(flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)));
-		SmartDashboard.putString("DB/String 6", Boolean.toString(drive.highGear));
-		SmartDashboard.putString("DB/String 7", Boolean.toString(collector.collectorJam()));
+		SmartDashboard.putString("DB/String 5", Double.toString(flywheel.flywheelSpeed()));
+		SmartDashboard.putString("DB/String 6", Boolean.toString(flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)));
+		SmartDashboard.putString("DB/String 7", Boolean.toString(drive.highGear));
+		SmartDashboard.putString("DB/String 8", Boolean.toString(collector.collectorJam()));
 	}
 
 	/**

@@ -11,7 +11,7 @@ public class GearMechanism {
 	boolean pressed = false;
 	boolean done = false;
 	int counter = 0;
-	boolean automated = true;
+	boolean automated = false;
 
 	public GearMechanism(FlyWheel f, OperatorControls o) {
 		gearFlap = new DoubleSolenoid(Constants.GEAR_EXTEND_PORT, Constants.GEAR_RETRACT_PORT);
@@ -36,7 +36,7 @@ public class GearMechanism {
 //		}
 	}
 
-	public void moveFlaps() {
+//	public void moveFlaps() {
 //		if (gearBumpSwitch1.get() == false && automated) {
 //			gearFlapIn();
 //			counter = 0;
@@ -47,5 +47,5 @@ public class GearMechanism {
 //				gearFlapOut();
 //			}
 //		}
-	}
+	//}
 }
