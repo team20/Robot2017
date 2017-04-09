@@ -1,47 +1,69 @@
 //Author: Rahul Shah and Ronak Parida
 package org.usfirst.frc.team20.robot;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class OperatorControls {
 	Controller operatorJoy;
 	FuelTank tank;
 	GearMechanism gear;
 	FlyWheel flywheel;
 	GroundCollector collector;
+	BobbysGearMechanism bobby;
 	boolean shooting;
-	boolean tankToFlywheel;
+	boolean tankToFlywheel;	
+	boolean getStartTime = false;
+	double startTime;
 
-	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, GroundCollector c) {
+	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, GroundCollector c, BobbysGearMechanism b) {
 		operatorJoy = new Controller(1);
 		tank = h;
 		gear = g;
 		flywheel = f;
 		collector = c;
+		bobby = b;
 		flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
 		shooting = false;
 		tankToFlywheel = false;
 	}
 
 	public void operatorControls() {
-		//gear.moveFlaps();
 		if (operatorJoy.getButtonY()) {
 			tank.retractAgitator();
-			collector.intake(0.85);	//TODO may need to be changed for the comp bot
-			tank.tankMotorIntoTank(0.95);	//TODO may need to be changed for the comp bot
+			collector.intake(0.85);
+			tank.tankMotorIntoTank(0.95);
 		}
 		if (operatorJoy.getButtonA()) {
 			collector.outtake(1);
 		}
-//		if (operatorJoy.getButtonDUp()) {
-//			gear.automated = true;
+//		if (operatorJoy.getButtonDRight()) {
+//			gear.gearFlapIn();
 //		}
-//		if (operatorJoy.getButtonDDown()) {
-//			gear.automated = false;
+//		if (operatorJoy.getButtonDLeft()) {
+//			gear.gearFlapOut();
 //		}
 		if (operatorJoy.getButtonDRight()) {
-			gear.gearFlapIn();
+			bobby.extend();
 		}
 		if (operatorJoy.getButtonDLeft()) {
-			gear.gearFlapOut();
+			bobby.retract();
+		}
+		if (operatorJoy.getButtonDUp()){	//gear collector collect
+			bobby.extend();
+			if (bobby.intake()){
+				if (!getStartTime) {
+					startTime = Timer.getFPGATimestamp();
+					getStartTime = true;
+				}
+				if (Timer.getFPGATimestamp() - startTime > Constants.WAIT_GEAR_TIME) {
+					bobby.retract();
+					collector.collector.set(0.2); // TODO tune holding gear voltage
+				}
+			}
+		}
+		if (operatorJoy.getButtonDDown()){	//gear collector hold for placement
+			bobby.extend();
+			bobby.outtake();
 		}
 		if (operatorJoy.getButtonX() || operatorJoy.getButtonB()) {
 			collector.stopCollector();
@@ -53,8 +75,8 @@ public class OperatorControls {
 		}
 		if (operatorJoy.getRightTriggerAxis() > 0) {
 			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) { 
-				collector.intake(1);	//TODO make sure it is the same as the one above
-				tank.tankMotorIntoFlywheel(0.4); // was 1
+				collector.intake(1.0);
+				tank.tankMotorIntoFlywheel(0.4);
 			}
 			shooting = true;
 		}

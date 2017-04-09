@@ -27,17 +27,18 @@ public class Constants {
 	public static final int PI_SOCKET_PORT_NUMBER = 0;
 	
 	//FlyWheel
-	public static final double FLYWHEEL_P = 0.2; //0.003
+	public static final double FLYWHEEL_P = 0.15; //0.003
 	public static final double FLYWHEEL_I = 0.0; //0.0
 	public static final double FLYWHEEL_D = 0.0; //0.0
 	public static final double FLYWHEEL_F = 0.034;	//0.032
-	public static final double FLYWHEEL_SPEED = 3900.0;
+	public static final double FLYWHEEL_SPEED = 3800.0;
 	public static final double FLYWHEEL_DEADBAND = 60.0;
 
 	//Bump Switch
 	public static final int GEAR_BUMP_SWITCH_PORT_ONE = 0;
 	
 	//Misc.
-	public static final double DRIVING_P = 0.010;
+	public static final double DRIVING_P = 0.020;	//TODO 0.020 practice, 0.010 comp
 	public static final double CLIMBER_MAX_VOLTAGE = 70.0; // Changed from 50 to 70 on 3/12. Still stalls occasionally.
+	public static final double WAIT_GEAR_TIME = 0.5;	//seconds
 }

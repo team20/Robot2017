@@ -3,7 +3,6 @@ package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.FeedbackDeviceStatus;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -19,7 +18,7 @@ public class DriveTrain {
 	boolean kArcadeStandard_Reported = false;
 	boolean setSetpoint;
 	boolean highGear;
-
+//	CANTalon test;
 	public DriveTrain() {
 		// Setting the Motor Port Numbers
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
@@ -44,11 +43,14 @@ public class DriveTrain {
 		followerLeftTwo.set(masterLeft.getDeviceID());
 		followerLeftTwo.reverseOutput(true);
 		// Setting the Encoders on the Master Motors
-		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		masterLeft.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		masterRight.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		masterLeft.setEncPosition(0);
 		masterRight.setEncPosition(0);
 		multiplier = 6.5;
+//		test = new CANTalon(12);
+//		test.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+//		test.setEncPosition(0);
 	}
 
 	public void resetTalons() {
@@ -73,31 +75,8 @@ public class DriveTrain {
 			masterLeft.set(-speed + leftTurn - rightTurn);
 		}
 	}
-
-	public boolean leftEncoder() {
-		boolean leftEncoder = false;
-		try {
-			FeedbackDeviceStatus sensorStatusLeft = masterLeft.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
-			leftEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusLeft);
-		} catch (Exception e) {
-			System.out.println("Left Encoder Error: " + e.toString());
-			rightEncoder();
-		}
-		return leftEncoder;
-	}
-
-	public boolean rightEncoder() {
-		boolean rightEncoder = false;
-		try {
-			FeedbackDeviceStatus sensorStatusRight = masterRight
-					.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
-			rightEncoder = (FeedbackDeviceStatus.FeedbackStatusPresent == sensorStatusRight);
-		} catch (Exception e) {
-			System.out.println("Right Encoder Error: " + e.toString());
-		}
-		return rightEncoder;
-	}
-
+	
+	
 	public void turnRight(double speed) { // turns right
 		masterRight.set(-speed);
 		masterLeft.set(-speed);
@@ -122,49 +101,4 @@ public class DriveTrain {
 		shifter.set(DoubleSolenoid.Value.kForward);
 		highGear = false;
 	}
-
-	public boolean turnAngle(double angle) {
-		return false;
-	}
-
-	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
-		double leftMotorSpeed;
-		double rightMotorSpeed;
-		if (squaredInputs) {
-			// square the inputs (while preserving the sign) to increase fine
-			// control
-			// while permitting full power
-			if (moveValue >= 0.0) {
-				moveValue = moveValue * moveValue;
-			} else {
-				moveValue = -(moveValue * moveValue);
-			}
-			if (rotateValue >= 0.0) {
-				rotateValue = rotateValue * rotateValue;
-			} else {
-				rotateValue = -(rotateValue * rotateValue);
-			}
-		}
-
-		if (moveValue > 0.0) {
-			if (rotateValue > 0.0) {
-				leftMotorSpeed = moveValue - rotateValue;
-				rightMotorSpeed = Math.max(moveValue, rotateValue);
-			} else {
-				leftMotorSpeed = Math.max(moveValue, -rotateValue);
-				rightMotorSpeed = moveValue + rotateValue;
-			}
-		} else {
-			if (rotateValue > 0.0) {
-				leftMotorSpeed = -Math.max(-moveValue, rotateValue);
-				rightMotorSpeed = moveValue + rotateValue;
-			} else {
-				leftMotorSpeed = moveValue - rotateValue;
-				rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
-			}
-		}
-		masterRight.set(rightMotorSpeed);
-		masterLeft.set(-leftMotorSpeed);
-	}
-
 }
