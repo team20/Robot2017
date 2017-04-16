@@ -13,10 +13,6 @@ public class FlyWheel {
 	public FlyWheel(){
 		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MASTER_PORT);
 		flywheelMaster.reverseOutput(false);
-		flywheelFollower = new CANTalon(Constants.FLYWHEEL_FOLLOWER_PORT);
-		flywheelFollower.changeControlMode(CANTalon.TalonControlMode.Follower);
-		flywheelFollower.set(flywheelMaster.getDeviceID());
-		flywheelFollower.reverseOutput(true);
 		flywheelEncoder = false;
 		flywheelMaster.configPeakOutputVoltage(12.0f, 0.0f);
 	}	

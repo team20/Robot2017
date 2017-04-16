@@ -6,8 +6,7 @@ public class BobbysGearMechanism {
 	DoubleSolenoid bobbyPiston;
 	OperatorControls operator;
 	GroundCollector collector;
-	boolean collecting = false;
-
+	
 	public BobbysGearMechanism(OperatorControls o, GroundCollector c) {
 		bobbyPiston = new DoubleSolenoid(Constants.GEAR_EXTEND_PORT, Constants.GEAR_RETRACT_PORT);
 		operator = o;
@@ -16,11 +15,10 @@ public class BobbysGearMechanism {
 
 	public boolean intake(){
 		collector.intake(1.0);
-		collecting = true;
-		if(collector.collector.getOutputCurrent() > 20.0){ // TODO figure out what the current limit is
-			return true;
-		}
-		return false;
+//		if(collector.collector.getOutputCurrent() > 25.0){ // TODO figure out what the current limit is
+//			return true;
+//		}
+		return true;
 	}
 	
 	public void outtake(){

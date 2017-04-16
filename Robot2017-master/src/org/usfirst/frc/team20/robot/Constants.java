@@ -12,7 +12,6 @@ public class Constants {
 	public static final int CLIMBER_FOLLOWER_PORT = 11; //Climb Left
 	public static final int GROUND_COLLECTOR_MOTOR_PORT = 5; //Collector
 	public static final int FLYWHEEL_MASTER_PORT = 6; //Fly Wheel
-	public static final int FLYWHEEL_FOLLOWER_PORT = 12;
 	public static final int FUEL_TANK_COLLECTOR_MOTOR_PORT = 7; //Fuel Tank
 
 	//Solenoids
@@ -39,6 +38,7 @@ public class Constants {
 	
 	//Misc.
 	public static final double DRIVING_P = 0.020;	//TODO 0.020 practice, 0.010 comp
+	public static final double TURNING_DEADBAND = 3.0;	//TODO 0.020 practice, 0.010 comp
 	public static final double CLIMBER_MAX_VOLTAGE = 70.0; // Changed from 50 to 70 on 3/12. Still stalls occasionally.
-	public static final double WAIT_GEAR_TIME = 0.5;	//seconds
+	public static final double WAIT_GEAR_TIME = 0.25;	//seconds
 }

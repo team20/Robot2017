@@ -14,6 +14,12 @@ public class RocketScript {
 	String spinUp = "10";
 	String lowGear = "11";
 
+	public String[] testTurning(){
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "90.0";
+		return autoCode;
+	}
+
 	public String[] middleGearTimed() {
 		String[] autoCode = new String[7];
 		autoCode[0] = timeDrive + ";" + "0.6" + ";" + "1.5"; //TODO MAKE SURE THIS IS FIVE SECONDS
@@ -170,13 +176,13 @@ public class RocketScript {
 		String[] autoCode = new String[14];
 		autoCode[0] = timeDrive + ";" + "1.0" + ";" + "0.85"; //0.7
 		autoCode[1] = timeDrive + ";" + "-0.5" + ";" + "0.2";
-		autoCode[2] = turn + ";" + AutoConstants.TURN_SPEED + ";" + "40.0";
+		autoCode[2] = turn + ";" + "40.0";
 //		autoCode[2] = fastDriveStraight + ";" + "0.35" + ";" + "25.0" + ";" + "33.0";
 		autoCode[3] = timeDrive + ";" + "0.5" + ";" + "0.7";
 		autoCode[4] = wait + ";" + "1.5";
 		autoCode[5] = timeDrive + ";" + "-1.0" + ";" + "0.15";
 		autoCode[6] = timeDrive + ";" + "-0.5" + ";" + "0.2";
-		autoCode[7] = turn + ";" + AutoConstants.TURN_SPEED + ";" + "90.0";
+		autoCode[7] = turn + ";" + "90.0";
 //		autoCode[7] = fastDriveStraight + ";" + "0.35" + ";" + "30.0" + ";" + "30.0";
 		autoCode[8] = spinUp + ";" + "NULL";
 		autoCode[9] = timeDrive + ";" + "1.0" + ";" + "0.5";

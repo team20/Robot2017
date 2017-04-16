@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	AlexDrive alex;
 	TsarControls tsar;
 	Compressor compressor;
-	DriverVision cam;
+	// DriverVision cam;
 	CircleArcs arc;
 	AHRS gyro = new AHRS(SerialPort.Port.kMXP); // DO NOT PUT IN ROBOT INIT
 	Util util;
@@ -50,6 +50,7 @@ public class Robot extends IterativeRobot {
 	boolean setStartTimeFlywheel = false;
 	boolean gotStartingENCClicks = false;
 	boolean setStartTimeShoot = false;
+	boolean resetGyroTurn = false;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -70,8 +71,12 @@ public class Robot extends IterativeRobot {
 		driver = new DriverControls(drive, climb);
 		operator = new OperatorControls(tank, gear, flywheel, collector, bobby);
 		arc = new CircleArcs();
-//		alex = new AlexDrive(drive, climb);
-//		tsar = new TsarControls(drive, climb, tank, gear, flywheel, collector);
+		// alex = new AlexDrive(drive, climb);
+		// tsar = new TsarControls(drive, climb, tank, gear, flywheel,
+		// collector);
+
+		// cam = new DriverVision("cam0", 0);
+		// cam.startUSBCamera();
 
 		compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
@@ -100,64 +105,77 @@ public class Robot extends IterativeRobot {
 	 */
 
 	public void autonomousInit() {
-		drive.masterLeft.setVoltageRampRate(60);//changed in 4 locations from 60 to 120
+		drive.masterLeft.setVoltageRampRate(60);
 		drive.masterRight.setVoltageRampRate(60);
 		gyro.reset();
 		drive.masterLeft.setEncPosition(0);
 		drive.masterLeft.enable();
 		autoModeSubStep = 0;
 		rocketScriptCurrentCount = 0;
-//		gear.gearFlapOut();
-		boolean button1 = SmartDashboard.getBoolean("DB/Button 0", false);
-		boolean button2 = SmartDashboard.getBoolean("DB/Button 1", false);
-		boolean button3 = SmartDashboard.getBoolean("DB/Button 2", false);
-		boolean button4 = SmartDashboard.getBoolean("DB/Button 3", false);
-		if (button1) {
-			if (button2 && !button3 && !button4) { // middle peg
-				rocketScriptData = getNewScript.middleGearTimed();
-				rocketScriptLength = rocketScriptData.length;
-			} else if (!button2 && button3 && !button4) { // right peg
-				rocketScriptData = getNewScript.rightGearNC(); // TODO with or without camera
-				rocketScriptLength = rocketScriptData.length;
-			} else if (!button2 && !button3 && button4) { // left peg
-				rocketScriptData = getNewScript.leftGearNC(); // TODO with or without camera
-				rocketScriptLength = rocketScriptData.length;
-			} else if (button2 && button3 && !button4) { // side peg to boiler
-				rocketScriptData = getNewScript.rightGearToBoilerRedNC();
-				rocketScriptLength = rocketScriptData.length;
-			} else if (!button2 && button3 && button4) {	//40kPa
-				rocketScriptData = getNewScript.hopperToBoilerRed();
-				rocketScriptLength = rocketScriptData.length;
-			} else if (button2 && !button3 && button4) {	//10kPa
-				rocketScriptData = getNewScript.stayAtBoilerAndShoot();
-				rocketScriptLength = rocketScriptData.length;
-			}
-		} else {
-			if (button2 && !button3 && !button4) { // middle peg
-				rocketScriptData = getNewScript.middleGearTimed();
-				rocketScriptLength = rocketScriptData.length;
-				gear.gearFlapOut();
-			} else if (!button2 && button3 && !button4) { // right peg
-				rocketScriptData = getNewScript.rightGearNC(); // TODO with or without camera
-				rocketScriptLength = rocketScriptData.length;
-				gear.gearFlapOut();
-			} else if (!button2 && !button3 && button4) { // left peg
-				rocketScriptData = getNewScript.leftGearNC(); // TODO with or without camera
-				rocketScriptLength = rocketScriptData.length;
-				gear.gearFlapOut();
-			} else if (button2 && button3 && !button4) { // side peg to boiler
-				rocketScriptData = getNewScript.leftGearToBoilerBlueNC();
-				rocketScriptLength = rocketScriptData.length;
-				gear.gearFlapOut();
-			} else if (!button2 && button3 && button4) {	//40kPa
-				rocketScriptData = getNewScript.hopperToBoilerBlue();
-				rocketScriptLength = rocketScriptData.length;
-				gear.gearFlapOut();
-			} else if (button2 && !button3 && button4) {	//10kPa
-				rocketScriptData = getNewScript.stayAtBoilerAndShoot();
-				rocketScriptLength = rocketScriptData.length;
-			}
-		}
+		// gear.gearFlapOut();
+		rocketScriptData = getNewScript.testTurning();
+		rocketScriptLength = rocketScriptData.length;
+		// boolean button1 = SmartDashboard.getBoolean("DB/Button 0", false);
+		// boolean button2 = SmartDashboard.getBoolean("DB/Button 1", false);
+		// boolean button3 = SmartDashboard.getBoolean("DB/Button 2", false);
+		// boolean button4 = SmartDashboard.getBoolean("DB/Button 3", false);
+		// if (button1) {
+		// if (button2 && !button3 && !button4) { // middle peg
+		// rocketScriptData = getNewScript.middleGearTimed();
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapOut();
+		// } else if (!button2 && button3 && !button4) { // right peg
+		// rocketScriptData = getNewScript.rightGearNC(); // TODO with or
+		// without camera
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapOut();
+		// } else if (!button2 && !button3 && button4) { // left peg
+		// rocketScriptData = getNewScript.leftGearNC(); // TODO with or without
+		// camera
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapOut();
+		// } else if (button2 && button3 && !button4) { // side peg to boiler
+		// rocketScriptData = getNewScript.rightGearToBoilerRedNC();
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapOut();
+		// } else if (!button2 && button3 && button4) { //40kPa
+		// rocketScriptData = getNewScript.hopperToBoilerRed();
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapIn();
+		// } else if (button2 && !button3 && button4) { //10kPa
+		// rocketScriptData = getNewScript.stayAtBoilerAndShoot();
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapIn();
+		// }
+		// } else {
+		// if (button2 && !button3 && !button4) { // middle peg
+		// rocketScriptData = getNewScript.middleGearTimed();
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapOut();
+		// } else if (!button2 && button3 && !button4) { // right peg
+		// rocketScriptData = getNewScript.rightGearNC(); // TODO with or
+		// without camera
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapOut();
+		// } else if (!button2 && !button3 && button4) { // left peg
+		// rocketScriptData = getNewScript.leftGearNC(); // TODO with or without
+		// camera
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapOut();
+		// } else if (button2 && button3 && !button4) { // side peg to boiler
+		// rocketScriptData = getNewScript.leftGearToBoilerBlueNC();
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapOut();
+		// } else if (!button2 && button3 && button4) { //40kPa
+		// rocketScriptData = getNewScript.hopperToBoilerBlue();
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapIn();
+		// } else if (button2 && !button3 && button4) { //10kPa
+		// rocketScriptData = getNewScript.stayAtBoilerAndShoot();
+		// rocketScriptLength = rocketScriptData.length;
+		//// gear.gearFlapIn();
+		// }
+		// }
 	}
 
 	/**
@@ -166,6 +184,12 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
+		SmartDashboard.putString("DB/String 0", Double.toString(gyro.getYaw())); // TODO
+																					// take
+																					// out
+		SmartDashboard.putString("DB/String 5", "Gyro Angle");
+		SmartDashboard.putString("DB/String 6", "Degrees Left");
+		SmartDashboard.putString("DB/String 7", "Set Speed");
 		if (rocketScriptCurrentCount < rocketScriptLength) {
 			String[] values = rocketScriptData[rocketScriptCurrentCount].split(";");
 			if (Integer.parseInt(values[0]) == RobotModes.GET_CAMERA_ANGLE) {
@@ -199,7 +223,6 @@ public class Robot extends IterativeRobot {
 			if (Integer.parseInt(values[0]) == RobotModes.SHOOTING) {
 				flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 				System.out.println("Flywheel RPMS " + flywheel.flywheelSpeed());
-				// if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
 				if (!setStartTimeShoot) {
 					startTime = Timer.getFPGATimestamp();
 					setStartTimeShoot = true;
@@ -208,7 +231,6 @@ public class Robot extends IterativeRobot {
 					collector.intake(1);
 					tank.tankMotorIntoFlywheel(0.4);
 					shooting = true;
-					// }
 				}
 				if (shooting) {
 					tank.runAgitator();
@@ -256,13 +278,16 @@ public class Robot extends IterativeRobot {
 				rocketScriptCurrentCount++;
 			}
 			if (Integer.parseInt(values[0]) == RobotModes.ARC_TURN) {
-				if(fastDriveArc(Double.parseDouble(values[1]), Double.parseDouble(values[2]), Double.parseDouble(values[3]),
-						Boolean.parseBoolean(values[4]))){
+				if (fastDriveArc(Double.parseDouble(values[1]), Double.parseDouble(values[2]),
+						Double.parseDouble(values[3]), Boolean.parseBoolean(values[4]))) {
 					rocketScriptCurrentCount++;
 				}
 			}
-			if(Integer.parseInt(values[0]) == RobotModes.TURN){
-				if(turn(Double.parseDouble(values[1]), Double.parseDouble(values[2]))){
+			if (Integer.parseInt(values[0]) == RobotModes.TURN) {
+				// if(turning(0.35, Double.parseDouble(values[1]))){
+				// rocketScriptCurrentCount++;
+				// }
+				if (turn(1.0, Double.parseDouble(values[1]))) {
 					rocketScriptCurrentCount++;
 				}
 			}
@@ -296,11 +321,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 1", "Flywheel Ready?");
 		SmartDashboard.putString("DB/String 2", "High Gear?");
 		SmartDashboard.putString("DB/String 3", "Collector Jam?");
+		SmartDashboard.putString("DB/String 4", "Have Gear?");
 		SmartDashboard.putString("DB/String 5", Double.toString(flywheel.flywheelSpeed()));
 		SmartDashboard.putString("DB/String 6", Boolean.toString(flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)));
 		SmartDashboard.putString("DB/String 7", Boolean.toString(drive.highGear));
 		SmartDashboard.putString("DB/String 8", Boolean.toString(collector.collectorJam()));
-		SmartDashboard.putString("DB/String 4", Double.toString(collector.collector.getOutputCurrent()));
+		SmartDashboard.putString("DB/String 9", Boolean.toString(bobby.intake()));
 	}
 
 	/**
@@ -308,8 +334,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		System.out.println("Left: " + drive.masterLeft.getEncPosition());
-		System.out.println("										Right: " + drive.masterRight.getEncPosition());
+		turn(1.0, 90.0);
+		SmartDashboard.putString("DB/String 0", Double.toString(gyro.getYaw()));
+		SmartDashboard.putString("DB/String 5", "Gyro Angle");
+		SmartDashboard.putString("DB/String 6", "Degrees Left");
+		SmartDashboard.putString("DB/String 7", "Set Speed");
+		// System.out.println("Left: " + drive.masterLeft.getEncPosition());
+		// System.out.println(" Right: " + drive.masterRight.getEncPosition());
 	}
 
 	// Auto Methods
@@ -338,55 +369,69 @@ public class Robot extends IterativeRobot {
 		}
 		return false;
 	}
-	
+
 	public boolean fastDriveStraight(double speed, double inches, double angleToDrive) {
 		if (gotStartingENCClicks == false) {
 			gyro.reset();
-			System.out.println("*************88888888888888888888888888888NavX Angle After Reset: " + gyro.getAngle());
 			gotStartingENCClicks = true;
 			startingENCClicks = drive.masterLeft.getEncPosition();
-			System.out.println("****************************Start ENC click value = " + startingENCClicks);
+			System.out.println("Start ENC click value = " + startingENCClicks);
 		}
 		if (Math.abs((double) (drive.masterLeft.getEncPosition() - startingENCClicks)) > Math
 				.abs(inches * AutoConstants.TICKS_PER_INCH)) {
-			drive.masterLeft.set(0.0);
-			drive.masterRight.set(0.0);
-			gotStartingENCClicks = false;
-			System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&Final NavX Angle: " + gyro.getAngle());
-			System.out.println("&&&&&&&&&&&&&&&&7777777777777777777777777777777777Enc value after speed 0 " + drive.masterLeft.getEncPosition());
+			drive.masterLeft.set(0.00);
+			drive.masterRight.set(0.00);
+			System.out.println("Final NavX Angle: " + gyro.getAngle());
+			System.out.println("Enc value after speed 0 " + drive.masterLeft.getEncPosition());
 			return true;
 		} else {
 			if (inches > 0) {
-				if (Math.abs((double) (drive.masterLeft.getEncPosition() - startingENCClicks)) < Math
-						.abs(inches * AutoConstants.TICKS_PER_INCH)) {
-					myDrive.arcadeDrive(speed, -((gyro.getAngle() - angleToDrive) * Constants.DRIVING_P));
-				}
+				if (Math.abs((double) (drive.masterLeft.getEncPosition() - startingENCClicks)) > Math
+						.abs(inches * AutoConstants.TICKS_PER_INCH * .60))
+				myDrive.arcadeDrive(speed, -((gyro.getAngle() - angleToDrive) * .020)); // .07
 			} else {
-				myDrive.arcadeDrive(-speed, -((gyro.getAngle() - angleToDrive) * Constants.DRIVING_P));
+				myDrive.arcadeDrive(-speed, -((gyro.getAngle() - angleToDrive) * .020)); // .07
 			}
 		}
 		return false;
 	}
-	
-	public boolean turn(double speed, double angle){
-		double degreesLeft = Math.abs(angle - gyro.getAngle());
-		double setSpeed = speed*(degreesLeft*Constants.DRIVING_P);
-		if(setSpeed < 0.30){
-			setSpeed = 0.30;
+
+	public boolean turn(double speed, double angle) {
+		double degreesLeft = Math.abs(angle - gyro.getYaw());
+		double setSpeed = speed * (degreesLeft / angle);
+		SmartDashboard.putString("DB/String 1", Double.toString(degreesLeft));
+		if (!resetGyroTurn) {
+			gyro.reset();
+			resetGyroTurn = true;
+			startTime = Timer.getFPGATimestamp();
 		}
-		if(degreesLeft < (angle - 2) || degreesLeft > (angle + 2)){
-			if(angle > 0){
+		if (Timer.getFPGATimestamp() - startTime < 5.0) {
+			if (angle > 0) {
 				drive.turnRight(setSpeed);
+				SmartDashboard.putString("DB/String 2", Double.toString(setSpeed));
 				angle = degreesLeft;
+				if (gyro.getYaw() > (angle + Constants.TURNING_DEADBAND)) {
+					drive.turnLeft(setSpeed);
+				}else{
+					drive.turnRight(setSpeed);
+				}
 			} else if (angle < 0) {
 				drive.turnLeft(setSpeed);
+				SmartDashboard.putString("DB/String 2", Double.toString(setSpeed));
 				angle = -degreesLeft;
+				if (gyro.getYaw() < angle - Constants.TURNING_DEADBAND) {
+					drive.turnRight(setSpeed);
+				}else{
+					drive.turnLeft(setSpeed);
+				}
 			}
-			return false;
-		}else{
+		} else {
+			System.out.println("******************IN THE STOP");
 			drive.stopDrive();
+			resetGyroTurn = false;
 			return true;
 		}
+		return false;
 	}
 
 	public boolean fastDriveArc(double speed, double radius, double degrees, boolean direction) {
@@ -399,16 +444,18 @@ public class Robot extends IterativeRobot {
 			startingENCClicks = drive.masterLeft.getEncPosition();
 			System.out.println("Start ENC click value = " + startingENCClicks);
 		}
-		if (arc.leftDone((drive.masterLeft.getEncPosition()-startingENCClicks)/AutoConstants.TICKS_PER_INCH)){
+		if (arc.leftDone((drive.masterLeft.getEncPosition() - startingENCClicks) / AutoConstants.TICKS_PER_INCH)) {
 			drive.masterLeft.set(0.00);
 			drive.masterRight.set(0.00);
 			System.out.println("Final NavX Angle: " + gyro.getAngle());
 			System.out.println("Enc value after speed 0 " + drive.masterLeft.getEncPosition());
 			return true;
 		} else {
-			double angleToDrive = arc.getLeftAngle((drive.masterLeft.getEncPosition() - startingENCClicks) / AutoConstants.TICKS_PER_INCH);
+			double angleToDrive = arc.getLeftAngle(
+					(drive.masterLeft.getEncPosition() - startingENCClicks) / AutoConstants.TICKS_PER_INCH);
 			if (radius > 0) {
-				if (!arc.leftDone((drive.masterLeft.getEncPosition()-startingENCClicks)/AutoConstants.TICKS_PER_INCH)) {
+				if (!arc.leftDone(
+						(drive.masterLeft.getEncPosition() - startingENCClicks) / AutoConstants.TICKS_PER_INCH)) {
 					myDrive.arcadeDrive(speed, -((gyro.getAngle() - angleToDrive) * Constants.DRIVING_P)); // .07
 				}
 			} else {

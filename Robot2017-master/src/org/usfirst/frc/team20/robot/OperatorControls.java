@@ -1,8 +1,6 @@
 //Author: Rahul Shah and Ronak Parida
 package org.usfirst.frc.team20.robot;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class OperatorControls {
 	Controller operatorJoy;
 	FuelTank tank;
@@ -13,6 +11,7 @@ public class OperatorControls {
 	boolean shooting;
 	boolean tankToFlywheel;	
 	boolean getStartTime = false;
+	boolean collectingGear = false;
 	double startTime;
 
 	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, GroundCollector c, BobbysGearMechanism b) {
@@ -50,17 +49,24 @@ public class OperatorControls {
 		}
 		if (operatorJoy.getButtonDUp()){	//gear collector collect
 			bobby.extend();
-			if (bobby.intake()){
-				if (!getStartTime) {
-					startTime = Timer.getFPGATimestamp();
-					getStartTime = true;
-				}
-				if (Timer.getFPGATimestamp() - startTime > Constants.WAIT_GEAR_TIME) {
-					bobby.retract();
-					collector.collector.set(0.2); // TODO tune holding gear voltage
-				}
-			}
+			bobby.intake();
+//			if (bobby.intake()){
+//				bobby.retract();
+//				collector.collector.set(0.0); //speed was 0.2
+//				collectingGear = true;
+//			}
 		}
+//		if(collectingGear){
+//			if(!getStartTime){
+//				startTime = Timer.getFPGATimestamp();
+//				getStartTime = true;
+//			}
+//			if(Timer.getFPGATimestamp() - startTime > Constants.WAIT_GEAR_TIME){
+//				bobby.retract();
+//				collector.collector.set(0.0); //speed was 0.2
+//				collectingGear = false;
+//			}
+//		}
 		if (operatorJoy.getButtonDDown()){	//gear collector hold for placement
 			bobby.extend();
 			bobby.outtake();
@@ -69,6 +75,8 @@ public class OperatorControls {
 			collector.stopCollector();
 			tank.stopTank();
 			tankToFlywheel = false;
+			collectingGear = false;
+			getStartTime = false;
 		}
 		if (operatorJoy.getButtonStart()) {
 			flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
@@ -89,6 +97,8 @@ public class OperatorControls {
 			collector.stopCollector();
 			shooting = false;
 			tankToFlywheel = false;
+			getStartTime = false;
+			collectingGear = false;
 			tank.retractAgitator();
 		}
 	}
