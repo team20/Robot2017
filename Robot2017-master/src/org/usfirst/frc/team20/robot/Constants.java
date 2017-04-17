@@ -37,8 +37,10 @@ public class Constants {
 	public static final int GEAR_BUMP_SWITCH_PORT_ONE = 0;
 	
 	//Misc.
-	public static final double DRIVING_P = 0.020;	//TODO 0.020 practice, 0.010 comp
-	public static final double TURNING_DEADBAND = 3.0;	//TODO 0.020 practice, 0.010 comp
+	public static final double DRIVING_P = 0.030;	//TODO 0.020 practice, 0.010 comp
+	public static final double DRIVING_P_LEFT = 0.018;	// 0.018 90, 
+	public static final double DRIVING_P_RIGHT = 0.013;	//TODO 0.012 90, 0.0135 110
+	public static final double TURNING_DEADBAND = 2.0;
 	public static final double CLIMBER_MAX_VOLTAGE = 70.0; // Changed from 50 to 70 on 3/12. Still stalls occasionally.
 	public static final double WAIT_GEAR_TIME = 0.25;	//seconds
 }

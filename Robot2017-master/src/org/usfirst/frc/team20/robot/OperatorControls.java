@@ -33,15 +33,15 @@ public class OperatorControls {
 			tank.tankMotorIntoTank(0.95);
 		}
 		if (operatorJoy.getButtonA()) {
-			collector.outtake(1);
+			collector.outtake(1.0);
 		}
-//		if (operatorJoy.getButtonDRight()) {
+//		if (operatorJoy.getButtonDRight()) {	//TODO make sure you uncomment this for the comp bot
 //			gear.gearFlapIn();
 //		}
 //		if (operatorJoy.getButtonDLeft()) {
 //			gear.gearFlapOut();
 //		}
-		if (operatorJoy.getButtonDRight()) {
+		if (operatorJoy.getButtonDRight()) {	//TODO make sure you delete this for champs
 			bobby.extend();
 		}
 		if (operatorJoy.getButtonDLeft()) {
@@ -49,27 +49,12 @@ public class OperatorControls {
 		}
 		if (operatorJoy.getButtonDUp()){	//gear collector collect
 			bobby.extend();
-			bobby.intake();
-//			if (bobby.intake()){
-//				bobby.retract();
-//				collector.collector.set(0.0); //speed was 0.2
-//				collectingGear = true;
-//			}
+//			collector.intake(1.0);
 		}
-//		if(collectingGear){
-//			if(!getStartTime){
-//				startTime = Timer.getFPGATimestamp();
-//				getStartTime = true;
-//			}
-//			if(Timer.getFPGATimestamp() - startTime > Constants.WAIT_GEAR_TIME){
-//				bobby.retract();
-//				collector.collector.set(0.0); //speed was 0.2
-//				collectingGear = false;
-//			}
-//		}
-		if (operatorJoy.getButtonDDown()){	//gear collector hold for placement
-			bobby.extend();
-			bobby.outtake();
+		if (operatorJoy.getButtonDDown()) { // gear collector hold for placement
+			bobby.retract();
+//			bobby.extend();
+//			collector.outtake(1.0);
 		}
 		if (operatorJoy.getButtonX() || operatorJoy.getButtonB()) {
 			collector.stopCollector();

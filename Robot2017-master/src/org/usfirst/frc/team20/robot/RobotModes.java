@@ -12,4 +12,5 @@ public class RobotModes {
 	public static final int WAIT = 9;
 	public static final int SPIN_UP = 10;
 	public static final int LOW_GEAR = 11;
+	public static final int CAMERA_TURN = 12;
 }

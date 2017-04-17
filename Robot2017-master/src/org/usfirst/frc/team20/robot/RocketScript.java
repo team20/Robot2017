@@ -13,8 +13,15 @@ public class RocketScript {
 	String wait = "9";
 	String spinUp = "10";
 	String lowGear = "11";
+	String cameraTurn = "12";
 
-	public String[] testTurning(){
+	public String[] testTurningLeft(){
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "-90.0";
+		return autoCode;
+	}
+
+	public String[] testTurningRight(){
 		String[] autoCode = new String[1];
 		autoCode[0] = turn + ";" + "90.0";
 		return autoCode;
@@ -22,12 +29,12 @@ public class RocketScript {
 
 	public String[] middleGearTimed() {
 		String[] autoCode = new String[7];
-		autoCode[0] = timeDrive + ";" + "0.6" + ";" + "1.5"; //TODO MAKE SURE THIS IS FIVE SECONDS
+		autoCode[0] = timeDrive + ";" + "0.6" + ";" + "3.0";
 		autoCode[1] = wait + ";" + "3.0";
 		autoCode[2] = fastDriveStraight + ";" + "0.6" + ";" + "-30.0" + ";" + "0.0";
-		autoCode[3] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "25.0" + ";" + "-90.0";
+		autoCode[3] = turn + ";" + "-90.0";
 		autoCode[4] = fastDriveStraight + ";" + "0.6" + ";" + "130.0" + ";" + "0.0";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "25.0" + ";" + "90.0";
+		autoCode[5] = turn + ";" + "90.0";
 		autoCode[6] = fastDriveStraight + ";" + "0.6" + ";" + "200.0" + ";" + "0.0";
 		return autoCode;
 	}
@@ -44,13 +51,12 @@ public class RocketScript {
 		String[] autoCode = new String[7];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "18.0" + ";"
-				+ AutoConstants.RIGHT_PEG_ANGLE;
+		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
 		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
 		autoCode[3] = wait + ";" + "3.0";
 		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "15.0" + ";" + "60.0";
+		autoCode[5] = turn + ";" + "60.0";
 		autoCode[6] = fastDriveStraight + ";" + "1.0" + ";" + "200.0" + ";" + "0.0";
 		return autoCode;
 	}
@@ -59,29 +65,28 @@ public class RocketScript {
 		String[] autoCode = new String[7];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "25.0" + ";"
-				+ AutoConstants.LEFT_PEG_ANGLE;
+		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
 		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
 		autoCode[3] = wait + ";" + "3.0";
 		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "30.0" + ";" + "-60.0";
+		autoCode[5] = turn + ";" + "-60.0";
 		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "200.0" + ";" + "0.0";
 		return autoCode;
 	}
 
 	public String[] rightGear() {
-		String[] autoCode = new String[8];
+		String[] autoCode = new String[9];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5.0" + ";"
-				+ AutoConstants.RIGHT_PEG_ANGLE;
+		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
 		autoCode[2] = getCameraAngle + ";" + "NULL";
-		autoCode[3] = goCameraDistance + ";" + "NULL";
-		autoCode[4] = wait + ";" + "3.0";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
-		autoCode[6] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "30.0" + ";" + "60.0";
-		autoCode[7] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "200.0" + ";" + "0.0";
+		autoCode[3] = cameraTurn + ";" + "NULL";
+		autoCode[4] = goCameraDistance + ";" + "NULL";
+		autoCode[5] = wait + ";" + "3.0";
+		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
+		autoCode[7] = turn + ";" + "60.0";
+		autoCode[8] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "200.0" + ";" + "0.0";
 		return autoCode;
 	}
 
@@ -89,13 +94,15 @@ public class RocketScript {
 		String[] autoCode = new String[8];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
-				+ AutoConstants.LEFT_PEG_ANGLE;
+//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
+//				+ AutoConstants.LEFT_PEG_ANGLE;
+		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
 		autoCode[2] = getCameraAngle + ";" + "NULL";
 		autoCode[3] = goCameraDistance + ";" + "NULL";
 		autoCode[4] = wait + ";" + "5.0";
 		autoCode[5] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
-		autoCode[6] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "30.0" + ";" + "-60.0";
+//		autoCode[6] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "30.0" + ";" + "-60.0";
+		autoCode[6] = turn + ";" + "-60.0";
 		autoCode[7] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "200.0" + ";" + "0.0";
 		return autoCode;
 	}
@@ -104,15 +111,17 @@ public class RocketScript {
 		String[] autoCode = new String[8];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "20.0" + ";"
-				+ AutoConstants.RIGHT_PEG_ANGLE;
+//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "20.0" + ";"
+//				+ AutoConstants.RIGHT_PEG_ANGLE;
+		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
 		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
 		autoCode[3] = wait + ";" + "3.0";
 		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
 				+ AutoConstants.BACK_UP_FROM_PEG_DISTANCE + ";" + "0.00";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "40.0" + ";"
-				+ AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
+//		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "40.0" + ";"
+//				+ AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
+		autoCode[5] = turn + ";" + AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
 		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_TO_BOILER_DISTANCE + ";" + "0.00";
 		autoCode[7] = shoot + ";" + "20";
@@ -123,15 +132,17 @@ public class RocketScript {
 		String[] autoCode = new String[8];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "30.0" + ";"
-				+ AutoConstants.LEFT_PEG_ANGLE;
+//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "30.0" + ";"
+//				+ AutoConstants.LEFT_PEG_ANGLE;
+		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
 		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
 		autoCode[3] = wait + ";" + "3.0";
 		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
 				+ AutoConstants.BACK_UP_FROM_PEG_DISTANCE + ";" + "0.00";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "60.0" + ";"
-				+ AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
+//		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "60.0" + ";"
+//				+ AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
+		autoCode[5] = turn + ";" + AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
 		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_TO_BOILER_DISTANCE + ";" + "0.00";
 		autoCode[7] = shoot + ";" + "20";
@@ -142,8 +153,9 @@ public class RocketScript {
 		String[] autoCode = new String[8];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
-				+ AutoConstants.RIGHT_PEG_ANGLE;
+//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
+//				+ AutoConstants.RIGHT_PEG_ANGLE;
+		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
 		autoCode[2] = getCameraAngle + ";" + "NULL";
 		autoCode[3] = goCameraDistance + ";" + "NULL";
 		autoCode[4] = wait + ";" + "2.5";
@@ -159,8 +171,9 @@ public class RocketScript {
 		String[] autoCode = new String[8];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
-				+ AutoConstants.LEFT_PEG_ANGLE;
+//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
+//				+ AutoConstants.LEFT_PEG_ANGLE;
+		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
 		autoCode[2] = getCameraAngle + ";" + "NULL";
 		autoCode[3] = goCameraDistance + ";" + "NULL";
 		autoCode[4] = wait + ";" + "2.5";
@@ -171,8 +184,43 @@ public class RocketScript {
 		autoCode[7] = shoot + ";" + "0";
 		return autoCode;
 	}
+	
+	public String[] middleGearToBoilerBlue(){
+		String[] autoCode = new String[6];
+		autoCode[0] = timeDrive + ";" + "0.6" + ";" + "2.0";
+		autoCode[1] = wait + ";" + "2.5";
+		autoCode[2] = fastDriveStraight + ";" + "0.6" + ";" + "-15.0" + ";" + "0.0";
+		autoCode[3] = turn + ";" + "-105.0";
+		autoCode[4] = timeDrive + ";" + "1.0" + ";" + "2.0";
+		autoCode[5] = shoot + ";" + "15.0";
+		return autoCode;
+	}
 
- 	public String[] hopperToBoilerRed() {
+	public String[] middleGearToBoilerRed(){
+		String[] autoCode = new String[8];
+		autoCode[0] = timeDrive + ";" + "1.0" + ";" + "0.7";
+		autoCode[1] = timeDrive + ";" + "0.6" + ";" + "0.3";
+		autoCode[2] = wait + ";" + "2.5";
+		autoCode[3] = fastDriveStraight + ";" + "0.6" + ";" + "-15.0" + ";" + "0.0";
+		autoCode[4] = turn + ";" + "105.0";
+		autoCode[5] = spinUp + ";" + "NULL";
+		autoCode[6] = timeDrive + ";" + "1.0" + ";" + "2.0";
+		autoCode[7] = shoot + ";" + "15.0";
+		return autoCode;
+	}
+
+//	public String[] middleGearToBoilerRed(){
+//		String[] autoCode = new String[6];
+//		autoCode[0] = timeDrive + ";" + "0.6" + ";" + "2.0";
+//		autoCode[1] = wait + ";" + "2.5";
+//		autoCode[2] = fastDriveStraight + ";" + "0.6" + ";" + "-15.0" + ";" + "0.0";
+//		autoCode[3] = turn + ";" + "110.0";
+//		autoCode[4] = timeDrive + ";" + "1.0" + ";" + "2.0";
+//		autoCode[5] = shoot + ";" + "15.0";
+//		return autoCode;
+//	}
+
+	public String[] hopperToBoilerRed() {
 		String[] autoCode = new String[14];
 		autoCode[0] = timeDrive + ";" + "1.0" + ";" + "0.85"; //0.7
 		autoCode[1] = timeDrive + ";" + "-0.5" + ";" + "0.2";

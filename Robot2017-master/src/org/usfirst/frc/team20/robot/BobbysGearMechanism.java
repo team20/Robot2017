@@ -12,18 +12,6 @@ public class BobbysGearMechanism {
 		operator = o;
 		collector = c;
 	}
-
-	public boolean intake(){
-		collector.intake(1.0);
-//		if(collector.collector.getOutputCurrent() > 25.0){ // TODO figure out what the current limit is
-//			return true;
-//		}
-		return true;
-	}
-	
-	public void outtake(){
-		collector.outtake(1.0);	//TODO figure out optimal speed
-	}
 	
 	public void retract(){
 		bobbyPiston.set(DoubleSolenoid.Value.kReverse);

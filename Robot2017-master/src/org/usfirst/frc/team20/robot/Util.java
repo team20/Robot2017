@@ -36,7 +36,7 @@ public class Util {
 		String angleDistance = "";
 		try {
 			System.out.println("*******Trying to Get Angle");
-			angleDistance = readSocket("10.0.20.79", 5801, "009");
+			angleDistance = readSocket("10.0.20.79", 9999, "009");	//port was: 5801
 			System.out.println("*******Got Angle********** = " + angleDistance);
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
