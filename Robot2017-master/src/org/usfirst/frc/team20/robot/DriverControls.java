@@ -4,9 +4,7 @@ package org.usfirst.frc.team20.robot;
 import edu.wpi.first.wpilibj.Timer;
 
 public class DriverControls {
-
 	Controller driverJoy;
-
 	DriveTrain drive;
 	Climber climb;
 	double speedStraight, speedLeft, speedRight;

@@ -7,20 +7,20 @@ public class OperatorControls {
 	GearMechanism gear;
 	FlyWheel flywheel;
 	GroundCollector collector;
-	BobbysGearMechanism bobby;
+	GearPickup carlos;
 	boolean shooting;
-	boolean tankToFlywheel;	
+	boolean tankToFlywheel;
 	boolean getStartTime = false;
 	boolean collectingGear = false;
 	double startTime;
 
-	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, GroundCollector c, BobbysGearMechanism b) {
+	public OperatorControls(FuelTank h, GearMechanism g, FlyWheel f, GroundCollector c, GearPickup b) {
 		operatorJoy = new Controller(1);
 		tank = h;
 		gear = g;
 		flywheel = f;
 		collector = c;
-		bobby = b;
+		carlos = b;
 		flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
 		shooting = false;
 		tankToFlywheel = false;
@@ -35,26 +35,32 @@ public class OperatorControls {
 		if (operatorJoy.getButtonA()) {
 			collector.outtake(1.0);
 		}
-//		if (operatorJoy.getButtonDRight()) {	//TODO make sure you uncomment this for the comp bot
-//			gear.gearFlapIn();
-//		}
-//		if (operatorJoy.getButtonDLeft()) {
-//			gear.gearFlapOut();
-//		}
-		if (operatorJoy.getButtonDRight()) {	//TODO make sure you delete this for champs
-			bobby.extend();
+		// if (operatorJoy.getButtonDRight()) { //TODO make sure you uncomment
+		// this for the comp bot
+		// gear.gearFlapIn();
+		// }
+		// if (operatorJoy.getButtonDLeft()) {
+		// gear.gearFlapOut();
+		// }
+		if (operatorJoy.getButtonDRight()) { // TODO make sure you delete this
+												// for champs
+			carlos.extend();
 		}
 		if (operatorJoy.getButtonDLeft()) {
-			bobby.retract();
+			carlos.retract();
 		}
-		if (operatorJoy.getButtonDUp()){	//gear collector collect
-			bobby.extend();
-//			collector.intake(1.0);
+		if (operatorJoy.getButtonDDown()) { // gear collector collect
+			carlos.extend();
+			collector.outtake(1.0);
 		}
-		if (operatorJoy.getButtonDDown()) { // gear collector hold for placement
-			bobby.retract();
-//			bobby.extend();
-//			collector.outtake(1.0);
+		if (operatorJoy.getButtonDUp()) { // gear collector hold for placement
+			carlos.retract();
+		}
+		if (Math.sqrt((operatorJoy.getRightXAxis() * operatorJoy.getRightXAxis())
+				+ (operatorJoy.getRightYAxis() * operatorJoy.getRightYAxis())) > 0.5) {
+			gear.gearFlapIn();
+		} else {
+			gear.gearFlapOut();
 		}
 		if (operatorJoy.getButtonX() || operatorJoy.getButtonB()) {
 			collector.stopCollector();
@@ -67,7 +73,7 @@ public class OperatorControls {
 			flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 		}
 		if (operatorJoy.getRightTriggerAxis() > 0) {
-			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) { 
+			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
 				collector.intake(1.0);
 				tank.tankMotorIntoFlywheel(0.4);
 			}

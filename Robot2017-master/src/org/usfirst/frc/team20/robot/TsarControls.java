@@ -1,7 +1,5 @@
 package org.usfirst.frc.team20.robot;
 
-import java.io.IOException;
-
 public class TsarControls {
 	Controller tsarJoy;
 	DriveTrain drive;
@@ -15,9 +13,6 @@ public class TsarControls {
 	double speedStraight;
 	double speedLeft;
 	double speedRight;
-	Util voltageFile = new Util();
-	Util currentFile = new Util();
-	Util speedFile = new Util();
 
 	public TsarControls(DriveTrain d, Climber c, FuelTank t, GearMechanism g, FlyWheel f, GroundCollector co){
 		tsarJoy = new Controller(0);
@@ -31,13 +26,6 @@ public class TsarControls {
 		speedLeft = 0;
 		speedRight = 0;
 		flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
-		try {
-			voltageFile.createFile("Voltage");
-			currentFile.createFile("Current");
-			speedFile.createFile("Speed");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void tsarControls(){	
@@ -115,17 +103,6 @@ public class TsarControls {
 			collector.stopCollector();
 			shooting = false;
 			tankToFlywheel = false;
-		}
-		try {
-			voltageFile.WriteToFile(Double.toString(flywheel.flywheelMaster.getOutputVoltage()));
-			currentFile.WriteToFile(Double.toString(flywheel.flywheelMaster.getOutputCurrent()));
-			speedFile.WriteToFile(Double.toString(flywheel.flywheelMaster.getSpeed()));
-			voltageFile.WriteToFile(",");
-			currentFile.WriteToFile(",");
-			speedFile.WriteToFile(",");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		}		
 	}
 }

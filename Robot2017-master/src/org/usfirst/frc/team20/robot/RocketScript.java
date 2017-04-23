@@ -2,42 +2,94 @@
 package org.usfirst.frc.team20.robot;
 
 public class RocketScript {
-	String getCameraAngle = "1"; // (angle, ip, port) //gets distance too
-	String goCameraDistance = "2";
-	String turn = "3";
-	String arcTurn = "4";	//speed, radius of circle, turn angle, direction (right == true)
-	String fastDriveStraight = "5";
-	String timeDrive = "6";
-	String shoot = "7";
-	String stopShooting = "8";
-	String wait = "9";
-	String spinUp = "10";
-	String lowGear = "11";
-	String cameraTurn = "12";
+	String turn = "1";
+	String arcTurn = "2"; // speed, radius of circle, turn angle, right?
+	String fastDriveStraight = "3";
+	String timeDrive = "4";
+	String shoot = "5";
+	String stopShooting = "6";
+	String wait = "7";
+	String spinUp = "8";
+	String lowGear = "9";
 
-	public String[] testTurningLeft(){
+	public String[] middleGear() {
 		String[] autoCode = new String[1];
-		autoCode[0] = turn + ";" + "-90.0";
+		autoCode[0] = timeDrive + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.MIDDLE_GEAR_TIME;
 		return autoCode;
 	}
 
-	public String[] testTurningRight(){
-		String[] autoCode = new String[1];
-		autoCode[0] = turn + ";" + "90.0";
-		return autoCode;
-	}
-
-	public String[] middleGearTimed() {
+	public String[] middleGearNeutralZoneRed() {
 		String[] autoCode = new String[7];
-		autoCode[0] = timeDrive + ";" + "0.6" + ";" + "3.0";
-		autoCode[1] = wait + ";" + "3.0";
-		autoCode[2] = fastDriveStraight + ";" + "0.6" + ";" + "-30.0" + ";" + "0.0";
+		autoCode[0] = timeDrive + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.MIDDLE_GEAR_TIME;
+		autoCode[1] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_LONG;
+		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.PEG_BACK_AWAY_PEG + ";" + "0.0";
 		autoCode[3] = turn + ";" + "-90.0";
-		autoCode[4] = fastDriveStraight + ";" + "0.6" + ";" + "130.0" + ";" + "0.0";
+		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.AROUND_AIRSHIP + ";" + "0.0";
 		autoCode[5] = turn + ";" + "90.0";
-		autoCode[6] = fastDriveStraight + ";" + "0.6" + ";" + "200.0" + ";" + "0.0";
+		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.NEUTRAL_ZONE_DISTANCE + ";" + "0.0";
 		return autoCode;
 	}
+
+	public String[] middleGearNeutralZoneBlue() {
+		String[] autoCode = new String[7];
+		autoCode[0] = timeDrive + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.MIDDLE_GEAR_TIME;
+		autoCode[1] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_LONG;
+		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.PEG_BACK_AWAY_PEG + ";" + "0.0";
+		autoCode[3] = turn + ";" + "90.0";
+		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.AROUND_AIRSHIP + ";" + "0.0";
+		autoCode[5] = turn + ";" + "-90.0";
+		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.NEUTRAL_ZONE_DISTANCE + ";" + "0.0";
+		return autoCode;
+	}
+
+	public String[] rightGear() {
+		String[] autoCode = new String[3];
+		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
+		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
+		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
+		return autoCode;
+	}
+
+	public String[] rightGearNeutralZone() {
+		String[] autoCode = new String[7];
+		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
+		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
+		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
+		autoCode[3] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_LONG;
+		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.PEG_BACK_AWAY_PEG + ";" + "0.0";
+		autoCode[5] = turn + ";" + "60.0";
+		autoCode[6] = fastDriveStraight + ";" + "1.0" + ";" + AutoConstants.NEUTRAL_ZONE_DISTANCE + ";" + "0.0";
+		return autoCode;
+	}
+	
+	public String[] leftGear() {
+		String[] autoCode = new String[3];
+		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
+		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
+		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
+		return autoCode;
+	}
+	
+	public String[] leftGearNeutralZone() {
+		String[] autoCode = new String[7];
+		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
+		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
+		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
+		autoCode[3] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_LONG;
+		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.PEG_BACK_AWAY_PEG + ";" + "0.0";
+		autoCode[5] = turn + ";" + "-60.0";
+		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.NEUTRAL_ZONE_DISTANCE + ";" + "0.0";
+		return autoCode;
+	}
+
 
 	public String[] stayAtBoilerAndShoot() {
 		String[] autoCode = new String[3];
@@ -47,123 +99,19 @@ public class RocketScript {
 		return autoCode;
 	}
 
-	public String[] rightGearNC() {
-		String[] autoCode = new String[7];
-		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
-		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
-		autoCode[3] = wait + ";" + "3.0";
-		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
-		autoCode[5] = turn + ";" + "60.0";
-		autoCode[6] = fastDriveStraight + ";" + "1.0" + ";" + "200.0" + ";" + "0.0";
-		return autoCode;
-	}
-
-	public String[] leftGearNC() {
-		String[] autoCode = new String[7];
-		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
-		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
-		autoCode[3] = wait + ";" + "3.0";
-		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
-		autoCode[5] = turn + ";" + "-60.0";
-		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "200.0" + ";" + "0.0";
-		return autoCode;
-	}
-
-	public String[] rightGear() {
-		String[] autoCode = new String[9];
-		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
-		autoCode[2] = getCameraAngle + ";" + "NULL";
-		autoCode[3] = cameraTurn + ";" + "NULL";
-		autoCode[4] = goCameraDistance + ";" + "NULL";
-		autoCode[5] = wait + ";" + "3.0";
-		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
-		autoCode[7] = turn + ";" + "60.0";
-		autoCode[8] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "200.0" + ";" + "0.0";
-		return autoCode;
-	}
-
-	public String[] leftGear() {
+	public String[] rightGearToBoilerRed() {
 		String[] autoCode = new String[8];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
-//				+ AutoConstants.LEFT_PEG_ANGLE;
-		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
-		autoCode[2] = getCameraAngle + ";" + "NULL";
-		autoCode[3] = goCameraDistance + ";" + "NULL";
-		autoCode[4] = wait + ";" + "5.0";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-30.0" + ";" + "0.0";
-//		autoCode[6] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "30.0" + ";" + "-60.0";
-		autoCode[6] = turn + ";" + "-60.0";
-		autoCode[7] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "200.0" + ";" + "0.0";
-		return autoCode;
-	}
-
-	public String[] rightGearToBoilerRedNC() {
-		String[] autoCode = new String[8];
-		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "20.0" + ";"
-//				+ AutoConstants.RIGHT_PEG_ANGLE;
 		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
 		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
-		autoCode[3] = wait + ";" + "3.0";
+		autoCode[3] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_SHORT;
 		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
-				+ AutoConstants.BACK_UP_FROM_PEG_DISTANCE + ";" + "0.00";
-//		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "40.0" + ";"
-//				+ AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
+				+ AutoConstants.BOILER_BACK_AWAY_PEG + ";" + "0.00";
 		autoCode[5] = turn + ";" + AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
-		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_TO_BOILER_DISTANCE + ";" + "0.00";
-		autoCode[7] = shoot + ";" + "20";
-		return autoCode;
-	}
-
-	public String[] leftGearToBoilerBlueNC() {
-		String[] autoCode = new String[8];
-		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "30.0" + ";"
-//				+ AutoConstants.LEFT_PEG_ANGLE;
-		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
-		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
-		autoCode[3] = wait + ";" + "3.0";
-		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
-				+ AutoConstants.BACK_UP_FROM_PEG_DISTANCE + ";" + "0.00";
-//		autoCode[5] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "60.0" + ";"
-//				+ AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
-		autoCode[5] = turn + ";" + AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
-		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_TO_BOILER_DISTANCE + ";" + "0.00";
-		autoCode[7] = shoot + ";" + "20";
-		return autoCode;
-	}
-
-	public String[] rightGearToBoilerRed() {	//TODO update gear placement code and check all (turn 180?)
-		String[] autoCode = new String[8];
-		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
-//				+ AutoConstants.RIGHT_PEG_ANGLE;
-		autoCode[1] = turn + ";" + AutoConstants.RIGHT_PEG_ANGLE;
-		autoCode[2] = getCameraAngle + ";" + "NULL";
-		autoCode[3] = goCameraDistance + ";" + "NULL";
-		autoCode[4] = wait + ";" + "2.5";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.BACK_UP_FROM_PEG_DISTANCE + ";" + "0.00";
-		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_TO_BOILER_DISTANCE + ";" + "0.00";
-		autoCode[7] = shoot + ";" + "0";
+		autoCode[6] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SIDE_BOILER_TIME;
+		autoCode[7] = shoot + ";" + "15";
 		return autoCode;
 	}
 
@@ -171,107 +119,140 @@ public class RocketScript {
 		String[] autoCode = new String[8];
 		autoCode[0] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
 				+ AutoConstants.SIDE_PEG_DISTANCE_ONE + ";" + "0.00";
-//		autoCode[1] = fastDriveStraight + ";" + AutoConstants.TURN_SPEED + ";" + "5" + ";"
-//				+ AutoConstants.LEFT_PEG_ANGLE;
 		autoCode[1] = turn + ";" + AutoConstants.LEFT_PEG_ANGLE;
-		autoCode[2] = getCameraAngle + ";" + "NULL";
-		autoCode[3] = goCameraDistance + ";" + "NULL";
-		autoCode[4] = wait + ";" + "2.5";
-		autoCode[5] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.BACK_UP_FROM_PEG_DISTANCE + ";" + "0.00";
-		autoCode[6] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
-				+ AutoConstants.SIDE_PEG_TO_BOILER_DISTANCE + ";" + "0.00";
-		autoCode[7] = shoot + ";" + "0";
-		return autoCode;
-	}
-	
-	public String[] middleGearToBoilerBlue(){
-		String[] autoCode = new String[6];
-		autoCode[0] = timeDrive + ";" + "0.6" + ";" + "2.0";
-		autoCode[1] = wait + ";" + "2.5";
-		autoCode[2] = fastDriveStraight + ";" + "0.6" + ";" + "-15.0" + ";" + "0.0";
-		autoCode[3] = turn + ";" + "-105.0";
-		autoCode[4] = timeDrive + ";" + "1.0" + ";" + "2.0";
-		autoCode[5] = shoot + ";" + "15.0";
+		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";"
+				+ AutoConstants.SIDE_PEG_DISTANCE_TWO + ";" + "0.00";
+		autoCode[3] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_SHORT;
+		autoCode[4] = fastDriveStraight + ";" + AutoConstants.DRIVE_BOILER_SPEED + ";"
+				+ AutoConstants.BOILER_BACK_AWAY_PEG + ";" + "0.00";
+		autoCode[5] = turn + ";" + AutoConstants.SIDE_PEG_TO_BOILER_ANGLE_RED;
+		autoCode[6] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SIDE_BOILER_TIME;
+		autoCode[7] = shoot + ";" + "15";
 		return autoCode;
 	}
 
-	public String[] middleGearToBoilerRed(){
+	public String[] middleGearToBoilerRed() {
 		String[] autoCode = new String[8];
-		autoCode[0] = timeDrive + ";" + "1.0" + ";" + "0.7";
-		autoCode[1] = timeDrive + ";" + "0.6" + ";" + "0.3";
-		autoCode[2] = wait + ";" + "2.5";
-		autoCode[3] = fastDriveStraight + ";" + "0.6" + ";" + "-15.0" + ";" + "0.0";
-		autoCode[4] = turn + ";" + "105.0";
+		autoCode[0] = timeDrive + ";" + AutoConstants.MIDDLE_BOILER_FAST_SPEED + ";" + AutoConstants.MIDDLE_BOILER_FAST_TIME;
+		autoCode[1] = timeDrive + ";" + AutoConstants.MIDDLE_BOILER_SLOW_SPEED + ";" + AutoConstants.MIDDLE_BOILER_SLOW_TIME;
+		autoCode[2] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_SHORT;
+		autoCode[3] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.MIDDLE_BOILER_BACK_UP + ";" + "0.0";
+		autoCode[4] = turn + ";" + AutoConstants.MIDDLE_BOILER_ANGLE_RED;
 		autoCode[5] = spinUp + ";" + "NULL";
-		autoCode[6] = timeDrive + ";" + "1.0" + ";" + "2.0";
+		autoCode[6] = timeDrive + ";" + "1.0" + ";" + AutoConstants.MIDDLE_BOILER_FINAL_DRIVE;
 		autoCode[7] = shoot + ";" + "15.0";
 		return autoCode;
 	}
 
-//	public String[] middleGearToBoilerRed(){
-//		String[] autoCode = new String[6];
-//		autoCode[0] = timeDrive + ";" + "0.6" + ";" + "2.0";
-//		autoCode[1] = wait + ";" + "2.5";
-//		autoCode[2] = fastDriveStraight + ";" + "0.6" + ";" + "-15.0" + ";" + "0.0";
-//		autoCode[3] = turn + ";" + "110.0";
-//		autoCode[4] = timeDrive + ";" + "1.0" + ";" + "2.0";
-//		autoCode[5] = shoot + ";" + "15.0";
-//		return autoCode;
-//	}
+	public String[] middleGearToBoilerBlue() {
+		String[] autoCode = new String[8];
+		autoCode[0] = timeDrive + ";" + AutoConstants.MIDDLE_BOILER_FAST_SPEED + ";" + AutoConstants.MIDDLE_BOILER_FAST_TIME;
+		autoCode[1] = timeDrive + ";" + AutoConstants.MIDDLE_BOILER_SLOW_SPEED + ";" + AutoConstants.MIDDLE_BOILER_SLOW_TIME;
+		autoCode[2] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_SHORT;
+		autoCode[3] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.MIDDLE_BOILER_BACK_UP + ";" + "0.0";
+		autoCode[4] = turn + ";" + AutoConstants.MIDDLE_BOILER_ANGLE_BLUE;
+		autoCode[5] = spinUp + ";" + "NULL";
+		autoCode[6] = timeDrive + ";" + "1.0" + ";" + AutoConstants.MIDDLE_BOILER_FINAL_DRIVE;
+		autoCode[7] = shoot + ";" + "15.0";
+		return autoCode;
+	}
 
 	public String[] hopperToBoilerRed() {
-		String[] autoCode = new String[14];
-		autoCode[0] = timeDrive + ";" + "1.0" + ";" + "0.85"; //0.7
-		autoCode[1] = timeDrive + ";" + "-0.5" + ";" + "0.2";
-		autoCode[2] = turn + ";" + "40.0";
-//		autoCode[2] = fastDriveStraight + ";" + "0.35" + ";" + "25.0" + ";" + "33.0";
-		autoCode[3] = timeDrive + ";" + "0.5" + ";" + "0.7";
-		autoCode[4] = wait + ";" + "1.5";
-		autoCode[5] = timeDrive + ";" + "-1.0" + ";" + "0.15";
-		autoCode[6] = timeDrive + ";" + "-0.5" + ";" + "0.2";
-		autoCode[7] = turn + ";" + "90.0";
-//		autoCode[7] = fastDriveStraight + ";" + "0.35" + ";" + "30.0" + ";" + "30.0";
-		autoCode[8] = spinUp + ";" + "NULL";
-		autoCode[9] = timeDrive + ";" + "1.0" + ";" + "0.5";
-		autoCode[10] = timeDrive + ";" + "0.0" + ";" + "0.25";
-		autoCode[11] = lowGear + ";" + "NULL";
-		autoCode[12] = timeDrive + ";" + "1.0" + ";" + "1.0";
-		autoCode[13] = shoot + ";" + "15";
+		String[] autoCode = new String[12];
+		autoCode[0] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SLAM_DRIVE_ONE;
+		autoCode[1] = timeDrive + ";" + "-0.5" + ";" + "0.2";	//FASTER WAY TO STOP
+		autoCode[2] = timeDrive + ";" + "0.80" + ";" + AutoConstants.SLAM_DRIVE_TWO;
+		autoCode[3] = wait + ";" + AutoConstants.SLAM_HOPPER_WAIT;
+		autoCode[4] = timeDrive + ";" + "-1.0" + ";" + AutoConstants.SLAM_BACK_UP;
+		autoCode[5] = turn + ";" + AutoConstants.SLAM_ANGLE_RED;
+		autoCode[6] = spinUp + ";" + "NULL";
+		autoCode[7] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SLAM_DRIVE_THREE;
+		autoCode[8] = lowGear + ";" + "NULL";
+		autoCode[9] = shoot + ";" + "0.0";	
+		autoCode[10] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SLAM_DRIVE_FOUR;
+		autoCode[11] = shoot + ";" + "15";	
 		return autoCode;
 	}
 
 	public String[] hopperToBoilerBlue() {
-		String[] autoCode = new String[14];
-		autoCode[0] = timeDrive + ";" + "1.0" + ";" + "0.85"; // 0.7
-		autoCode[1] = timeDrive + ";" + "-0.5" + ";" + "0.2";
-		autoCode[2] = turn + ";" + AutoConstants.TURN_SPEED + ";" + "-40.0";
-// 		autoCode[2] = fastDriveStraight + ";" + "0.35" + ";" + "25.0" + ";" + "-33.0";
-		autoCode[3] = timeDrive + ";" + "0.5" + ";" + "0.7";
-		autoCode[4] = wait + ";" + "1.5";
-		autoCode[5] = timeDrive + ";" + "-1.0" + ";" + "0.15";
-		autoCode[6] = timeDrive + ";" + "-0.5" + ";" + "0.2";
-		autoCode[7] = turn + ";" + AutoConstants.TURN_SPEED + ";" + "-90.0";
-//		autoCode[7] = fastDriveStraight + ";" + "0.35" + ";" + "30.0" + ";" + "-30.0";
-		autoCode[8] = spinUp + ";" + "NULL";
-		autoCode[9] = timeDrive + ";" + "1.0" + ";" + "0.5";
-		autoCode[10] = timeDrive + ";" + "0.0" + ";" + "0.25";
-		autoCode[11] = lowGear + ";" + "NULL";
-		autoCode[12] = timeDrive + ";" + "1.0" + ";" + "1.0";
-		autoCode[13] = shoot + ";" + "15";
+		String[] autoCode = new String[12];
+		autoCode[0] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SLAM_DRIVE_ONE;
+		autoCode[1] = timeDrive + ";" + "-0.5" + ";" + "0.2";	//FASTER WAY TO STOP
+		autoCode[2] = timeDrive + ";" + "0.80" + ";" + AutoConstants.SLAM_DRIVE_TWO;
+		autoCode[3] = wait + ";" + AutoConstants.SLAM_HOPPER_WAIT;
+		autoCode[4] = timeDrive + ";" + "-1.0" + ";" + AutoConstants.SLAM_BACK_UP;
+		autoCode[5] = turn + ";" + AutoConstants.SLAM_ANGLE_BLUE;
+		autoCode[6] = spinUp + ";" + "NULL";
+		autoCode[7] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SLAM_DRIVE_THREE;
+		autoCode[8] = lowGear + ";" + "NULL";
+		autoCode[9] = shoot + ";" + "0.0";	
+		autoCode[10] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SLAM_DRIVE_FOUR;
+		autoCode[11] = shoot + ";" + "15";	
+		return autoCode;
+	}
+	
+	//FOR TESTING PURPOSES
+	public String[] testTurningLeft60() {
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "-60.0";
 		return autoCode;
 	}
 
-	//ARC TURNING 40kPa
-//	public String[] hopperToBoilerBlue() {
-//		String[] autoCode = new String[1];
-//		autoCode[0] = arcTurn + ";" + "0.65" + ";" + "48.0" + ";" + "90.0" + ";" + "false";
-//		return autoCode;
-//	}
-//
-//	public String[] hopperToBoilerRed() {
-//		String[] autoCode = new String[1];
-//		autoCode[0] = arcTurn + ";" + "0.65" + ";" + "48.0" + ";" + "90.0" + ";" + "true";
-//		return autoCode;
-//	}
+	public String[] testTurningRight60() {
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "60.0";
+		return autoCode;
+	}
+
+	public String[] testTurningLeft90() {
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "-90.0";
+		return autoCode;
+	}
+
+	public String[] testTurningRight90() {
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "90.0";
+		return autoCode;
+	}
+
+	public String[] testTurningLeft105() {
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "-105.0";
+		return autoCode;
+	}
+
+	public String[] testTurningRight105() {
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "105.0";
+		return autoCode;
+	}
+
+	public String[] testTurningLeft170() {
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "-170.0";
+		return autoCode;
+	}
+
+	public String[] testTurningRight170() {
+		String[] autoCode = new String[1];
+		autoCode[0] = turn + ";" + "170.0";
+		return autoCode;
+	}
+
+
+	// ARC TURNING 40kPa
+	// public String[] hopperToBoilerBlue() {
+	// String[] autoCode = new String[1];
+	// autoCode[0] = arcTurn + ";" + "0.65" + ";" + "48.0" + ";" + "90.0" + ";"
+	// + "false";
+	// return autoCode;
+	// }
+	//
+	// public String[] hopperToBoilerRed() {
+	// String[] autoCode = new String[1];
+	// autoCode[0] = arcTurn + ";" + "0.65" + ";" + "48.0" + ";" + "90.0" + ";"
+	// + "true";
+	// return autoCode;
+	// }
 }
