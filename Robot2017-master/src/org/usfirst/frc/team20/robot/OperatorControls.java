@@ -35,15 +35,7 @@ public class OperatorControls {
 		if (operatorJoy.getButtonA()) {
 			collector.outtake(1.0);
 		}
-		// if (operatorJoy.getButtonDRight()) { //TODO make sure you uncomment
-		// this for the comp bot
-		// gear.gearFlapIn();
-		// }
-		// if (operatorJoy.getButtonDLeft()) {
-		// gear.gearFlapOut();
-		// }
-		if (operatorJoy.getButtonDRight()) { // TODO make sure you delete this
-												// for champs
+		if (operatorJoy.getButtonDRight()) {
 			carlos.extend();
 		}
 		if (operatorJoy.getButtonDLeft()) {
@@ -75,7 +67,7 @@ public class OperatorControls {
 		if (operatorJoy.getRightTriggerAxis() > 0) {
 			if (flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)) {
 				collector.intake(1.0);
-				tank.tankMotorIntoFlywheel(0.4);
+				tank.tankMotorIntoFlywheel(0.3);	//0.4
 			}
 			shooting = true;
 		}

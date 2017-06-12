@@ -21,8 +21,8 @@ public class AutoConstants {
 	public static final String SIDE_PEG_DISTANCE_TWO = "50.0";
 	public static final String PEG_BACK_AWAY_PEG = "-30.0";
 	public static final String NEUTRAL_ZONE_DISTANCE = "200.0";
-	public static final String RIGHT_PEG_ANGLE = "-60.0";
-	public static final String LEFT_PEG_ANGLE = "60.0";
+	public static final String RIGHT_PEG_ANGLE = "-80.0";
+	public static final String LEFT_PEG_ANGLE = "80.0";
 		
 	//Side Peg to Boiler Autos
 	public static final String BOILER_BACK_AWAY_PEG = "-20.0";
@@ -33,13 +33,14 @@ public class AutoConstants {
 	public static final String GEAR_WAIT_TIME_SHORT = "2.5";
 	
 	//Middle Peg to Boiler Autos
-	public static final String MIDDLE_BOILER_ANGLE_RED = "113.0";
-	public static final String MIDDLE_BOILER_ANGLE_BLUE = "-113.0";
 	public static final String MIDDLE_BOILER_FAST_SPEED = "1.0";
-	public static final String MIDDLE_BOILER_SLOW_SPEED = "0.4";	
+	public static final String MIDDLE_BOILER_SLOW_SPEED = "0.4";
 	public static final String MIDDLE_BOILER_FAST_TIME = "0.55";
-	public static final String MIDDLE_BOILER_SLOW_TIME = "1.1";
-	public static final String MIDDLE_BOILER_BACK_UP = "-15.0";
+	public static final String MIDDLE_BOILER_SLOW_TIME = "2.6";
+	public static final String MIDDLE_BOILER_GEAR_WAIT = "0.25";	//1d.5, that's a double, right?
+	public static final String MIDDLE_BOILER_BACK_UP = "-12.0";
+	public static final String MIDDLE_BOILER_ANGLE_RED = "110.0";
+	public static final String MIDDLE_BOILER_ANGLE_BLUE = "-110.0";
 	public static final String MIDDLE_BOILER_FINAL_DRIVE = "2.0";
 
 	//Slam Slam Autos

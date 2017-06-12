@@ -8,7 +8,7 @@ public class GearMechanism {
 	OperatorControls operator;
 
 	public GearMechanism(FlyWheel f, OperatorControls o) {
-//		gearFlap = new DoubleSolenoid(Constants.GEAR_EXTEND_PORT, Constants.GEAR_RETRACT_PORT);
+		gearFlap = new DoubleSolenoid(Constants.GEAR_EXTEND_PORT, Constants.GEAR_RETRACT_PORT);
 		flywheel = f;
 		operator = o;
 	}

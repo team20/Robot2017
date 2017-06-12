@@ -40,37 +40,7 @@ public class FuelTank {
 		agitatorPistons.set(DoubleSolenoid.Value.kForward);
 	}
 	public void runAgitator(){
-//		double currentMatchTime = station.getMatchTime();
-//		if(initialMatchTime < 0){
-//			initialMatchTime = currentMatchTime;
-//		}
-//		System.out.println(initialMatchTime + "              " + currentMatchTime);
-//		if(initialMatchTime - 0.25 < currentMatchTime){
-//			System.out.println("In the If");
-//			retractAgitator();
-//		}else{
-//			if(initialMatchTime - 0.4 > currentMatchTime){
-//				initialMatchTime = currentMatchTime;
-//			}
-//			actuateAgitator();
-//		}
 		counter++;
-//		if(counter%20 == 0){
-//			if(out){
-//				retractAgitator();
-//				out = !out;
-//			}else{
-//				actuateAgitator();
-//				out = !out;
-//				
-//			}
-//		}
-//		if(counter%30 == 0 && counter % 10 == 0){
-//			retractAgitator();
-//		}else if(counter % 7 == 0){
-//			actuateAgitator();
-//		}
-		
 		if(counter==14){
 			actuateAgitator();
 		}else if(counter >= 42){

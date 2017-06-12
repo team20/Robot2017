@@ -34,20 +34,11 @@ public class Robot extends IterativeRobot {
 	AHRS gyro = new AHRS(SerialPort.Port.kMXP); // DO NOT PUT IN ROBOT INIT
 	RocketScript getNewScript;
 	String[] rocketScriptData;
-	int rocketScriptCurrentCount, rocketScriptLength = 0;
-	int startingENCClicks;
-	int autoModeSubStep = 0;
-	double rotateToAngleRate, currentRotationRate;
-	double startTime;
+	int rocketScriptCurrentCount, rocketScriptLength = 0, startingENCClicks, autoModeSubStep = 0;
+	double rotateToAngleRate, currentRotationRate, startTime;
 	double nominalVoltage = Constants.NOMINAL_VOLTAGE;
-	boolean shooting = false;
-	boolean resetGyro = false;
-	boolean setStartTime = false;
-	boolean waitStartTime = false;
-	boolean setStartTimeFlywheel = false;
-	boolean gotStartingENCClicks = false;
-	boolean setStartTimeShoot = false;
-	boolean resetGyroTurn = false;
+	boolean shooting = false, resetGyro = false, setStartTime = false, waitStartTime = false, setStartTimeFlywheel = false, 
+			gotStartingENCClicks = false, setStartTimeShoot = false, resetGyroTurn = false;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -64,18 +55,19 @@ public class Robot extends IterativeRobot {
 		climb = new Climber();
 		drive = new DriveTrain();
 		carlos = new GearPickup();
-		driver = new DriverControls(drive, climb);
+		//driver = new DriverControls(drive, climb);
 		operator = new OperatorControls(tank, gear, flywheel, collector, carlos);
 		arc = new CircleArcs();
 		getNewScript = new RocketScript();
-		// alex = new AlexDrive(drive, climb);
+		alex = new AlexDrive(drive, climb);
 		// tsar = new TsarControls(drive, climb, tank, gear, flywheel, collector);
-
+		
 		// cam = new DriverVision("cam0", 0);
 		// cam.startUSBCamera();
 
 		compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
+		
 		drive.shiftHigh();
 		flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
 
@@ -98,7 +90,7 @@ public class Robot extends IterativeRobot {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 
-	public void autonomousInit() { // TODO uncomment gear flap stuff
+	public void autonomousInit() {
 		drive.masterLeft.setVoltageRampRate(60);
 		drive.masterRight.setVoltageRampRate(60);
 		gyro.reset();
@@ -106,100 +98,111 @@ public class Robot extends IterativeRobot {
 		drive.masterLeft.enable();
 		autoModeSubStep = 0;
 		rocketScriptCurrentCount = 0;
-		// gear.gearFlapOut();
-//		rocketScriptData = getNewScript.testTurningRight60();
-//		rocketScriptData = getNewScript.testTurningRight90();
-//		rocketScriptData = getNewScript.testTurningRight105();
-//		rocketScriptData = getNewScript.testTurningRight170();
-//		rocketScriptData = getNewScript.testTurningLeft60();
-//		rocketScriptData = getNewScript.testTurningLeft90();
-//		rocketScriptData = getNewScript.testTurningLeft105();
-//		rocketScriptData = getNewScript.testTurningLeft170();
-//		rocketScriptLength = rocketScriptData.length;			//REMEMBER TO UNCOMMENT THIS WHEN TESTING
+		gear.gearFlapOut();
+		// rocketScriptData = getNewScript.testTurningRight60();
+		// rocketScriptData = getNewScript.testTurningRight90();
+		// rocketScriptData = getNewScript.testTurningRight105();
+		// rocketScriptData = getNewScript.testTurningRight170();
+		// rocketScriptData = getNewScript.testTurningLeft60();
+		// rocketScriptData = getNewScript.testTurningLeft90();
+		// rocketScriptData = getNewScript.testTurningLeft105();
+		// rocketScriptData = getNewScript.testTurningLeft170();
+		// rocketScriptLength = rocketScriptData.length; //REMEMBER TO UNCOMMENT
+		// THIS WHEN TESTING
 		boolean button1 = SmartDashboard.getBoolean("DB/Button 0", false);
 		boolean button2 = SmartDashboard.getBoolean("DB/Button 1", false);
 		boolean button3 = SmartDashboard.getBoolean("DB/Button 2", false);
 		boolean button4 = SmartDashboard.getBoolean("DB/Button 3", false);
 		double neutralZone = SmartDashboard.getNumber("DB/Slider 0", 0.0);
 		if (button1) {
-			if (button2 && !button3 && !button4 && neutralZone == 0.0) { // middle peg
+			if (button2 && !button3 && !button4 && neutralZone == 0.0) { // middle
+																			// peg
 				rocketScriptData = getNewScript.middleGearNeutralZoneRed();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
-			} else if (button2 && !button3 && !button4 && neutralZone != 0.0){
+				gear.gearFlapOut();
+			} else if (button2 && !button3 && !button4 && neutralZone != 0.0) {
 				rocketScriptData = getNewScript.middleGear();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
-			} else if (!button2 && button3 && !button4 && neutralZone == 0.0) { // right peg
+				gear.gearFlapOut();
+			} else if (!button2 && button3 && !button4 && neutralZone == 0.0) { // right
+																				// peg
 				rocketScriptData = getNewScript.rightGearNeutralZone();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
-			} else if (!button2 && button3 && !button4 && neutralZone != 0.0){
+				gear.gearFlapOut();
+			} else if (!button2 && button3 && !button4 && neutralZone != 0.0) {
 				rocketScriptData = getNewScript.rightGear();
-				rocketScriptLength = rocketScriptData.length;				
-				// gear.gearFlapOut();
-			} else if (!button2 && !button3 && button4 && neutralZone == 0.0) { // left peg
+				rocketScriptLength = rocketScriptData.length;
+				gear.gearFlapOut();
+			} else if (!button2 && !button3 && button4 && neutralZone == 0.0) { // left
+																				// peg
 				rocketScriptData = getNewScript.leftGearNeutralZone();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
-			} else if (!button2 && !button3 && button4 && neutralZone != 0.0){
+				gear.gearFlapOut();
+			} else if (!button2 && !button3 && button4 && neutralZone != 0.0) {
 				rocketScriptData = getNewScript.leftGear();
-				rocketScriptLength = rocketScriptData.length;				
-				// gear.gearFlapOut();
+				rocketScriptLength = rocketScriptData.length;
+				gear.gearFlapOut();
 			} else if (button2 && button3 && !button4) { // side peg to boiler
 				rocketScriptData = getNewScript.rightGearToBoilerRed();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
+				gear.gearFlapOut();
 			} else if (!button2 && button3 && button4) { // 40kPa
 				rocketScriptData = getNewScript.hopperToBoilerRed();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapIn();
+				gear.gearFlapIn();
 			} else if (button2 && !button3 && button4) { // 10kPa
 				rocketScriptData = getNewScript.stayAtBoilerAndShoot();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapIn();
+				gear.gearFlapIn();
 			} else if (button2 && button3 && button4) {
 				rocketScriptData = getNewScript.middleGearToBoilerRed();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
+				gear.gearFlapOut();
 			}
 		} else {
-			if (button2 && !button3 && !button4 && neutralZone == 0.0) { // middle peg
+			if (button2 && !button3 && !button4 && neutralZone == 0.0) { // middle
+																			// peg
 				rocketScriptData = getNewScript.middleGearNeutralZoneBlue();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
-			} else if (button2 && !button3 && !button4 && neutralZone != 0.0){
+				gear.gearFlapOut();
+			} else if (button2 && !button3 && !button4 && neutralZone != 0.0) {
 				rocketScriptData = getNewScript.middleGear();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
-			} else if (!button2 && button3 && !button4 && neutralZone == 0.0) { // right peg
+				gear.gearFlapOut();
+			} else if (!button2 && button3 && !button4 && neutralZone == 0.0) { // right
+																				// peg
 				rocketScriptData = getNewScript.rightGearNeutralZone();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
-			} else if (!button2 && button3 && !button4 && neutralZone != 0.0){
+				gear.gearFlapOut();
+			} else if (!button2 && button3 && !button4 && neutralZone != 0.0) {
 				rocketScriptData = getNewScript.rightGear();
-				rocketScriptLength = rocketScriptData.length;				
-				// gear.gearFlapOut();
-			} else if (!button2 && !button3 && button4 && neutralZone == 0.0) { // left peg
+				rocketScriptLength = rocketScriptData.length;
+				gear.gearFlapOut();
+			} else if (!button2 && !button3 && button4 && neutralZone == 0.0) { // left
+																				// peg
 				rocketScriptData = getNewScript.leftGearNeutralZone();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
-			} else if (!button2 && !button3 && button4 && neutralZone != 0.0){
+				gear.gearFlapOut();
+			} else if (!button2 && !button3 && button4 && neutralZone != 0.0) {
 				rocketScriptData = getNewScript.leftGear();
-				rocketScriptLength = rocketScriptData.length;				
-				// gear.gearFlapOut();
+				rocketScriptLength = rocketScriptData.length;
+				gear.gearFlapOut();
+			} else if (button2 && !button3 && button4) { // 10kPa
+				rocketScriptData = getNewScript.stayAtBoilerAndShoot();
+				rocketScriptLength = rocketScriptData.length;
+				gear.gearFlapIn();
 			} else if (button2 && button3 && !button4) { // side peg to boiler
 				rocketScriptData = getNewScript.leftGearToBoilerBlue();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
+				gear.gearFlapOut();
 			} else if (!button2 && button3 && button4) { // 40kPa
 				rocketScriptData = getNewScript.hopperToBoilerBlue();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapIn();
+				gear.gearFlapIn();
 			} else if (button2 && button3 && button4) {
 				rocketScriptData = getNewScript.middleGearToBoilerBlue();
 				rocketScriptLength = rocketScriptData.length;
-				// gear.gearFlapOut();
+				gear.gearFlapOut();
 			}
 		}
 	}
@@ -210,8 +213,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-//		double speed = Double.parseDouble(SmartDashboard.getString("DB/String 0"));
-//		drive.turnLeft(speed);
+		// double speed = Double.parseDouble(SmartDashboard.getString("DB/String
+		// 0"));
+		// drive.turnLeft(speed);
 		if (rocketScriptCurrentCount < rocketScriptLength) {
 			String[] values = rocketScriptData[rocketScriptCurrentCount].split(";");
 			if (Integer.parseInt(values[0]) == RobotModes.FAST_DRIVE_STRAIGHT) {
@@ -225,15 +229,15 @@ public class Robot extends IterativeRobot {
 			if (Integer.parseInt(values[0]) == RobotModes.SHOOTING) {
 				flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
 				System.out.println("Flywheel RPMS " + flywheel.flywheelSpeed());
-//				if (!setStartTimeShoot) {
-//					startTime = Timer.getFPGATimestamp();
-//					setStartTimeShoot = true;
-//				}
-//				if (Timer.getFPGATimestamp() - startTime > 0.8) {
-					collector.intake(1);
-					tank.tankMotorIntoFlywheel(0.4);
-					shooting = true;
-//				}
+				// if (!setStartTimeShoot) {
+				// startTime = Timer.getFPGATimestamp();
+				// setStartTimeShoot = true;
+				// }
+				// if (Timer.getFPGATimestamp() - startTime > 0.8) {
+				collector.intake(1);
+				tank.tankMotorIntoFlywheel(0.4);
+				shooting = true;
+				// }
 				if (shooting) {
 					tank.runAgitator();
 					System.out.println("***************Running Agitator");
@@ -281,6 +285,10 @@ public class Robot extends IterativeRobot {
 				drive.shiftLow();
 				rocketScriptCurrentCount++;
 			}
+			if (Integer.parseInt(values[0]) == RobotModes.HIGH_GEAR) {
+				drive.shiftHigh();
+				rocketScriptCurrentCount++;
+			}
 			if (Integer.parseInt(values[0]) == RobotModes.ARC_TURN) {
 				if (fastDriveArc(Double.parseDouble(values[1]), Double.parseDouble(values[2]),
 						Double.parseDouble(values[3]), Boolean.parseBoolean(values[4]))) {
@@ -288,7 +296,7 @@ public class Robot extends IterativeRobot {
 				}
 			}
 			if (Integer.parseInt(values[0]) == RobotModes.TURN) {
-				System.out.println("Turning");
+				System.out.println("******************************** " + gyro.getAngle());
 				if (turn(Double.parseDouble(values[1]))) {
 					setStartTime = false;
 					resetGyroTurn = false;
@@ -300,7 +308,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		//gear.gearFlapOut();
+		gear.gearFlapOut();
 		flywheel.stopFlywheel();
 		collector.stopCollector();
 		shooting = false;
@@ -318,18 +326,24 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		driver.driverControls();
+//		String speed = SmartDashboard.getString("DB/String 0", "4700");
+//		Constants.FLYWHEEL_SPEED = Double.parseDouble(speed);
+//		String f = SmartDashboard.getString("DB/String 1", "0.027");
+//		Constants.FLYWHEEL_F = Double.parseDouble(speed);
+		//driver.driverControls();
 		operator.operatorControls();
 		// tsar.tsarControls();
-		//alex.AlexControls();
+		alex.AlexControls();
 		SmartDashboard.putString("DB/String 0", "Flywheel Speed");
 		SmartDashboard.putString("DB/String 1", "Flywheel Ready?");
 		SmartDashboard.putString("DB/String 2", "High Gear?");
 		SmartDashboard.putString("DB/String 3", "Collector Jam?");
+		SmartDashboard.putString("DB/String 4", "Carlos Up?");
 		SmartDashboard.putString("DB/String 5", Double.toString(flywheel.flywheelSpeed()));
 		SmartDashboard.putString("DB/String 6", Boolean.toString(flywheel.flywheelReady(Constants.FLYWHEEL_SPEED)));
 		SmartDashboard.putString("DB/String 7", Boolean.toString(drive.highGear));
 		SmartDashboard.putString("DB/String 8", Boolean.toString(collector.collectorJam()));
+		SmartDashboard.putString("DB/String 9", Boolean.toString(carlos.up));
 	}
 
 	/**
@@ -357,15 +371,18 @@ public class Robot extends IterativeRobot {
 		if (!resetGyroTurn) {
 			gyro.reset();
 			resetGyroTurn = true;
+			nominalVoltage = Constants.NOMINAL_VOLTAGE;
 		}
 		if (Math.abs(gyro.getAngle() - angleToDrive) < Constants.TURNING_DEADBAND) {
 			System.out.println("*************************************HIT TURNING DEADBAND");
 			if (!setStartTime) {
 				startTime = Timer.getFPGATimestamp();
 				setStartTime = true;
+				nominalVoltage = Constants.NOMINAL_VOLTAGE;
 			}
-			if (Timer.getFPGATimestamp() - startTime > 0.3) {
+			if (Timer.getFPGATimestamp() - startTime > 0.5) {
 				System.out.println("#######################################################HIT TUNE TIME");
+				nominalVoltage = 0;
 				if (Math.abs(gyro.getAngle() - angleToDrive) < Constants.TURNING_DEADBAND) {
 					System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&done turning");
 					drive.stopDrive();
@@ -382,9 +399,9 @@ public class Robot extends IterativeRobot {
 
 	public void arcadeTurn(double rotateValue) {
 		double leftMotorSpeed, rightMotorSpeed;
-		if(rotateValue > 1.0){
+		if (rotateValue > 1.0) {
 			rotateValue = 1.0;
-		} else if (rotateValue < -1.0){
+		} else if (rotateValue < -1.0) {
 			rotateValue = -1.0;
 		}
 		if (rotateValue >= 0.0) {
@@ -399,23 +416,23 @@ public class Robot extends IterativeRobot {
 			leftMotorSpeed = -rotateValue;
 			rightMotorSpeed = 0.0;
 		}
-		if(leftMotorSpeed > 1.0){
+		if (leftMotorSpeed > 1.0) {
 			leftMotorSpeed = 1.0;
-		} else if (leftMotorSpeed < -1.0){
+		} else if (leftMotorSpeed < -1.0) {
 			leftMotorSpeed = -1.0;
-		} else if (Math.abs(leftMotorSpeed) < Constants.NOMINAL_VOLTAGE){
-			if (leftMotorSpeed > 0.0){
+		} else if (Math.abs(leftMotorSpeed) < Constants.NOMINAL_VOLTAGE) {
+			if (leftMotorSpeed > 0.0) {
 				leftMotorSpeed = nominalVoltage;
 			} else {
 				leftMotorSpeed = -nominalVoltage;
 			}
 		}
-		if(rightMotorSpeed > 1.0){
+		if (rightMotorSpeed > 1.0) {
 			rightMotorSpeed = 1.0;
-		} else if (rightMotorSpeed < -1.0){
+		} else if (rightMotorSpeed < -1.0) {
 			rightMotorSpeed = -1.0;
-		} else if (Math.abs(rightMotorSpeed) < Constants.NOMINAL_VOLTAGE){
-			if (rightMotorSpeed > 0.0){
+		} else if (Math.abs(rightMotorSpeed) < Constants.NOMINAL_VOLTAGE) {
+			if (rightMotorSpeed > 0.0) {
 				rightMotorSpeed = nominalVoltage;
 			} else {
 				rightMotorSpeed = -nominalVoltage;
@@ -465,8 +482,8 @@ public class Robot extends IterativeRobot {
 			return true;
 		} else {
 			if (inches > 0) {
-				if (Math.abs((double) (drive.masterLeft.getEncPosition() - startingENCClicks)) < 
-						Math.abs(inches * AutoConstants.TICKS_PER_INCH))
+				if (Math.abs((double) (drive.masterLeft.getEncPosition() - startingENCClicks)) < Math
+						.abs(inches * AutoConstants.TICKS_PER_INCH))
 					myDrive.arcadeDrive(speed, -((gyro.getAngle() - angleToDrive) * Constants.DRIVING_P)); // .07
 			} else {
 				myDrive.arcadeDrive(-speed, -((gyro.getAngle() - angleToDrive) * Constants.DRIVING_P)); // .07

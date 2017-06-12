@@ -1,6 +1,8 @@
 //Author: Roland Rao
 package org.usfirst.frc.team20.robot;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class AlexDrive {
 
 	Controller alexJoy;
@@ -43,11 +45,12 @@ public class AlexDrive {
 		}
 		if(alexJoy.getButtonB()){
 			drive.shiftLow();
+			Timer.delay(0.01);
 		}
 		if(alexJoy.getButtonX()){
 			climb.climb(1);
-		}
-		if(climb.climberMaster.getOutputCurrent()>50 || climb.climberFollower.getOutputCurrent()>50){
+		}		
+		if (climb.climberMaster.getOutputCurrent() > 50 || climb.climberFollower.getOutputCurrent() > 50) {
 			climb.stopClimbing();
 		}
 		if(alexJoy.getButtonA()){

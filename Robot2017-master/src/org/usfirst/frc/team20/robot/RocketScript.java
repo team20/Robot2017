@@ -2,15 +2,16 @@
 package org.usfirst.frc.team20.robot;
 
 public class RocketScript {
-	String turn = "1";
+	String turn = "1";	//angle
 	String arcTurn = "2"; // speed, radius of circle, turn angle, right?
-	String fastDriveStraight = "3";
-	String timeDrive = "4";
-	String shoot = "5";
-	String stopShooting = "6";
-	String wait = "7";
-	String spinUp = "8";
-	String lowGear = "9";
+	String fastDriveStraight = "3";//speed, distance, angle
+	String timeDrive = "4";	//speed, time drive for
+	String shoot = "5";	//none
+	String stopShooting = "6";	//none
+	String wait = "7";	//length of wait
+	String spinUp = "8";	//spins the fly wheel up to speed without shooting
+	String lowGear = "9";	//shifts the drive train into low gear
+	String highGear = "10";
 
 	public String[] middleGear() {
 		String[] autoCode = new String[1];
@@ -95,7 +96,7 @@ public class RocketScript {
 		String[] autoCode = new String[3];
 		autoCode[0] = shoot + ";" + "8.0";
 		autoCode[1] = stopShooting + ";" + "NULL";
-		autoCode[2] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + "-80.0" + ";" + "0.0";
+		autoCode[2] = timeDrive + ";" + "-0.65" + ";" + "3.0";
 		return autoCode;
 	}
 
@@ -132,28 +133,36 @@ public class RocketScript {
 	}
 
 	public String[] middleGearToBoilerRed() {
-		String[] autoCode = new String[8];
+		String[] autoCode = new String[12];
 		autoCode[0] = timeDrive + ";" + AutoConstants.MIDDLE_BOILER_FAST_SPEED + ";" + AutoConstants.MIDDLE_BOILER_FAST_TIME;
 		autoCode[1] = timeDrive + ";" + AutoConstants.MIDDLE_BOILER_SLOW_SPEED + ";" + AutoConstants.MIDDLE_BOILER_SLOW_TIME;
 		autoCode[2] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_SHORT;
 		autoCode[3] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.MIDDLE_BOILER_BACK_UP + ";" + "0.0";
-		autoCode[4] = turn + ";" + AutoConstants.MIDDLE_BOILER_ANGLE_RED;
-		autoCode[5] = spinUp + ";" + "NULL";
-		autoCode[6] = timeDrive + ";" + "1.0" + ";" + AutoConstants.MIDDLE_BOILER_FINAL_DRIVE;
-		autoCode[7] = shoot + ";" + "15.0";
+		autoCode[4] = lowGear;
+		autoCode[5] = wait + ";" + "0.25";
+		autoCode[6] = turn + ";" + AutoConstants.MIDDLE_BOILER_ANGLE_RED;
+		autoCode[7] = highGear;
+		autoCode[8] = timeDrive + ";" + "0.25" + ";" + "0.25";
+		autoCode[9] = spinUp + ";" + "NULL";
+		autoCode[10] = timeDrive + ";" + "1.0" + ";" + AutoConstants.MIDDLE_BOILER_FINAL_DRIVE;
+		autoCode[11] = shoot + ";" + "15.0";
 		return autoCode;
 	}
 
 	public String[] middleGearToBoilerBlue() {
-		String[] autoCode = new String[8];
+		String[] autoCode = new String[12];
 		autoCode[0] = timeDrive + ";" + AutoConstants.MIDDLE_BOILER_FAST_SPEED + ";" + AutoConstants.MIDDLE_BOILER_FAST_TIME;
 		autoCode[1] = timeDrive + ";" + AutoConstants.MIDDLE_BOILER_SLOW_SPEED + ";" + AutoConstants.MIDDLE_BOILER_SLOW_TIME;
 		autoCode[2] = wait + ";" + AutoConstants.GEAR_WAIT_TIME_SHORT;
 		autoCode[3] = fastDriveStraight + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.MIDDLE_BOILER_BACK_UP + ";" + "0.0";
-		autoCode[4] = turn + ";" + AutoConstants.MIDDLE_BOILER_ANGLE_BLUE;
-		autoCode[5] = spinUp + ";" + "NULL";
-		autoCode[6] = timeDrive + ";" + "1.0" + ";" + AutoConstants.MIDDLE_BOILER_FINAL_DRIVE;
-		autoCode[7] = shoot + ";" + "15.0";
+		autoCode[4] = lowGear;
+		autoCode[5] = wait + ";" + "0.25";
+		autoCode[6] = turn + ";" + AutoConstants.MIDDLE_BOILER_ANGLE_BLUE;
+		autoCode[7] = highGear;
+		autoCode[8] = timeDrive + ";" + "0.25" + ";" + "0.25";
+		autoCode[9] = spinUp + ";" + "NULL";
+		autoCode[10] = timeDrive + ";" + "1.0" + ";" + AutoConstants.MIDDLE_BOILER_FINAL_DRIVE;
+		autoCode[11] = shoot + ";" + "15.0";
 		return autoCode;
 	}
 
@@ -162,7 +171,7 @@ public class RocketScript {
 		autoCode[0] = timeDrive + ";" + "1.0" + ";" + AutoConstants.SLAM_DRIVE_ONE;
 		autoCode[1] = timeDrive + ";" + "-0.5" + ";" + "0.2";	//FASTER WAY TO STOP
 		autoCode[2] = timeDrive + ";" + "0.80" + ";" + AutoConstants.SLAM_DRIVE_TWO;
-		autoCode[3] = wait + ";" + AutoConstants.SLAM_HOPPER_WAIT;
+		autoCode[2] = wait + ";" + AutoConstants.MIDDLE_BOILER_GEAR_WAIT;
 		autoCode[4] = timeDrive + ";" + "-1.0" + ";" + AutoConstants.SLAM_BACK_UP;
 		autoCode[5] = turn + ";" + AutoConstants.SLAM_ANGLE_RED;
 		autoCode[6] = spinUp + ";" + "NULL";
@@ -193,8 +202,11 @@ public class RocketScript {
 	
 	//FOR TESTING PURPOSES
 	public String[] testTurningLeft60() {
-		String[] autoCode = new String[1];
-		autoCode[0] = turn + ";" + "-60.0";
+		String[] autoCode = new String[3];
+//		autoCode[0] = turn + ";" + "-60.0";
+		autoCode[0] = lowGear;
+		autoCode[1] = turn + ";" + AutoConstants.MIDDLE_BOILER_ANGLE_RED;
+		autoCode[2] = highGear;
 		return autoCode;
 	}
 

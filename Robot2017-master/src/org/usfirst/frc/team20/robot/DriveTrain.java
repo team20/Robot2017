@@ -76,20 +76,19 @@ public class DriveTrain {
 		}
 	}
 	
+	public void stopDrive() {
+		masterRight.set(0);
+		masterLeft.set(0);
+	}
 	
-	public void turnRight(double speed) { // turns right
+	public void turnLeft(double speed){
 		masterRight.set(-speed);
 		masterLeft.set(-speed);
 	}
 
-	public void turnLeft(double speed) { // turns left
+	public void turnRight(double speed){
 		masterRight.set(speed);
 		masterLeft.set(speed);
-	}
-
-	public void stopDrive() {
-		masterRight.set(0);
-		masterLeft.set(0);
 	}
 
 	public void shiftHigh() { // shifts into high gear ratio

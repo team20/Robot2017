@@ -10,4 +10,5 @@ public class RobotModes {
 	public static final int WAIT = 7;
 	public static final int SPIN_UP = 8;
 	public static final int LOW_GEAR = 9;
+	public static final int HIGH_GEAR = 10;
 }

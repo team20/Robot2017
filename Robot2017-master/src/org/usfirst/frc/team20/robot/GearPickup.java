@@ -3,17 +3,20 @@ package org.usfirst.frc.team20.robot;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class GearPickup {
-	DoubleSolenoid bobbyPiston;
+	DoubleSolenoid carlosPiston;
+	boolean up = false;
 	
 	public GearPickup() {
-		bobbyPiston = new DoubleSolenoid(Constants.FLOOR_EXTEND_PORT, Constants.FLOOR_RETRACT_PORT);
+		carlosPiston = new DoubleSolenoid(Constants.FLOOR_EXTEND_PORT, Constants.FLOOR_RETRACT_PORT);
 	}
 	
 	public void retract(){
-		bobbyPiston.set(DoubleSolenoid.Value.kReverse);
+		carlosPiston.set(DoubleSolenoid.Value.kReverse);
+		up = true;
 	}
 	
 	public void extend(){
-		bobbyPiston.set(DoubleSolenoid.Value.kForward);
+		carlosPiston.set(DoubleSolenoid.Value.kForward);
+		up = false;
 	}
 }
