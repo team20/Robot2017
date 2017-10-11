@@ -6,10 +6,11 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.FeedbackDeviceStatus;
 import com.ctre.CANTalon.TalonControlMode;
 
-public class FlyWheel {
+public class FlyWheel implements Loggable{
 	CANTalon flywheelMaster;
 	CANTalon flywheelFollower;
 	boolean flywheelEncoder;
+	
 	public FlyWheel(){
 		flywheelMaster = new CANTalon(Constants.FLYWHEEL_MASTER_PORT);
 		flywheelMaster.reverseOutput(false);
@@ -49,5 +50,11 @@ public class FlyWheel {
 	}
 	public void stopFlywheel(){
 		flywheelMaster.set(0);
+	}
+
+	@Override
+	public String log() {
+		return "/nFlywheelMaster/t" + flywheelMaster.getOutputCurrent() + "/t" + flywheelMaster.getBusVoltage() + "/t" + flywheelMaster.getOutputVoltage()
+		+ "/nFlywheelFollower/t" + flywheelFollower.getOutputCurrent() + "/t" + flywheelFollower.getBusVoltage() + "/t" + flywheelFollower.getOutputVoltage();
 	}
 }

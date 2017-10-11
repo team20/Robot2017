@@ -3,7 +3,7 @@ package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
 
-public class GroundCollector {
+public class GroundCollector implements Loggable{
 	CANTalon collector;
 	Constants constants;
 	
@@ -27,5 +27,10 @@ public class GroundCollector {
 		}else{
 			return false;
 		}
+	}
+
+	@Override
+	public String log() {
+		return "/nCollector Motor/t" + collector.getOutputCurrent() + "/t" + collector.getBusVoltage() + "/t" + collector.getOutputVoltage();
 	}
 }

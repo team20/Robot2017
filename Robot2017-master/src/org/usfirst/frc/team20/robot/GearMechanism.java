@@ -2,7 +2,7 @@ package org.usfirst.frc.team20.robot;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-public class GearMechanism {
+public class GearMechanism implements Loggable{
 	DoubleSolenoid gearFlap;
 	FlyWheel flywheel;
 	OperatorControls operator;
@@ -19,5 +19,10 @@ public class GearMechanism {
 
 	public void gearFlapIn() {
 		gearFlap.set(DoubleSolenoid.Value.kForward);
+	}
+
+	@Override
+	public String log() {
+		return "/nGear Flaps/t" + gearFlap.get();
 	}
 }

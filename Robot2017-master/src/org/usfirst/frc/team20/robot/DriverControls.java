@@ -22,19 +22,19 @@ public class DriverControls {
 
 	public void driverControls() {
 		if (driverJoy.getRightTriggerAxis() > 0.1) {
-			speedStraight = driverJoy.getRightTriggerAxis();
+			speedStraight = driverJoy.getRightTriggerAxis()*0.75;
 		} else if (driverJoy.getLeftTriggerAxis() > 0.1) {
-			speedStraight = -driverJoy.getLeftTriggerAxis();
+			speedStraight = -driverJoy.getLeftTriggerAxis()*0.75;
 		} else {
 			speedStraight = 0.0;
 		}
 		if (driverJoy.getLeftXAxis() < -0.1) {
-			speedLeft = -driverJoy.getLeftXAxis();
+			speedLeft = -driverJoy.getLeftXAxis()*0.75;
 		} else {
 			speedLeft = 0.0;
 		}
 		if (driverJoy.getLeftXAxis() > 0.1) {
-			speedRight = driverJoy.getLeftXAxis();
+			speedRight = driverJoy.getLeftXAxis()*0.75;
 		} else {
 			speedRight = 0.0;
 		}

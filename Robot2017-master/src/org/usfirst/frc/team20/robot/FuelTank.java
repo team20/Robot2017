@@ -3,12 +3,10 @@ package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DriverStation;
 
-public class FuelTank {
+public class FuelTank implements Loggable{
 	CANTalon tankMotor;
 	private DoubleSolenoid agitatorPistons;
-	DriverStation station;
 	double initialMatchTime;
 	boolean tankToFlywheel;
 	int counter = 0;
@@ -18,8 +16,6 @@ public class FuelTank {
 		tankMotor = new CANTalon(Constants.FUEL_TANK_COLLECTOR_MOTOR_PORT);
 		tankMotor.reverseOutput(false);
 		agitatorPistons = new DoubleSolenoid(Constants.TANK_EXTEND_PORT, Constants.TANK_RETRACT_PORT);
-		station = DriverStation.getInstance();
-		initialMatchTime = station.getMatchTime();
 		tankToFlywheel = false;
 		tankMotor.reverseOutput(false);
 	}
@@ -48,5 +44,12 @@ public class FuelTank {
 			counter = 0;
 		}
 		
+	}
+
+	@Override
+	public String log() {
+		return "/nTankMotor/t" + tankMotor.getOutputCurrent() + "/t" + tankMotor.getBusVoltage() + "/t" + tankMotor.getOutputVoltage()
+		+ "/n***Pneumatic/tCommanded Dog Position"
+		+ "/nAgitator/t" + agitatorPistons.get();
 	}
 }

@@ -3,7 +3,7 @@ package org.usfirst.frc.team20.robot;
 
 import com.ctre.CANTalon;
 
-public class Climber {
+public class Climber implements Loggable{
 	CANTalon climberMaster, climberFollower;
 	boolean safe;
 	
@@ -28,5 +28,12 @@ public class Climber {
 	}
 	public void stopClimbing(){
 		climberMaster.set(0);
+	}
+
+	@Override
+	public String log() {
+		return "***/nTalon/tCurrent Output/tBus Voltage/tOutput Voltage"
+		+ "/nClimberMaster/t" + climberMaster.getOutputCurrent() + "/t" + climberMaster.getBusVoltage() + "/t" + climberMaster.getOutputVoltage()
+		+ "/nClimberFollower/t" + climberFollower.getOutputCurrent() + "/t" + climberFollower.getBusVoltage() + "/t" + climberFollower.getOutputVoltage();
 	}
 }

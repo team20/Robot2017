@@ -6,7 +6,7 @@ import com.ctre.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class DriveTrain {
+public class DriveTrain implements Loggable{
 	DriverStation d = DriverStation.getInstance();
 	DoubleSolenoid shifter = new DoubleSolenoid(Constants.DRIVETRAIN_EXTEND_PORT, Constants.DRIVERTRAIN_RETRACT_PORT);
 	CANTalon masterRight, followerRightOne, followerRightTwo;
@@ -18,7 +18,6 @@ public class DriveTrain {
 	boolean kArcadeStandard_Reported = false;
 	boolean setSetpoint;
 	boolean highGear;
-//	CANTalon test;
 	public DriveTrain() {
 		// Setting the Motor Port Numbers
 		masterRight = new CANTalon(Constants.DRIVETRAIN_MASTER_RIGHT_MOTOR_PORT);
@@ -99,5 +98,18 @@ public class DriveTrain {
 	public void shiftLow() { // shifts into low gear ratio
 		shifter.set(DoubleSolenoid.Value.kForward);
 		highGear = false;
+	}
+
+	@Override
+	public String log() {
+		return "***/nDrivetrain Talon/tCurrent Output/tBus Voltage/tOutput Voltage"
+		+ "/nMasterRight/t" + masterRight.getOutputCurrent() + "/t" + masterRight.getBusVoltage() + "/t" + masterRight.getOutputVoltage()
+		+ "/nFollowerRightOne/t" + followerRightOne.getOutputCurrent() + "/t" + followerRightOne.getBusVoltage() + "/t" + followerRightOne.getOutputVoltage()
+		+ "/nFollowerRightTwo/t" + followerRightTwo.getOutputCurrent() + "/t" + followerRightTwo.getBusVoltage() + "/t" + followerRightTwo.getOutputVoltage()
+		+ "/nMasterLeft/t" + masterLeft.getOutputCurrent() + "/t" + masterLeft.getBusVoltage() + "/t" + masterLeft.getOutputVoltage()
+		+ "/nFollowerLeftOne/t" + followerLeftOne.getOutputCurrent() + "/t" + followerLeftOne.getBusVoltage() + "/t" + followerLeftOne.getOutputVoltage()
+		+ "/nFollowerLeftTwo/t" + followerLeftTwo.getOutputCurrent() + "/t" + followerLeftTwo.getBusVoltage() + "/t" + followerLeftTwo.getOutputVoltage()
+		+ "/n***Pneumatics/tCommanded Dog Position"
+		+ "/nDrivetrain Shifting/t" + shifter.get();
 	}
 }

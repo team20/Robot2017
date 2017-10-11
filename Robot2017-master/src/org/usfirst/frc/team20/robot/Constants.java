@@ -8,7 +8,7 @@ public class Constants {
 	public static final int DRIVETRAIN_MASTER_LEFT_MOTOR_PORT = 10; // Left Top
 	public static final int DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_ONE = 9; // Left Front
 	public static final int DRIVETRAIN_FOLLOWER_LEFT_MOTOR_PORT_TWO = 8; // Left Back
-	public static final int CLIMBER_MASTER_PORT = 1; // Climb Right
+	public static final int CLIMBER_MASTER_PORT = 12; // Climb Right, 1 on practice robot
 	public static final int CLIMBER_FOLLOWER_PORT = 11; // Climb Left
 	public static final int GROUND_COLLECTOR_MOTOR_PORT = 5; // Collector
 	public static final int FLYWHEEL_MASTER_PORT = 6; // Fly Wheel
@@ -26,13 +26,15 @@ public class Constants {
 
 	// Sockets
 	public static final int PI_SOCKET_PORT_NUMBER = 0;
+	public static final int COMPUTER_PORT = 50000;
+	public static final String COMPUTER_IP = "";	//TODO find IP with RoboRio
 
 	// FlyWheel
 	public static final double FLYWHEEL_P = 0.15; // 0.003
 	public static final double FLYWHEEL_I = 0.0; // 0.0
 	public static final double FLYWHEEL_D = 0.0; // 0.0
 	public static  double FLYWHEEL_F = 0.027; // 0.032, 0.034 after champs, 0.027 for hopper shot
-	public static  double FLYWHEEL_SPEED = 3800.0;	//3800.0 champs, 4400 new hood
+	public static  double FLYWHEEL_SPEED = 3200.0;	//3800.0 champs, 4400 new hood, 7000 basketball hoop
 	public static final double FLYWHEEL_DEADBAND = 200.0;
 
 	// Bump Switch

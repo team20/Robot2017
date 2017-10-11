@@ -36,11 +36,11 @@ public class AutoConstants {
 	public static final String MIDDLE_BOILER_FAST_SPEED = "1.0";
 	public static final String MIDDLE_BOILER_SLOW_SPEED = "0.4";
 	public static final String MIDDLE_BOILER_FAST_TIME = "0.55";
-	public static final String MIDDLE_BOILER_SLOW_TIME = "2.6";
-	public static final String MIDDLE_BOILER_GEAR_WAIT = "0.25";	//1d.5, that's a double, right?
+	public static final String MIDDLE_BOILER_SLOW_TIME = "2.35";
+	public static final String MIDDLE_BOILER_GEAR_WAIT = "0.0";	//1d.5, that's a double, right?
 	public static final String MIDDLE_BOILER_BACK_UP = "-12.0";
-	public static final String MIDDLE_BOILER_ANGLE_RED = "110.0";
-	public static final String MIDDLE_BOILER_ANGLE_BLUE = "-110.0";
+	public static final String MIDDLE_BOILER_ANGLE_RED = "105.0";
+	public static final String MIDDLE_BOILER_ANGLE_BLUE = "-105.0";
 	public static final String MIDDLE_BOILER_FINAL_DRIVE = "2.0";
 
 	//Slam Slam Autos

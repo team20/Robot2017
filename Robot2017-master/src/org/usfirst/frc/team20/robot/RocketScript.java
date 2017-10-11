@@ -3,7 +3,7 @@ package org.usfirst.frc.team20.robot;
 
 public class RocketScript {
 	String turn = "1";	//angle
-	String arcTurn = "2"; // speed, radius of circle, turn angle, right?
+	String spline = "2"; // speed, radius of circle, turn angle, right?
 	String fastDriveStraight = "3";//speed, distance, angle
 	String timeDrive = "4";	//speed, time drive for
 	String shoot = "5";	//none
@@ -13,6 +13,20 @@ public class RocketScript {
 	String lowGear = "9";	//shifts the drive train into low gear
 	String highGear = "10";
 
+	public String[] splineTest1(){
+		String[] autoCode = new String[1];
+		autoCode[0] = spline + ";" + "0.5";
+		return autoCode;
+	}
+	public String[] newKidsDemo(){
+		String[] autoCode = new String[5];
+		autoCode[0] = spinUp + ";" + "NULL";
+		autoCode[1] = turn + ";" + "90.0";
+		autoCode[2] = shoot + ";" + "5.0";
+		autoCode[3] = stopShooting + ";" + "NULL";
+		return autoCode;
+	}
+	
 	public String[] middleGear() {
 		String[] autoCode = new String[1];
 		autoCode[0] = timeDrive + ";" + AutoConstants.DRIVE_STRAIGHT_SPEED + ";" + AutoConstants.MIDDLE_GEAR_TIME;
