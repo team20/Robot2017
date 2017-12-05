@@ -7,8 +7,12 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import javax.script.*;
+import java.io.FileReader;
 
 public class Robot extends IterativeRobot {
+	ScriptEngine js;
+	Invocable autoPeriodic;
 	RobotDrive myDrive;
 	DriveTrain drive;
 	FlyWheel flywheel;
@@ -30,7 +34,7 @@ public class Robot extends IterativeRobot {
 	int rocketScriptCurrentCount, rocketScriptLength = 0, startingENCClicks, autoModeSubStep = 0, startingENCClicksLeft = 0, startingENCClicksRight = 0;
 	double rotateToAngleRate, currentRotationRate, startTime;
 	double nominalVoltage = Constants.NOMINAL_VOLTAGE;
-	boolean shooting = false, resetGyro = false, setStartTime = false, waitStartTime = false, setStartTimeFlywheel = false, 
+	boolean shooting = false, resetGyro = false, setStartTime = false, waitStartTime = false, setStartTimeFlywheel = false,
 			gotStartingENCClicks = false, setStartTimeShoot = false, resetGyroTurn = false;
 //	Logger logger = new Logger();
 	boolean beenEnabled = false, socket = false;
@@ -55,14 +59,10 @@ public class Robot extends IterativeRobot {
 		arc = new CircleArcs();
 		getNewScript = new RocketScript();
 		alex = new AlexDrive(drive, climb);
-		// tsar = new TsarControls(drive, climb, tank, gear, flywheel, collector);
-		
-		// cam = new DriverVision("cam0", 0);
-		// cam.startUSBCamera();
 
 		compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
-		
+
 		drive.shiftHigh();
 		flywheel.setPID(Constants.FLYWHEEL_P, Constants.FLYWHEEL_I, Constants.FLYWHEEL_D, Constants.FLYWHEEL_F);
 
@@ -71,27 +71,24 @@ public class Robot extends IterativeRobot {
 
 		myDrive = new RobotDrive(drive.masterRight, drive.masterLeft);
 		myDrive.setExpiration(1.0);
-		
-		//register to log
-//		logger.register(climb);
-//		logger.register(collector);
-//		logger.register(flywheel);
-//		logger.register(tank);
-//		logger.register(drive);
-//		logger.register(gear);
-//		logger.register(carlos);
-//		logger.startSocket(); socket = true;
+
+		try {
+			js = new ScriptEngineManager().getEngineByName("nashorn");
+			js.put("flywheel", flywheel);
+			js.put("collector", collector);
+			js.put("tank", tank);
+			js.put("gear", gear);
+			js.put("climb", climb);
+			js.put("drive", drive);
+			js.put("carlos", carlos);
+			js.eval(new FileReader("auto.js"));
+			auto = (Invocable) js;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void disabledInit(){
-//		if(beenEnabled){
-//			try {
-//				logger.closeSocket(); socket = false;
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		beenEnabled = false;
+	public void disabledInit() {
 	}
 
 	public void autonomousInit() {
@@ -103,115 +100,9 @@ public class Robot extends IterativeRobot {
 		autoModeSubStep = 0;
 		rocketScriptCurrentCount = 0;
 		gear.gearFlapOut();
-		// rocketScriptData = getNewScript.testTurningRight60();
-		// rocketScriptData = getNewScript.testTurningRight90();
-		// rocketScriptData = getNewScript.testTurningRight105();
-		// rocketScriptData = getNewScript.testTurningRight170();
-		// rocketScriptData = getNewScript.testTurningLeft60();
-		// rocketScriptData = getNewScript.testTurningLeft90();
-		// rocketScriptData = getNewScript.testTurningLeft105();
-		// rocketScriptData = getNewScript.testTurningLeft170();
-		// rocketScriptLength = rocketScriptData.length; //REMEMBER TO UNCOMMENT
-		// THIS WHEN TESTING
 		rocketScriptData = getNewScript.splineTest1();
 		rocketScriptLength = rocketScriptData.length;
-//		boolean button1 = SmartDashboard.getBoolean("DB/Button 0", false);
-//		boolean button2 = SmartDashboard.getBoolean("DB/Button 1", false);
-//		boolean button3 = SmartDashboard.getBoolean("DB/Button 2", false);
-//		boolean button4 = SmartDashboard.getBoolean("DB/Button 3", false);
-//		double neutralZone = SmartDashboard.getNumber("DB/Slider 0", 0.0);
-//		if (button1) {
-//			if (button2 && !button3 && !button4 && neutralZone == 0.0) { // middle																			// peg
-//				rocketScriptData = getNewScript.middleGearNeutralZoneRed();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (button2 && !button3 && !button4 && neutralZone != 0.0) {
-//				rocketScriptData = getNewScript.middleGear();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && button3 && !button4 && neutralZone == 0.0) { // right
-//																				// peg
-//				rocketScriptData = getNewScript.rightGearNeutralZone();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && button3 && !button4 && neutralZone != 0.0) {
-//				rocketScriptData = getNewScript.rightGear();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && !button3 && button4 && neutralZone == 0.0) { // left
-//																				// peg
-//				rocketScriptData = getNewScript.leftGearNeutralZone();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && !button3 && button4 && neutralZone != 0.0) {
-//				rocketScriptData = getNewScript.leftGear();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (button2 && button3 && !button4) { // side peg to boiler
-//				rocketScriptData = getNewScript.rightGearToBoilerRed();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && button3 && button4) { // 40kPa
-//				rocketScriptData = getNewScript.hopperToBoilerRed();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapIn();
-//			} else if (button2 && !button3 && button4) { // 10kPa
-//				rocketScriptData = getNewScript.stayAtBoilerAndShoot();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapIn();
-//			} else if (button2 && button3 && button4) {
-//				rocketScriptData = getNewScript.middleGearToBoilerRed();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			}
-//		} else {
-//			if (button2 && !button3 && !button4 && neutralZone == 0.0) { // middle peg
-//				rocketScriptData = getNewScript.middleGearNeutralZoneBlue();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (button2 && !button3 && !button4 && neutralZone != 0.0) {
-//				rocketScriptData = getNewScript.middleGear();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && button3 && !button4 && neutralZone == 0.0) { // right peg
-//				rocketScriptData = getNewScript.rightGearNeutralZone();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && button3 && !button4 && neutralZone != 0.0) {
-//				rocketScriptData = getNewScript.rightGear();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && !button3 && button4 && neutralZone == 0.0) { // left peg
-//				rocketScriptData = getNewScript.leftGearNeutralZone();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && !button3 && button4 && neutralZone != 0.0) {
-//				rocketScriptData = getNewScript.leftGear();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (button2 && !button3 && button4) { // 10kPa
-//				rocketScriptData = getNewScript.stayAtBoilerAndShoot();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapIn();
-//			} else if (button2 && button3 && !button4) { // side peg to boiler
-//				rocketScriptData = getNewScript.leftGearToBoilerBlue();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			} else if (!button2 && button3 && button4) { // 40kPa
-//				rocketScriptData = getNewScript.hopperToBoilerBlue();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapIn();
-//			} else if (button2 && button3 && button4) {
-//				rocketScriptData = getNewScript.middleGearToBoilerBlue();
-//				rocketScriptLength = rocketScriptData.length;
-//				gear.gearFlapOut();
-//			}
-//		}
-		
-//		if(!socket){
-//			logger.startSocket(); socket = true;
-//		}
-//		beenEnabled = true;
+
 	}
 
 	/**
@@ -220,91 +111,12 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-//		logger.log();
-		if (rocketScriptCurrentCount < rocketScriptLength) {
-			String[] values = rocketScriptData[rocketScriptCurrentCount].split(";");
-			if (Integer.parseInt(values[0]) == RobotModes.FAST_DRIVE_STRAIGHT) {
-				if (fastDriveStraight(Double.parseDouble(values[1]),
-						Double.parseDouble(values[2]) - AutoConstants.STOPPING_INCHES, Double.parseDouble(values[3]))) {
-					gotStartingENCClicks = false;
-					gyro.reset();
-					rocketScriptCurrentCount++;
-				}
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.SHOOTING) {
-				flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
-				System.out.println("Flywheel RPMS " + flywheel.flywheelSpeed());
-				collector.intake(1);
-				tank.tankMotorIntoFlywheel(0.4);
-				shooting = true;
-				// }
-				if (shooting) {
-					tank.runAgitator();
-					System.out.println("***************Running Agitator");
-					if (!setStartTimeFlywheel) {
-						startTime = Timer.getFPGATimestamp();
-						setStartTimeFlywheel = true;
-					}
-					if (Timer.getFPGATimestamp() - startTime > Double.parseDouble(values[1])) {
-						System.out.println("******************************DONE SHOOTING");
-						rocketScriptCurrentCount++;
-					}
-				}
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.STOP_SHOOTING) {
-				System.out.println("****************Stopping Shooting");
-				flywheel.stopFlywheel();
-				collector.stopCollector();
-				tank.stopTank();
-				shooting = false;
-				setStartTimeFlywheel = false;
-				rocketScriptCurrentCount++;
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.WAIT) {
-				System.out.println("WAITING");
-				if (!waitStartTime) {
-					startTime = Timer.getFPGATimestamp();
-					waitStartTime = true;
-				}
-				if (Timer.getFPGATimestamp() - startTime > Double.parseDouble(values[1])) {
-					System.out.println("******************************DONE WAITING");
-					waitStartTime = false;
-					rocketScriptCurrentCount++;
-				}
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.SPIN_UP) {
-				flywheel.shootWithEncoders(Constants.FLYWHEEL_SPEED);
-				rocketScriptCurrentCount++;
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.TIME_DRIVE) {
-				if (fastDriveStraightTimer(Double.parseDouble(values[1]), Double.parseDouble(values[2]), true)) {
-					rocketScriptCurrentCount++;
-				}
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.LOW_GEAR) {
-				drive.shiftLow();
-				rocketScriptCurrentCount++;
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.HIGH_GEAR) {
-				drive.shiftHigh();
-				rocketScriptCurrentCount++;
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.ARC_TURN) {
-				RobotGrid grid = new RobotGrid(0, 0, 0, 1);
-				grid.addLinearPoint(50, 0, 0);
-				if (spline(Double.parseDouble(values[1]), grid)) {
-					rocketScriptCurrentCount++;
-				}
-			}
-			if (Integer.parseInt(values[0]) == RobotModes.TURN) {
-				System.out.println("******************************** " + gyro.getAngle());
-				if (turn(Double.parseDouble(values[1]))) {
-					setStartTime = false;
-					resetGyroTurn = false;
-					rocketScriptCurrentCount++;
-				}
-			}
+		try {
+			auto.invokeFunction("periodic");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 	}
 
 	@Override
@@ -319,7 +131,7 @@ public class Robot extends IterativeRobot {
 		drive.shiftHigh();
 		drive.masterRight.setVoltageRampRate(120);
 		drive.masterLeft.setVoltageRampRate(120);
-		
+
 //		if(!socket){
 //			logger.startSocket(); socket = true;
 //		}
